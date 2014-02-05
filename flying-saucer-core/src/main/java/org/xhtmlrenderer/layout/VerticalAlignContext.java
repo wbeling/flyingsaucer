@@ -36,7 +36,7 @@ import org.xhtmlrenderer.render.InlineLayoutBox;
  * must be taken into consideration when aligning content.
  */
 public class VerticalAlignContext {
-    private List _measurements = new ArrayList();
+    private List<InlineBoxMeasurements> _measurements = new ArrayList<InlineBoxMeasurements>();
     
     private int _inlineTop;
     private boolean _inlineTopSet = false;
@@ -50,7 +50,7 @@ public class VerticalAlignContext {
     private int _paintingBottom;
     private boolean _paintingBottomSet = false;
     
-    private List _children = new ArrayList();
+    private List<ChildContextData> _children = new ArrayList<ChildContextData>();
     
     private VerticalAlignContext _parent = null;
     
@@ -123,7 +123,7 @@ public class VerticalAlignContext {
     }
     
     public InlineBoxMeasurements getParentMeasurements() {
-        return (InlineBoxMeasurements)_measurements.get(_measurements.size()-1);
+        return _measurements.get(_measurements.size()-1);
     }
     
     public void popMeasurements() {
@@ -145,11 +145,11 @@ public class VerticalAlignContext {
         
         result.setParent(vaRoot);
         
-        InlineBoxMeasurements initial = (InlineBoxMeasurements)vaRoot._measurements.get(0);
+        InlineBoxMeasurements initial = vaRoot._measurements.get(0);
         result.pushMeasurements(initial);
         
         if (vaRoot._children == null) {
-            vaRoot._children = new ArrayList();
+            vaRoot._children = new ArrayList<ChildContextData>();
         }
         
         vaRoot._children.add(new ChildContextData(root, result));

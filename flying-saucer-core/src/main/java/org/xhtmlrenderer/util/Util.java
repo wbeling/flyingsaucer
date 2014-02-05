@@ -504,7 +504,7 @@ public class Util {
      * @param array PARAM
      * @return Returns
      */
-    public static List toList(Object[] array) {
+    public static List<Object> toList(Object[] array) {
         return to_list(array);
     }
 
@@ -514,8 +514,8 @@ public class Util {
      * @param array PARAM
      * @return Returns
      */
-    public static List to_list(Object[] array) {
-        List list = new ArrayList();
+    public static List<Object> to_list(Object[] array) {
+        List<Object> list = new ArrayList<Object>();
         for (int i = 0; i < array.length; i++) {
             list.add(array[i]);
         }

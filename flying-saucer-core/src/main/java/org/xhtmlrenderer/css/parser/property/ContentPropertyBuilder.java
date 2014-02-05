@@ -35,7 +35,7 @@ import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 
 public class ContentPropertyBuilder extends AbstractPropertyBuilder {
 
-    public List buildDeclarations(
+    public List<PropertyDeclaration> buildDeclarations(
             CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             PropertyValue value = (PropertyValue)values.get(0);
@@ -50,7 +50,7 @@ public class ContentPropertyBuilder extends AbstractPropertyBuilder {
             }
         }
         
-        List resultValues = new ArrayList();
+        List<PropertyValue> resultValues = new ArrayList<PropertyValue>();
         for (Iterator i = values.iterator(); i.hasNext(); ) {
             PropertyValue value = (PropertyValue)i.next();
             

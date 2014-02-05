@@ -49,11 +49,11 @@ import org.xhtmlrenderer.util.XRLog;
 // manage colspans and the details of the table layout algorithms).  Many kudos
 // to the KHTML developers for making such an amazing piece of software!
 public class TableBox extends BlockBox {
-    private final List _columns = new ArrayList();
+    private final List<ColumnData> _columns = new ArrayList<ColumnData>();
     private int[] _columnPos;
     private TableLayout _tableLayout;
 
-    private List _styleColumns;
+    private List<TableColumn> _styleColumns;
 
     private int _pageClearance;
 
@@ -82,7 +82,7 @@ public class TableBox extends BlockBox {
 
     public void addStyleColumn(TableColumn col) {
         if (_styleColumns == null) {
-            _styleColumns = new ArrayList();
+            _styleColumns = new ArrayList<TableColumn>();
         }
         _styleColumns.add(col);
     }
@@ -104,7 +104,7 @@ public class TableBox extends BlockBox {
     }
 
     public int spanOfEffCol(int effCol) {
-        return ((ColumnData)_columns.get(effCol)).getSpan();
+        return _columns.get(effCol).getSpan();
     }
 
     public int colToEffCol(int col) {
@@ -165,7 +165,7 @@ public class TableBox extends BlockBox {
         newColumn.setSpan(firstSpan);
         _columns.add(pos, newColumn);
 
-        ColumnData leftOver = (ColumnData)_columns.get(pos+1);
+        ColumnData leftOver = _columns.get(pos+1);
         leftOver.setSpan(leftOver.getSpan() - firstSpan);
 
         for (Iterator i = getChildIterator(); i.hasNext(); ) {
@@ -193,7 +193,7 @@ public class TableBox extends BlockBox {
         return result;
     }
 
-    public List getColumns() {
+    public List<ColumnData> getColumns() {
         return _columns;
     }
 
@@ -932,7 +932,7 @@ public class TableBox extends BlockBox {
 
     private static class FixedTableLayout implements TableLayout {
         private final TableBox _table;
-        private List _widths;
+        private List<Length> _widths;
 
         public FixedTableLayout(TableBox table) {
             _table = table;
@@ -943,7 +943,7 @@ public class TableBox extends BlockBox {
         }
 
         private void initWidths() {
-            _widths = new ArrayList(_table.numEffCols());
+            _widths = new ArrayList<Length>(_table.numEffCols());
             for (int i = 0; i < _table.numEffCols(); i++) {
                 _widths.add(new Length());
             }
@@ -1008,7 +1008,7 @@ public class TableBox extends BlockBox {
                     while (usedSpan < span) {
                         int eSpan = _table.spanOfEffCol(cCol + i);
 
-                        Length columnWidth = (Length) _widths.get(cCol + i);
+                        Length columnWidth = _widths.get(cCol + i);
                         // only set if no col element has already set it.
                         if (columnWidth.isVariable() && !w.isVariable()) {
                             _widths.set(cCol + i, new Length(w.value() * eSpan, w.type()));
@@ -1043,7 +1043,7 @@ public class TableBox extends BlockBox {
 
             boolean haveNonFixed = false;
             for (int i = 0; i < _widths.size(); i++) {
-                Length w = (Length)_widths.get(i);
+                Length w = _widths.get(i);
                 if (! w.isFixed()) {
                     haveNonFixed = true;
                     break;
@@ -1067,7 +1067,7 @@ public class TableBox extends BlockBox {
 
             // first assign fixed width
             for ( int i = 0; i < nEffCols; i++ ) {
-                Length l = (Length)_widths.get(i);
+                Length l = _widths.get(i);
                 if ( l.isFixed() ) {
                     calcWidth[i] = l.value();
                     available -= l.value();
@@ -1078,7 +1078,7 @@ public class TableBox extends BlockBox {
             if ( available > 0 ) {
                 int totalPercent = 0;
                 for ( int i = 0; i < nEffCols; i++ ) {
-                    Length l = (Length)_widths.get(i);
+                    Length l = _widths.get(i);
                     if ( l.isPercent() ) {
                         totalPercent += l.value();
                     }
@@ -1091,7 +1091,7 @@ public class TableBox extends BlockBox {
                 }
 
                 for ( int i = 0; available > 0 && i < nEffCols; i++ ) {
-                    Length l = (Length)_widths.get(i);
+                    Length l = _widths.get(i);
                     if ( l.isPercent() ) {
                         long w = base * l.value() / totalPercent;
                         available -= w;
@@ -1104,14 +1104,14 @@ public class TableBox extends BlockBox {
             if ( available > 0 ) {
                 int totalVariable = 0;
                 for ( int i = 0; i < nEffCols; i++ ) {
-                    Length l = (Length)_widths.get(i);
+                    Length l = _widths.get(i);
                     if ( l.isVariable() ) {
                         totalVariable++;
                     }
                 }
 
                 for ( int i = 0; available > 0 && i < nEffCols; i++ ) {
-                    Length l = (Length)_widths.get(i);
+                    Length l = _widths.get(i);
                     if ( l.isVariable() ) {
                         int w = available / totalVariable;
                         available -= w;
@@ -1157,7 +1157,7 @@ public class TableBox extends BlockBox {
     private static class AutoTableLayout implements TableLayout {
         private final TableBox _table;
         private Layout[] _layoutStruct;
-        private List _spanCells;
+        private List<TableCellBox> _spanCells;
 
         public AutoTableLayout(TableBox table) {
             _table = table;
@@ -1180,7 +1180,7 @@ public class TableBox extends BlockBox {
                 _layoutStruct[i].setMaxWidth(getMinColWidth());
             }
 
-            _spanCells = new ArrayList();
+            _spanCells = new ArrayList<TableCellBox>();
 
             TableBox table = _table;
             int nEffCols = table.numEffCols();
@@ -1313,8 +1313,8 @@ public class TableBox extends BlockBox {
                 }
             });
 
-            for (Iterator i = _spanCells.iterator(); i.hasNext(); ) {
-                TableCellBox cell = (TableCellBox)i.next();
+            for (Iterator<TableCellBox> i = _spanCells.iterator(); i.hasNext(); ) {
+                TableCellBox cell = i.next();
 
                 cell.calcMinMaxWidth(c);
 

@@ -49,7 +49,7 @@ class SelectField extends FormField {
     }
 
     public JComponent create() {
-        List optionList = createList();
+        List<NameValuePair> optionList = createList();
 
         // Either a select list or a drop down/combobox
         if (shouldRenderAsList()) {
@@ -92,7 +92,7 @@ class SelectField extends FormField {
     }
     
     protected FormFieldState loadOriginalState() {
-        ArrayList list = new ArrayList();
+        ArrayList<Integer> list = new ArrayList<Integer>();
         
         NodeList options = getElement().getElementsByTagName("option");
 
@@ -157,13 +157,13 @@ class SelectField extends FormField {
         return new String [] {};
     }
 
-    private List createList() {
-        List list = new ArrayList();        
+    private List<NameValuePair> createList() {
+        List<NameValuePair> list = new ArrayList<NameValuePair>();        
         addChildren(list, getElement(), 0);
         return list;
     }
 
-    private void addChildren(List list, Element e, int indent) {
+    private void addChildren(List<NameValuePair> list, Element e, int indent) {
         NodeList children = e.getChildNodes();
         
         for (int i = 0; i < children.getLength(); i++) {

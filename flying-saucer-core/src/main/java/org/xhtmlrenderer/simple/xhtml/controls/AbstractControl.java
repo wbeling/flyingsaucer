@@ -42,7 +42,7 @@ public abstract class AbstractControl implements FormControl {
     private boolean _successful;
     private boolean _enabled;
 
-    private List _listeners = new ArrayList();
+    private List<FormControlListener> _listeners = new ArrayList<FormControlListener>();
 
     public AbstractControl(XhtmlForm form, Element e) {
         _form = form;
@@ -69,20 +69,20 @@ public abstract class AbstractControl implements FormControl {
     }
 
     protected void fireChanged() {
-        for (Iterator iter = _listeners.iterator(); iter.hasNext();) {
-            ((FormControlListener) iter.next()).changed(this);
+        for (Iterator<FormControlListener> iter = _listeners.iterator(); iter.hasNext();) {
+            iter.next().changed(this);
         }
     }
 
     protected void fireSuccessful() {
-        for (Iterator iter = _listeners.iterator(); iter.hasNext();) {
-            ((FormControlListener) iter.next()).successful(this);
+        for (Iterator<FormControlListener> iter = _listeners.iterator(); iter.hasNext();) {
+            iter.next().successful(this);
         }
     }
 
     protected void fireEnabled() {
-        for (Iterator iter = _listeners.iterator(); iter.hasNext();) {
-            ((FormControlListener) iter.next()).enabled(this);
+        for (Iterator<FormControlListener> iter = _listeners.iterator(); iter.hasNext();) {
+            iter.next().enabled(this);
         }
     }
 

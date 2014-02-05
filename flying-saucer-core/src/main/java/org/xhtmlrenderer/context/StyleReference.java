@@ -29,6 +29,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
 import org.xhtmlrenderer.css.extend.lib.DOMTreeResolver;
@@ -102,7 +103,7 @@ public class StyleReference {
         _doc = doc;
         AttributeResolver attRes = new StandardAttributeResolver(_nsh, _uac, ui);
 
-        List infos = getStylesheets();
+        List<StylesheetInfo> infos = getStylesheets();
         XRLog.match("media = " + _context.getMedia());
         _matcher = new org.xhtmlrenderer.css.newmatch.Matcher(
                 new DOMTreeResolver(), 
@@ -112,10 +113,10 @@ public class StyleReference {
                 _context.getMedia());
     }
     
-    private List readAndParseAll(List infos, String medium) {
-        List result = new ArrayList(infos.size() + 15);
-        for (Iterator i = infos.iterator(); i.hasNext(); ) {
-            StylesheetInfo info = (StylesheetInfo)i.next();
+    private List<Stylesheet> readAndParseAll(List<StylesheetInfo> infos, String medium) {
+        List<Stylesheet> result = new ArrayList<Stylesheet>(infos.size() + 15);
+        for (Iterator<StylesheetInfo> i = infos.iterator(); i.hasNext(); ) {
+            StylesheetInfo info = i.next();
             if (info.appliesToMedia(medium)) {
                 Stylesheet sheet = info.getStylesheet();
                 
@@ -156,9 +157,9 @@ public class StyleReference {
      * @param e The DOM Element for which to find properties
      * @return Map of CSS property names to CSSValue instance assigned to it.
      */
-    public java.util.Map getCascadedPropertiesMap(Element e) {
+    public java.util.Map<String, CSSPrimitiveValue> getCascadedPropertiesMap(Element e) {
         CascadedStyle cs = _matcher.getCascadedStyle(e, false);//this is only for debug, I think
-        java.util.LinkedHashMap props = new java.util.LinkedHashMap();
+        java.util.LinkedHashMap<String, CSSPrimitiveValue> props = new java.util.LinkedHashMap<String, CSSPrimitiveValue>();
         for (java.util.Iterator i = cs.getCascadedPropertyDeclarations(); i.hasNext();) {
             PropertyDeclaration pd = (PropertyDeclaration) i.next();
 
@@ -232,8 +233,8 @@ public class StyleReference {
      *
      * @return The stylesheets value
      */
-    private List getStylesheets() {
-        List infos = new LinkedList();
+    private List<StylesheetInfo> getStylesheets() {
+        List<StylesheetInfo> infos = new LinkedList<StylesheetInfo>();
         long st = System.currentTimeMillis();
 
         StylesheetInfo defaultStylesheet = _nsh.getDefaultStylesheet(_stylesheetFactory);

@@ -54,7 +54,7 @@ public class StylesheetFactoryImpl implements StylesheetFactory {
     /**
      * an LRU cache
      */
-    private java.util.LinkedHashMap _cache =
+    private java.util.LinkedHashMap<Object, Stylesheet> _cache =
             new java.util.LinkedHashMap(_cacheCapacity, 0.75f, true) {
                 private static final long serialVersionUID = 1L;
 
@@ -141,7 +141,7 @@ public class StylesheetFactoryImpl implements StylesheetFactory {
      * @return The stylesheet
      */
     public synchronized Stylesheet getCachedStylesheet(Object key) {
-        return (Stylesheet) _cache.get(key);
+        return _cache.get(key);
     }
 
     /**

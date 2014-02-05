@@ -530,12 +530,12 @@ class DOMTreeModel implements TreeModel {
     /**
      * Description of the Field
      */
-    HashMap displayableNodes;
+    HashMap<Node, List> displayableNodes;
 
     /**
      * Description of the Field
      */
-    List listeners = new ArrayList();
+    List<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
 
     /**
      * Constructor for the DOMTreeModel object
@@ -543,7 +543,7 @@ class DOMTreeModel implements TreeModel {
      * @param doc PARAM
      */
     public DOMTreeModel(Document doc) {
-        this.displayableNodes = new HashMap();
+        this.displayableNodes = new HashMap<Node, List>();
         this.doc = doc;
         setRoot("body");
     }
@@ -620,12 +620,12 @@ class DOMTreeModel implements TreeModel {
 
         Node node = (Node) parent;
 
-        List children = (List) this.displayableNodes.get(parent);
+        List<Node> children = this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
         }
 
-        return (Node) children.get(index);
+        return children.get(index);
     }
 
 
@@ -640,7 +640,7 @@ class DOMTreeModel implements TreeModel {
     public int getChildCount(Object parent) {
 
         Node node = (Node) parent;
-        List children = (List) this.displayableNodes.get(parent);
+        List<Node> children = this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
         }
@@ -661,7 +661,7 @@ class DOMTreeModel implements TreeModel {
     public int getIndexOfChild(Object parent, Object child) {
 
         Node node = (Node) parent;
-        List children = (List) this.displayableNodes.get(parent);
+        List<Node> children = this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
         }
@@ -708,10 +708,10 @@ class DOMTreeModel implements TreeModel {
      * @param parent The feature to be added to the Displayable attribute
      * @return Returns
      */
-    private List addDisplayable(Node parent) {
-        List children = (List) this.displayableNodes.get(parent);
+    private List<Node> addDisplayable(Node parent) {
+        List<Node> children = this.displayableNodes.get(parent);
         if (children == null) {
-            children = new ArrayList();
+            children = new ArrayList<Node>();
             this.displayableNodes.put(parent, children);
             NodeList nl = parent.getChildNodes();
             for (int i = 0, len = nl.getLength(); i < len; i++) {
@@ -724,7 +724,7 @@ class DOMTreeModel implements TreeModel {
             }
             return children;
         } else {
-            return new ArrayList();
+            return new ArrayList<Node>();
         }
     }
 

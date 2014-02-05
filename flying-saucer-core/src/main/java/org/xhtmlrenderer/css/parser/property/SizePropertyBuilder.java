@@ -33,9 +33,9 @@ import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 public class SizePropertyBuilder extends AbstractPropertyBuilder {
     private static final CSSName[] ALL = { CSSName.FS_PAGE_ORIENTATION, CSSName.FS_PAGE_HEIGHT, CSSName.FS_PAGE_WIDTH };
     
-    public List buildDeclarations(
+    public List<PropertyDeclaration> buildDeclarations(
             CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
-        List result = new ArrayList(3);
+        List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(3);
         checkValueCount(cssName, 1, 2, values.size());
         
         if (values.size() == 1) {

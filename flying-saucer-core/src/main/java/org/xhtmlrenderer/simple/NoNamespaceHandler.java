@@ -128,7 +128,7 @@ public class NoNamespaceHandler implements NamespaceHandler {
     private Pattern _mediaPattern = Pattern.compile("media\\s?=\\s?");
 
     public StylesheetInfo[] getStylesheets(org.w3c.dom.Document doc) {
-        List list = new ArrayList();
+        List<StylesheetInfo> list = new ArrayList<StylesheetInfo>();
         //get the processing-instructions (actually for XmlDocuments)
         //type and href are required to be set
         NodeList nl = doc.getChildNodes();
@@ -179,7 +179,7 @@ public class NoNamespaceHandler implements NamespaceHandler {
             list.add(info);
         }
 
-        return (StylesheetInfo[])list.toArray(new StylesheetInfo[list.size()]);
+        return list.toArray(new StylesheetInfo[list.size()]);
     }
 
     public StylesheetInfo getDefaultStylesheet(StylesheetFactory factory) {

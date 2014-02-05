@@ -31,7 +31,7 @@ public class PageRule implements RulesetContainer {
     private Ruleset _ruleset;
     private int _origin;
     
-    private Map _marginBoxes = new HashMap();
+    private Map<MarginBoxName, List> _marginBoxes = new HashMap<MarginBoxName, List>();
     
     private int _pos;
     
@@ -89,14 +89,14 @@ public class PageRule implements RulesetContainer {
     }
     
     public List getMarginBoxProperties(MarginBoxName name) {
-        return (List)_marginBoxes.get(name);
+        return _marginBoxes.get(name);
     }
     
     public void addMarginBoxProperties(MarginBoxName name, List props) {
         _marginBoxes.put(name, props);
     }
     
-    public Map getMarginBoxes() {
+    public Map<MarginBoxName, List> getMarginBoxes() {
         return _marginBoxes;
     }
     

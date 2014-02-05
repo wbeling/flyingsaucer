@@ -115,12 +115,12 @@ public final class CSSName implements Comparable {
     /**
      * Map of all CSS properties
      */
-    private static final Map ALL_PROPERTY_NAMES = new TreeMap();
+    private static final Map<String, CSSName> ALL_PROPERTY_NAMES = new TreeMap<String, CSSName>();
 
     /**
      * Map of all non-shorthand CSS properties
      */
-    private static final Map ALL_PRIMITIVE_PROPERTY_NAMES = new TreeMap();
+    private static final Map<String, CSSName> ALL_PRIMITIVE_PROPERTY_NAMES = new TreeMap<String, CSSName>();
 
     /**
      * Unique CSSName instance for CSS2 property.
@@ -1625,7 +1625,7 @@ public final class CSSName implements Comparable {
      *
      * @return Returns
      */
-    public static Iterator allCSS2PropertyNames() {
+    public static Iterator<String> allCSS2PropertyNames() {
         return ALL_PROPERTY_NAMES.keySet().iterator();
     }
 
@@ -1634,7 +1634,7 @@ public final class CSSName implements Comparable {
      *
      * @return Returns
      */
-    public static Iterator allCSS2PrimitivePropertyNames() {
+    public static Iterator<String> allCSS2PrimitivePropertyNames() {
         return ALL_PRIMITIVE_PROPERTY_NAMES.keySet().iterator();
     }
 
@@ -1683,7 +1683,7 @@ public final class CSSName implements Comparable {
      */
     public static CSSName getByPropertyName(String propName) {
 
-        return (CSSName) ALL_PROPERTY_NAMES.get(propName);
+        return ALL_PROPERTY_NAMES.get(propName);
     }
 
     public static CSSName getByID(int id) {
@@ -1732,10 +1732,10 @@ public final class CSSName implements Comparable {
     }
 
     static {
-        Iterator iter = ALL_PROPERTY_NAMES.values().iterator();
+        Iterator<CSSName> iter = ALL_PROPERTY_NAMES.values().iterator();
         ALL_PROPERTIES = new CSSName[ALL_PROPERTY_NAMES.size()];
         while (iter.hasNext()) {
-            CSSName name = (CSSName) iter.next();
+            CSSName name = iter.next();
             ALL_PROPERTIES[name.FS_ID] = name;
         }
     }
@@ -1746,8 +1746,8 @@ public final class CSSName implements Comparable {
                 XRLog.cssParse("(" + uri + ") " + message);
             }
         });
-        for (Iterator i = ALL_PRIMITIVE_PROPERTY_NAMES.values().iterator(); i.hasNext(); ) {
-            CSSName cssName = (CSSName)i.next();
+        for (Iterator<CSSName> i = ALL_PRIMITIVE_PROPERTY_NAMES.values().iterator(); i.hasNext(); ) {
+            CSSName cssName = i.next();
             if (cssName.initialValue.charAt(0) != '=' && cssName.implemented) {
                 PropertyValue value = parser.parsePropertyValue(
                         cssName, StylesheetInfo.USER_AGENT, cssName.initialValue);

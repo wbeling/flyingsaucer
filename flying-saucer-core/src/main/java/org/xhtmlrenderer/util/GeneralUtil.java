@@ -132,7 +132,7 @@ public class GeneralUtil {
     public static String trackBack(int cnt) {
         Exception ex = new Exception();
         StringBuffer sb = new StringBuffer();
-        List list = new ArrayList(cnt);
+        List<String> list = new ArrayList<String>(cnt);
         StackTraceElement[] stes = ex.getStackTrace();
         if (cnt >= stes.length) {
             cnt = stes.length - 1;
@@ -149,11 +149,11 @@ public class GeneralUtil {
             sb = new StringBuffer();
         }
 
-        Iterator iter = list.iterator();
+        Iterator<String> iter = list.iterator();
         StringBuffer padding = new StringBuffer("");
         StringBuffer trackback = new StringBuffer();
         while (iter.hasNext()) {
-            String s = (String) iter.next();
+            String s = iter.next();
             trackback.append(padding).append(s).append("\n");
             padding.append("   ");
         }

@@ -35,11 +35,10 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.InlineText;
 import org.xhtmlrenderer.render.InlineLayoutBox;
 import org.xhtmlrenderer.render.LineBox;
-import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
 
 public class ContentFunctionFactory {
-    private List _functions = new ArrayList();
+    private List<ContentFunction> _functions = new ArrayList<ContentFunction>();
     
     {
         _functions.add(new PageCounterFunction());
@@ -49,8 +48,8 @@ public class ContentFunctionFactory {
     }
     
     public ContentFunction lookupFunction(LayoutContext c, FSFunction function) {
-        for (Iterator i = _functions.iterator(); i.hasNext(); ) {
-            ContentFunction f = (ContentFunction)i.next();
+        for (Iterator<ContentFunction> i = _functions.iterator(); i.hasNext(); ) {
+            ContentFunction f = i.next();
             if (f.canHandle(c, function)) {
                 return f;
             }

@@ -20,6 +20,7 @@
 package org.xhtmlrenderer.util;
 
 import java.awt.*;
+import java.awt.RenderingHints.Key;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,8 +110,8 @@ public class ScalingOptions {
 	 *
 	 * @return Map of rendering hints.
 	 */
-	protected Map getRenderingHints() {
-		HashMap map = new HashMap();
+	protected Map<Key, Object> getRenderingHints() {
+		HashMap<Key, Object> map = new HashMap<Key, Object>();
 		map.put(RenderingHints.KEY_INTERPOLATION, getRenderingHint());
 		return map;
 	}

@@ -187,12 +187,12 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
         }
     }
 
-    protected List checkInheritAll(CSSName[] all, List values, int origin, boolean important, boolean inheritAllowed) {
+    protected List<PropertyDeclaration> checkInheritAll(CSSName[] all, List values, int origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             CSSPrimitiveValue value = (CSSPrimitiveValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
             if (value.getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {
-                List result = new ArrayList(all.length);
+                List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(all.length);
                 for (int i = 0; i < all.length; i++) {
                     result.add(
                             new PropertyDeclaration(all[i], value, important, origin));

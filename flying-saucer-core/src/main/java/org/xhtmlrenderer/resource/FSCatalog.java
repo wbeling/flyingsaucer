@@ -67,9 +67,9 @@ public class FSCatalog {
      *
      * @param catalogURI A String URI to a catalog XML file on the classpath.
      */
-    public Map parseCatalog(String catalogURI) {
+    public Map<String, String> parseCatalog(String catalogURI) {
         URL url;
-        Map map = null;
+        Map<String, String> map = null;
         InputStream s = null;
         try {
             url = FSCatalog.class.getClassLoader().getResource(catalogURI);
@@ -77,7 +77,7 @@ public class FSCatalog {
             map = parseCatalog(new InputSource(s));
         } catch (Exception ex) {
             XRLog.xmlEntities(Level.WARNING, "Could not open XML catalog from URI '" + catalogURI + "'", ex);
-            map = new HashMap();
+            map = new HashMap<String, String>();
         } finally {
             try {
                 if (s != null) {
@@ -96,7 +96,7 @@ public class FSCatalog {
      *
      * @param inputSource A SAX InputSource to a catalog XML file on the classpath.
      */
-    public Map parseCatalog(InputSource inputSource) {
+    public Map<String, String> parseCatalog(InputSource inputSource) {
         XMLReader xmlReader = XMLResource.newXMLReader();
 
         CatalogContentHandler ch = new CatalogContentHandler();
@@ -150,16 +150,16 @@ public class FSCatalog {
      * parse, then call getEntityMap().
      */
     private static class CatalogContentHandler extends DefaultHandler {
-        private Map entityMap;
+        private Map<String, String> entityMap;
 
         public CatalogContentHandler() {
-            this.entityMap = new HashMap();
+            this.entityMap = new HashMap<String, String>();
         }
 
         /**
          * Returns a Map of public Ids to local URIs
          */
-        public Map getEntityMap() {
+        public Map<String, String> getEntityMap() {
             return entityMap;
         }
 

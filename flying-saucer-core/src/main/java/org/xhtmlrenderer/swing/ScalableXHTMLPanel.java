@@ -50,7 +50,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
 
 	private int scalePolicy = SCALE_POLICY_NONE;
 	private double scale = -1.0d;
-	private ArrayList scListeners = null;
+	private ArrayList<ScaleChangeListener> scListeners = null;
 	/**
 	 * The lastly calculated layout size
 	 */
@@ -61,7 +61,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
 	 */
 	public ScalableXHTMLPanel() {
 		super();
-		scListeners = new ArrayList();
+		scListeners = new ArrayList<ScaleChangeListener>();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
 	 */
 	public ScalableXHTMLPanel(UserAgentCallback uac) {
 		super(uac);
-		scListeners = new ArrayList();
+		scListeners = new ArrayList<ScaleChangeListener>();
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
 	private void scaleChanged() {
 		ScaleChangeEvent evt = new ScaleChangeEvent(this, scale);
 		for (int i = 0; i < scListeners.size(); i++) {
-			ScaleChangeListener scl = (ScaleChangeListener) scListeners.get(i);
+			ScaleChangeListener scl = scListeners.get(i);
 			scl.scaleChanged(evt);
 		}
 	}

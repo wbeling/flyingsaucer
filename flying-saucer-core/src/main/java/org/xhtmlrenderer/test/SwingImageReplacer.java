@@ -22,10 +22,10 @@ import java.util.List;
  * @author patrick
  */
 public class SwingImageReplacer extends ElementReplacer {
-    private final Map imageComponents;
+    private final Map<Element, ReplacedElement> imageComponents;
 
     public SwingImageReplacer() {
-        imageComponents = new HashMap();
+        imageComponents = new HashMap<Element, ReplacedElement>();
     }
 
     public boolean isElementNameMatch() {
@@ -118,7 +118,7 @@ public class SwingImageReplacer extends ElementReplacer {
         if (imageComponents.size() == 0) {
             return null;
         }
-        ReplacedElement replacedElement = (ReplacedElement) imageComponents.get(e);
+        ReplacedElement replacedElement = imageComponents.get(e);
         return replacedElement;
     }
 

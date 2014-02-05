@@ -53,7 +53,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
     private static StylesheetInfo _defaultStylesheet;
     private static boolean _defaultStylesheetError = false;
 
-    private final Map _metadata = null;
+    private final Map<String, String> _metadata = null;
 
     /**
      * Gets the namespace attribute of the XhtmlNamespaceHandler object
@@ -327,7 +327,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @return The stylesheetLinks value
      */
     public StylesheetInfo[] getStylesheets(org.w3c.dom.Document doc) {
-        List result = new ArrayList();
+        List<StylesheetInfo> result = new ArrayList<StylesheetInfo>();
         //get the processing-instructions (actually for XmlDocuments)
         result.addAll(Arrays.asList(super.getStylesheets(doc)));
 
@@ -358,7 +358,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
             }
         }
 
-        return (StylesheetInfo[])result.toArray(new StylesheetInfo[result.size()]);
+        return result.toArray(new StylesheetInfo[result.size()]);
     }
 
     public StylesheetInfo getDefaultStylesheet(StylesheetFactory factory) {
@@ -422,12 +422,12 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return stream;
     }
 
-    private Map getMetaInfo(org.w3c.dom.Document doc) {
+    private Map<String, String> getMetaInfo(org.w3c.dom.Document doc) {
         if(this._metadata != null) {
             return this._metadata;
         }
 
-        Map metadata = new HashMap();
+        Map<String, String> metadata = new HashMap<String, String>();
 
         Element html = doc.getDocumentElement();
         Element head = findFirstChild(html, "head");
@@ -460,7 +460,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
     public String getLang(org.w3c.dom.Element e) {
         String lang = e.getAttribute("lang");
         if(lang.equals("")) {
-            lang = (String) this.getMetaInfo(e.getOwnerDocument()).get("Content-Language");
+            lang = this.getMetaInfo(e.getOwnerDocument()).get("Content-Language");
             if(lang == null) {
                 lang = "";
             }

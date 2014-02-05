@@ -81,10 +81,10 @@ public class PageSize {
             new FSCssValue(CSSPrimitiveValue.CSS_MM, "11in"),
             new FSCssValue(CSSPrimitiveValue.CSS_MM, "17in"));
     
-    private static final Map SIZE_MAP;
+    private static final Map<String, PageSize> SIZE_MAP;
     
     static {
-        SIZE_MAP = new HashMap();
+        SIZE_MAP = new HashMap<String, PageSize>();
         SIZE_MAP.put("A3", A3);
         SIZE_MAP.put("A4", A4);
         SIZE_MAP.put("A5", A5);
@@ -115,6 +115,6 @@ public class PageSize {
     }
     
     public static PageSize resolvePageSize(String pageSize) {
-        return (PageSize)SIZE_MAP.get(pageSize);
+        return SIZE_MAP.get(pageSize);
     }
 }

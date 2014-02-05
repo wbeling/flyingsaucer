@@ -48,7 +48,7 @@ public class StylesheetInfo {
     /** Description of the Field */
     private String type;
     
-    private List mediaTypes = new ArrayList();
+    private List<String> mediaTypes = new ArrayList<String>();
     
     private String content;
 
@@ -87,14 +87,14 @@ public class StylesheetInfo {
      */
     public void setMedia( String media ) {
         String[] mediaTypes = media.split(",");
-        List l = new ArrayList(mediaTypes.length);
+        List<String> l = new ArrayList<String>(mediaTypes.length);
         for (int i = 0; i < mediaTypes.length; i++) {
             l.add(mediaTypes[i].trim().toLowerCase());
         }
         this.mediaTypes = l;
     }
     
-    public void setMedia(List mediaTypes) {
+    public void setMedia(List<String> mediaTypes) {
         this.mediaTypes = mediaTypes;
     }
     
@@ -152,7 +152,7 @@ public class StylesheetInfo {
      *
      * @return   The media value
      */
-    public List getMedia() {
+    public List<String> getMedia() {
         return mediaTypes;
     }
 

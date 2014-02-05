@@ -75,7 +75,7 @@ public abstract class Box implements Styleable {
 
     private Box _parent;
 
-    private List _boxes;
+    private List<Box> _boxes;
 
     /**
      * Keeps track of the start of childrens containing block.
@@ -134,7 +134,7 @@ public abstract class Box implements Styleable {
 
     public void addChild(Box child) {
         if (_boxes == null) {
-            _boxes = new ArrayList();
+            _boxes = new ArrayList<Box>();
         }
         if (child == null) {
             throw new NullPointerException("trying to add null child");
@@ -216,7 +216,7 @@ public abstract class Box implements Styleable {
         if (_boxes == null) {
             throw new IndexOutOfBoundsException();
         } else {
-            return (Box) _boxes.get(i);
+            return _boxes.get(i);
         }
     }
 
@@ -496,8 +496,8 @@ public abstract class Box implements Styleable {
         }
     }
 
-    public List getElementBoxes(Element elem) {
-        List result = new ArrayList();
+    public List<Box> getElementBoxes(Element elem) {
+        List<Box> result = new ArrayList<Box>();
         for (int i = 0; i < getChildCount(); i++) {
             Box child = getChild(i);
             if (child.getElement() == elem) {

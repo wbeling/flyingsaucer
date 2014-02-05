@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class DataURLConnection extends URLConnection {
 
-    private Map _headers = new HashMap();
+    private Map<String, String> _headers = new HashMap<String, String>();
     private byte [] _data;
 
     DataURLConnection(URL u) {
@@ -44,7 +44,7 @@ public class DataURLConnection extends URLConnection {
     }
 
     public String getContentType() {
-        String type = (String) _headers.get("Content-Type");
+        String type = _headers.get("Content-Type");
         
         if (type == null) {
             return "Content-Type: text/plain; charset=US-ASCII";
@@ -82,7 +82,7 @@ public class DataURLConnection extends URLConnection {
         String data = sub.substring(comma + 1);
 
         boolean isBase64 = false;
-        Map properties = new HashMap();
+        Map<String, String> properties = new HashMap<String, String>();
         
         properties.put("charset", "US-ASCII");
         
@@ -114,7 +114,7 @@ public class DataURLConnection extends URLConnection {
             }
         }
         
-        String charset = (String) properties.get("charset");
+        String charset = properties.get("charset");
 
         // Make sure we have a supported charset
         if (!Charset.isSupported(charset)) {

@@ -1762,7 +1762,7 @@ public class BlockBox extends Box implements InlinePaintable {
     // FIXME Should be expanded into generic restyle facility
     public void styleText(LayoutContext c, CalculatedStyle style) {
         if (getChildrenContentType() == CONTENT_INLINE) {
-            LinkedList styles = new LinkedList();
+            LinkedList<CalculatedStyle> styles = new LinkedList<CalculatedStyle>();
             styles.add(style);
             for (Iterator i = _inlineContent.iterator(); i.hasNext();) {
                 Styleable child = (Styleable) i.next();
@@ -1778,13 +1778,13 @@ public class BlockBox extends Box implements InlinePaintable {
                                 cs = c.getCss().getPseudoElementStyle(
                                         iB.getElement(), iB.getPseudoElementOrClass());
                             }
-                            styles.add(((CalculatedStyle) styles.getLast()).deriveStyle(cs));
+                            styles.add(styles.getLast().deriveStyle(cs));
                         } else {
                             styles.add(style.createAnonymousStyle(IdentValue.INLINE));
                         }
                     }
 
-                    iB.setStyle(((CalculatedStyle) styles.getLast()));
+                    iB.setStyle(styles.getLast());
                     iB.applyTextTransform();
 
                     if (iB.isEndsHere()) {

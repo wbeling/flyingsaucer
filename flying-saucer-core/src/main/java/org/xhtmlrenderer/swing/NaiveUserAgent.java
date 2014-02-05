@@ -64,7 +64,7 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
     /**
      * a (simple) LRU cache
      */
-    protected LinkedHashMap _imageCache;
+    protected LinkedHashMap<String, ImageResource> _imageCache;
     private int _imageCacheCapacity;
     private String _baseURL;
 
@@ -85,7 +85,7 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
 
         // note we do *not* override removeEldestEntry() here--users of this class must call shrinkImageCache().
         // that's because we don't know when is a good time to flush the cache
-        this._imageCache = new java.util.LinkedHashMap(_imageCacheCapacity, 0.75f, true);
+        this._imageCache = new java.util.LinkedHashMap<String, ImageResource>(_imageCacheCapacity, 0.75f, true);
     }
 
     /**
@@ -94,7 +94,7 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
      */
     public void shrinkImageCache() {
         int ovr = _imageCache.size() - _imageCacheCapacity;
-        Iterator it = _imageCache.keySet().iterator();
+        Iterator<String> it = _imageCache.keySet().iterator();
         while (it.hasNext() && ovr-- > 0) {
             it.next();
             it.remove();
@@ -157,7 +157,7 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
             ir = createImageResource(null, image);
         } else {
             uri = resolveURI(uri);
-            ir = (ImageResource) _imageCache.get(uri);
+            ir = _imageCache.get(uri);
             //TODO: check that cached image is still valid
             if (ir == null) {
                 InputStream is = resolveAndOpenStream(uri);

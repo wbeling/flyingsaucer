@@ -31,8 +31,8 @@ public class BorderSpacingPropertyBuilder extends AbstractPropertyBuilder {
     private static final CSSName[] ALL = new CSSName[] {
         CSSName.FS_BORDER_SPACING_HORIZONTAL, CSSName.FS_BORDER_SPACING_VERTICAL };
     
-    public List buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
-        List result = checkInheritAll(ALL, values, origin, important, inheritAllowed);
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+        List<PropertyDeclaration> result = checkInheritAll(ALL, values, origin, important, inheritAllowed);
         if (result != null) {
             return result;
         }
@@ -70,7 +70,7 @@ public class BorderSpacingPropertyBuilder extends AbstractPropertyBuilder {
                     CSSName.FS_BORDER_SPACING_VERTICAL, vertical, important, origin);            
         }
         
-        result = new ArrayList(2);
+        result = new ArrayList<PropertyDeclaration>(2);
         result.add(horizontalSpacing);
         result.add(verticalSpacing);
         

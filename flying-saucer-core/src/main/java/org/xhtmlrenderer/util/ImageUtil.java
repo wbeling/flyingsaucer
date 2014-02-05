@@ -39,10 +39,10 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class ImageUtil {
 
-    private static final Map qual;
+    private static final Map<DownscaleQuality, Scaler> qual;
 
     static {
-        qual = new HashMap();
+        qual = new HashMap<DownscaleQuality, Scaler>();
         qual.put(DownscaleQuality.FAST, new OldScaler());
         qual.put(DownscaleQuality.HIGH_QUALITY, new HighQualityScaler());
         qual.put(DownscaleQuality.LOW_QUALITY, new FastScaler());
@@ -173,7 +173,7 @@ public class ImageUtil {
         w = (opt.getTargetWidth() <= 0 ? w : opt.getTargetWidth());
         h = (opt.getTargetHeight() <= 0 ? h : opt.getTargetHeight());
 
-        Scaler scaler = (ImageUtil.Scaler) qual.get(opt.getDownscalingHint());
+        Scaler scaler = qual.get(opt.getDownscalingHint());
         opt.setTargetWidth(w);
         opt.setTargetHeight(h);
 
@@ -220,8 +220,8 @@ public class ImageUtil {
      *                   not check for duplicate dimensions.
      * @return List of buffered images in the given dimensions.
      */
-    public static java.util.List scaleMultiple(ScalingOptions opt, BufferedImage img, java.util.List dimensions) {
-        java.util.List scaledImages = new ArrayList(dimensions.size());
+    public static java.util.List<BufferedImage> scaleMultiple(ScalingOptions opt, BufferedImage img, java.util.List dimensions) {
+        java.util.List<BufferedImage> scaledImages = new ArrayList<BufferedImage>(dimensions.size());
 
         Iterator iter = dimensions.iterator();
         while (iter.hasNext()) {

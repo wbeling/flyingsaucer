@@ -102,21 +102,21 @@ public class FloatManager {
         }
     }
 
-    private List getFloats(int direction) {
+    private List<BoxOffset> getFloats(int direction) {
         return direction == LEFT ? _leftFloats : _rightFloats;
     }
 
-    private List getOpposingFloats(int direction) {
+    private List<BoxOffset> getOpposingFloats(int direction) {
         return direction == LEFT ? _rightFloats : _leftFloats;
     }
 
     private void alignToLastFloat(CssContext cssCtx,
                                   BlockFormattingContext bfc, BlockBox current, int direction) {
 
-        List floats = getFloats(direction);
+        List<BoxOffset> floats = getFloats(direction);
         if (floats.size() > 0) {
             Point offset = bfc.getOffset();
-            BoxOffset lastOffset = (BoxOffset) floats.get(floats.size() - 1);
+            BoxOffset lastOffset = floats.get(floats.size() - 1);
             BlockBox last = lastOffset.getBox();
 
             Rectangle currentBounds = current.getMarginEdge(cssCtx, -offset.x, -offset.y);
@@ -152,10 +152,10 @@ public class FloatManager {
     private void alignToLastOpposingFloat(CssContext cssCtx,
                                           BlockFormattingContext bfc, BlockBox current, int direction) {
 
-        List floats = getOpposingFloats(direction);
+        List<BoxOffset> floats = getOpposingFloats(direction);
         if (floats.size() > 0) {
             Point offset = bfc.getOffset();
-            BoxOffset lastOffset = (BoxOffset) floats.get(floats.size() - 1);
+            BoxOffset lastOffset = floats.get(floats.size() - 1);
 
             Rectangle currentBounds = current.getMarginEdge(cssCtx, -offset.x, -offset.y);
 
@@ -185,11 +185,11 @@ public class FloatManager {
                 (current.getX() + current.getWidth()) <= current.getContainingBlock().getContentWidth();
     }
 
-    private int findLowestY(CssContext cssCtx, List floats) {
+    private int findLowestY(CssContext cssCtx, List<BoxOffset> floats) {
         int result = 0;
 
-        for (Iterator i = floats.iterator(); i.hasNext();) {
-            BoxOffset floater = (BoxOffset) i.next();
+        for (Iterator<BoxOffset> i = floats.iterator(); i.hasNext();) {
+            BoxOffset floater = i.next();
 
             Rectangle bounds = floater.getBox().getMarginEdge(
                     cssCtx, -floater.getX(), -floater.getY());
@@ -211,12 +211,12 @@ public class FloatManager {
     }
 
     private boolean overlaps(CssContext cssCtx, BlockFormattingContext bfc,
-                             BlockBox current, List floats) {
+                             BlockBox current, List<BoxOffset> floats) {
         Point offset = bfc.getOffset();
         Rectangle bounds = current.getMarginEdge(cssCtx, -offset.x, -offset.y);
 
-        for (Iterator i = floats.iterator(); i.hasNext();) {
-            BoxOffset floater = (BoxOffset) i.next();
+        for (Iterator<BoxOffset> i = floats.iterator(); i.hasNext();) {
+            BoxOffset floater = i.next();
             Rectangle floaterBounds = floater.getBox().getMarginEdge(cssCtx,
                     -floater.getX(), -floater.getY());
 
@@ -229,7 +229,7 @@ public class FloatManager {
     }
 
     private void moveFloatBelow(CssContext cssCtx, BlockFormattingContext bfc,
-                                   Box current, List floats) {
+                                   Box current, List<BoxOffset> floats) {
         if (floats.size() == 0) {
             return;
         }
@@ -244,7 +244,7 @@ public class FloatManager {
     }
 
     private void moveClear(CssContext cssCtx, BlockFormattingContext bfc,
-                           Box current, List floats) {
+                           Box current, List<BoxOffset> floats) {
         if (floats.size() == 0) {
             return;
         }
@@ -272,9 +272,9 @@ public class FloatManager {
         removeFloat(floater, getFloats(RIGHT));
     }
 
-    private void removeFloat(BlockBox floater, List floats) {
-        for (Iterator i = floats.iterator(); i.hasNext();) {
-            BoxOffset boxOffset = (BoxOffset) i.next();
+    private void removeFloat(BlockBox floater, List<BoxOffset> floats) {
+        for (Iterator<BoxOffset> i = floats.iterator(); i.hasNext();) {
+            BoxOffset boxOffset = i.next();
             if (boxOffset.getBox().equals(floater)) {
                 i.remove();
                 floater.getFloatedBoxData().setManager(null);
@@ -287,9 +287,9 @@ public class FloatManager {
         calcFloatLocations(getFloats(RIGHT));
     }
 
-    private void calcFloatLocations(List floats) {
-        for (Iterator i = floats.iterator(); i.hasNext();) {
-            BoxOffset boxOffset = (BoxOffset) i.next();
+    private void calcFloatLocations(List<BoxOffset> floats) {
+        for (Iterator<BoxOffset> i = floats.iterator(); i.hasNext();) {
+            BoxOffset boxOffset = i.next();
             boxOffset.getBox().calcCanvasLocation();
             boxOffset.getBox().calcChildLocations();
         }
@@ -393,9 +393,9 @@ public class FloatManager {
                 floater.getStyle().isFloatedLeft() ? getFloats(LEFT) : getFloats(RIGHT));
     }
 
-    private Point getOffset(BlockBox floater, List floats) {
-        for (Iterator i = floats.iterator(); i.hasNext();) {
-            BoxOffset boxOffset = (BoxOffset) i.next();
+    private Point getOffset(BlockBox floater, List<BoxOffset> floats) {
+        for (Iterator<BoxOffset> i = floats.iterator(); i.hasNext();) {
+            BoxOffset boxOffset = i.next();
             BlockBox box = boxOffset.getBox();
 
             if (box.equals(floater)) {
@@ -406,9 +406,9 @@ public class FloatManager {
         return null;
     }
 
-    private void performFloatOperation(FloatOperation op, List floats) {
-        for (Iterator i = floats.iterator(); i.hasNext();) {
-            BoxOffset boxOffset = (BoxOffset) i.next();
+    private void performFloatOperation(FloatOperation op, List<BoxOffset> floats) {
+        for (Iterator<BoxOffset> i = floats.iterator(); i.hasNext();) {
+            BoxOffset boxOffset = i.next();
             BlockBox box = boxOffset.getBox();
 
             box.setAbsX(box.getX() + getMaster().getAbsX() - boxOffset.getX());

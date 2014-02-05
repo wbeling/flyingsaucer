@@ -35,18 +35,18 @@ public class BorderPropertyBuilders {
     private static abstract class BorderSidePropertyBuilder extends AbstractPropertyBuilder {
         protected abstract CSSName[][] getProperties();
         
-        private void addAll(List result, CSSName[] properties, CSSPrimitiveValue value, int origin, boolean important) {
+        private void addAll(List<PropertyDeclaration> result, CSSName[] properties, CSSPrimitiveValue value, int origin, boolean important) {
             for (int i = 0; i < properties.length; i++) {
                 result.add(new PropertyDeclaration(
                         properties[i], value, important, origin));
             }
         }
         
-        public List buildDeclarations(
+        public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
             CSSName[][] props = getProperties();
             
-            List result = new ArrayList(3);
+            List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(3);
             
             if (values.size() == 1 && 
                     ((CSSPrimitiveValue)values.get(0)).getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {

@@ -49,11 +49,11 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     /**
      * Cache of image components (ReplacedElements) for quick lookup, keyed by Element.
      */
-    protected Map imageComponents;
+    protected Map<CacheKey, ReplacedElement> imageComponents;
     /**
      * Cache of XhtmlForms keyed by Element.
      */
-    protected LinkedHashMap forms;
+    protected LinkedHashMap<Element, XhtmlForm> forms;
 
     private FormSubmissionListener formSubmissionListener;
 
@@ -172,7 +172,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             return null;
         }
         CacheKey key = new CacheKey(elem, ruri, cssWidth, cssHeight);
-        return (ReplacedElement) imageComponents.get(key);
+        return imageComponents.get(key);
     }
 
 
@@ -217,7 +217,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      */
     protected void storeImageReplacedElement(Element e, ReplacedElement cc, String uri, final int cssWidth, final int cssHeight) {
         if (imageComponents == null) {
-            imageComponents = new HashMap();
+            imageComponents = new HashMap<CacheKey, ReplacedElement>();
         }
         CacheKey key = new CacheKey(e, uri, cssWidth, cssHeight);
         imageComponents.put(key, cc);
@@ -242,7 +242,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      */
     protected void addForm(Element e, XhtmlForm f) {
         if (forms == null) {
-            forms = new LinkedHashMap();
+            forms = new LinkedHashMap<Element, XhtmlForm>();
         }
         forms.put(e, f);
     }
@@ -257,7 +257,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         if (forms == null) {
             return null;
         }
-        return (XhtmlForm) forms.get(e);
+        return forms.get(e);
     }
 
     /**

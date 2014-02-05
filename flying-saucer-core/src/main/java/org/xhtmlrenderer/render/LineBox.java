@@ -63,7 +63,7 @@ public class LineBox extends Box implements InlinePaintable {
     private int _paintingTop;
     private int _paintingHeight;
     
-    private List _nonFlowContent;
+    private List<BlockBox> _nonFlowContent;
     
     private MarkerData _markerData;
     
@@ -366,7 +366,7 @@ public class LineBox extends Box implements InlinePaintable {
     }
     
     
-    public void addAllChildren(List list, Layer layer) {
+    public void addAllChildren(List<Box> list, Layer layer) {
         for (int i = 0; i < getChildCount(); i++) {
             Box child = getChild(i);
             if (getContainingLayer() == layer) {
@@ -384,7 +384,7 @@ public class LineBox extends Box implements InlinePaintable {
     
     public void addNonFlowContent(BlockBox box) {
         if (_nonFlowContent == null) {
-            _nonFlowContent = new ArrayList();
+            _nonFlowContent = new ArrayList<BlockBox>();
         }
         
         _nonFlowContent.add(box);

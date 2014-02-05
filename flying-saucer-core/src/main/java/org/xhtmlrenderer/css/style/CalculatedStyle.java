@@ -91,7 +91,7 @@ public class CalculatedStyle {
     /**
      * Cache child styles of this style that have the same cascaded properties
      */
-    private final java.util.HashMap _childCache = new java.util.HashMap();
+    private final java.util.HashMap<String, CalculatedStyle> _childCache = new java.util.HashMap<String, CalculatedStyle>();
     /*private java.util.HashMap _childCache = new java.util.LinkedHashMap(5, 0.75f, true) {
         private static final int MAX_ENTRIES = 10;
 
@@ -176,7 +176,7 @@ public class CalculatedStyle {
      */
     public synchronized CalculatedStyle deriveStyle(CascadedStyle matched) {
         String fingerprint = matched.getFingerprint();
-        CalculatedStyle cs = (CalculatedStyle) _childCache.get(fingerprint);
+        CalculatedStyle cs = _childCache.get(fingerprint);
 
         if (cs == null) {
             cs = new CalculatedStyle(this, matched);
@@ -1155,13 +1155,13 @@ public class CalculatedStyle {
                 isIdent(CSSName.BACKGROUND_IMAGE, IdentValue.NONE));
     }
 
-    public List getTextDecorations() {
+    public List<FSDerivedValue> getTextDecorations() {
         FSDerivedValue value = valueByName(CSSName.TEXT_DECORATION);
         if (value == IdentValue.NONE) {
             return null;
         } else {
             List idents = ((ListValue) value).getValues();
-            List result = new ArrayList(idents.size());
+            List<FSDerivedValue> result = new ArrayList<FSDerivedValue>(idents.size());
             for (Iterator i = idents.iterator(); i.hasNext();) {
                 result.add(DerivedValueFactory.newDerivedValue(
                         this, CSSName.TEXT_DECORATION, (PropertyValue) i.next()));

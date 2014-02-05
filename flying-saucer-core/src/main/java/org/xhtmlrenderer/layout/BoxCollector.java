@@ -39,7 +39,7 @@ import org.xhtmlrenderer.render.RenderingContext;
 public class BoxCollector {
     public void collect(
             CssContext c, Shape clip, Layer layer, 
-            List blockContent, List inlineContent, BoxRangeLists rangeLists) {
+            List<Box> blockContent, List<Box> inlineContent, BoxRangeLists rangeLists) {
         if (layer.isInline()) {
             collectInlineLayer(c, clip, layer, blockContent, inlineContent, rangeLists);
         } else {
@@ -54,7 +54,7 @@ public class BoxCollector {
     
     private void collectInlineLayer(
             CssContext c, Shape clip, Layer layer, 
-            List blockContent, List inlineContent, BoxRangeLists rangeLists) {
+            List<Box> blockContent, List<Box> inlineContent, BoxRangeLists rangeLists) {
         InlineLayoutBox iB = (InlineLayoutBox)layer.getMaster();
         List content = iB.getElementWithContent();
         
@@ -92,7 +92,7 @@ public class BoxCollector {
     
     public void collect(
             CssContext c, Shape clip, Layer layer, Box container, 
-            List blockContent, List inlineContent, BoxRangeLists rangeLists) {
+            List<Box> blockContent, List<Box> inlineContent, BoxRangeLists rangeLists) {
         if (layer != container.getContainingLayer()) {
             return;
         }
@@ -149,7 +149,7 @@ public class BoxCollector {
     }
 
     private void saveRangeData(
-            CssContext c, Box container, List blockContent, List inlineContent,
+            CssContext c, Box container, List<Box> blockContent, List<Box> inlineContent,
             BoxRangeLists rangeLists, boolean isBlock, int blockStart, int inlineStart,
             int blockRangeStart, int inlineRangeStart) {
         if (isBlock && c instanceof RenderingContext) {

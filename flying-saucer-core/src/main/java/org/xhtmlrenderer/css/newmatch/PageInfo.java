@@ -58,18 +58,18 @@ public class PageInfo {
     }
     
     public CascadedStyle createMarginBoxStyle(MarginBoxName marginBox, boolean alwaysCreate) {
-        List marginProps = (List)_marginBoxes.get(marginBox);
+        List<PropertyDeclaration> marginProps = (List<PropertyDeclaration>)_marginBoxes.get(marginBox);
         
         if ((marginProps == null || marginProps.size() == 0) && ! alwaysCreate) {
             return null;
         }
         
-        List all;
+        List<PropertyDeclaration> all;
         if (marginProps != null) {
-            all = new ArrayList(marginProps.size() + 3);
+            all = new ArrayList<PropertyDeclaration>(marginProps.size() + 3);
             all.addAll(marginProps);    
         } else {
-            all = new ArrayList(3);
+            all = new ArrayList<PropertyDeclaration>(3);
         }
         
         all.add(CascadedStyle.createLayoutPropertyDeclaration(CSSName.DISPLAY, IdentValue.TABLE_CELL));

@@ -506,7 +506,7 @@ abstract class Condition {
         if (s.indexOf(ch) == -1) {
             return new String[] { s };
         } else {
-            List result = new ArrayList();
+            List<String> result = new ArrayList<String>();
             
             int last = 0;
             int next = 0;
@@ -522,7 +522,7 @@ abstract class Condition {
                 result.add(s.substring(last));
             }
             
-            return (String[])result.toArray(new String[result.size()]);
+            return result.toArray(new String[result.size()]);
         }
     }    
 }

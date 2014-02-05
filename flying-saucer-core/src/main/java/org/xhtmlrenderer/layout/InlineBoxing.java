@@ -66,21 +66,21 @@ public class InlineBoxing {
 
         int contentStart = 0;
 
-        List openInlineBoxes = null;
+        List<InlineBox> openInlineBoxes = null;
 
-        Map iBMap = new HashMap();
+        Map<InlineBox, InlineLayoutBox> iBMap = new HashMap<InlineBox, InlineLayoutBox>();
 
         if (box instanceof AnonymousBlockBox) {
             openInlineBoxes = ((AnonymousBlockBox)box).getOpenInlineBoxes();
             if (openInlineBoxes != null) {
-                openInlineBoxes = new ArrayList(openInlineBoxes);
+                openInlineBoxes = new ArrayList<InlineBox>(openInlineBoxes);
                 currentIB = addOpenInlineBoxes(
                         c, currentLine, openInlineBoxes, maxAvailableWidth, iBMap);
             }
         }
 
         if (openInlineBoxes == null) {
-            openInlineBoxes = new ArrayList();
+            openInlineBoxes = new ArrayList<InlineBox>();
         }
 
         remainingWidth -= c.getBlockFormattingContext().getFloatDistance(c, currentLine, remainingWidth);
@@ -98,12 +98,12 @@ public class InlineBoxing {
         }
         c.setCurrentMarkerData(null);
 
-        List pendingFloats = new ArrayList();
+        List<FloatLayoutResult> pendingFloats = new ArrayList<FloatLayoutResult>();
         int pendingLeftMBP = 0;
         int pendingRightMBP = 0;
 
         boolean hasFirstLinePEs = false;
-        List pendingInlineLayers = new ArrayList();
+        List<Layer> pendingInlineLayers = new ArrayList<Layer>();
 
         if (c.getFirstLinesTracker().hasStyles()) {
             box.styleText(c, c.getFirstLinesTracker().deriveAll(box.getStyle()));
@@ -482,7 +482,7 @@ public class InlineBoxing {
             InlineBoxMeasurements measurements = getInitialMeasurements(c, container, strutM);
             vaContext.setInitialMeasurements(measurements);
 
-            List lBDecorations = calculateTextDecorations(
+            List<TextDecoration> lBDecorations = calculateTextDecorations(
                     container, measurements.getBaseline(), strutM);
             if (lBDecorations != null) {
                 current.setTextDecorations(lBDecorations);
@@ -503,8 +503,8 @@ public class InlineBoxing {
             if (vaContext.getInlineTop() < 0) {
                 moveLineContents(current, -vaContext.getInlineTop());
                 if (lBDecorations != null) {
-                    for (Iterator i = lBDecorations.iterator(); i.hasNext(); ) {
-                        TextDecoration lBDecoration = (TextDecoration)i.next();
+                    for (Iterator<TextDecoration> i = lBDecorations.iterator(); i.hasNext(); ) {
+                        TextDecoration lBDecoration = i.next();
                         lBDecoration.setOffset(lBDecoration.getOffset() - vaContext.getInlineTop());
                     }
                 }
@@ -587,7 +587,7 @@ public class InlineBoxing {
         iB.setBaseline(Math.round(fm.getAscent()));
 
         alignInlineContent(c, iB, fm.getAscent(), fm.getDescent(), vaContext);
-        List decorations = calculateTextDecorations(iB, iB.getBaseline(), fm);
+        List<TextDecoration> decorations = calculateTextDecorations(iB, iB.getBaseline(), fm);
         if (decorations != null) {
             iB.setTextDecorations(decorations);
         }
@@ -610,14 +610,14 @@ public class InlineBoxing {
         return result;
     }
 
-    public static List calculateTextDecorations(Box box, int baseline,
+    public static List<TextDecoration> calculateTextDecorations(Box box, int baseline,
             FSFontMetrics fm) {
-        List result = null;
+        List<TextDecoration> result = null;
         CalculatedStyle style = box.getStyle();
 
         List idents = style.getTextDecorations();
         if (idents != null) {
-            result = new ArrayList(idents.size());
+            result = new ArrayList<TextDecoration>(idents.size());
             if (idents.contains(IdentValue.UNDERLINE)) {
                 TextDecoration decoration = new TextDecoration(IdentValue.UNDERLINE);
                 // JDK returns zero so create additional space equal to one
@@ -746,8 +746,8 @@ public class InlineBoxing {
 
     private static void saveLine(LineBox current, LayoutContext c,
                                  BlockBox block, int minHeight,
-                                 int maxAvailableWidth, List pendingFloats,
-                                 boolean hasFirstLinePCs, List pendingInlineLayers,
+                                 int maxAvailableWidth, List<FloatLayoutResult> pendingFloats,
+                                 boolean hasFirstLinePCs, List<Layer> pendingInlineLayers,
                                  MarkerData markerData, int contentStart, boolean alwaysBreak) {
         current.setContentStart(contentStart);
         current.prunePendingInlineBoxes();
@@ -786,8 +786,8 @@ public class InlineBoxing {
         }
 
         if (pendingFloats.size() > 0) {
-            for (Iterator i = pendingFloats.iterator(); i.hasNext(); ) {
-                FloatLayoutResult layoutResult = (FloatLayoutResult)i.next();
+            for (Iterator<FloatLayoutResult> i = pendingFloats.iterator(); i.hasNext(); ) {
+                FloatLayoutResult layoutResult = i.next();
                 LayoutUtil.layoutFloated(c, current, layoutResult.getBlock(), maxAvailableWidth, null);
                 current.addNonFlowContent(layoutResult.getBlock());
             }
@@ -822,9 +822,9 @@ public class InlineBoxing {
         }
     }
 
-    private static void finishPendingInlineLayers(LayoutContext c, List layers) {
+    private static void finishPendingInlineLayers(LayoutContext c, List<Layer> layers) {
         for (int i = 0; i < layers.size(); i++) {
-            Layer l = (Layer)layers.get(i);
+            Layer l = layers.get(i);
             l.positionChildren(c);
         }
     }
@@ -851,7 +851,7 @@ public class InlineBoxing {
 
     private static int processOutOfFlowContent(
             LayoutContext c, LineBox current, BlockBox block,
-            int available, List pendingFloats) {
+            int available, List<FloatLayoutResult> pendingFloats) {
         int result = 0;
         CalculatedStyle style = block.getStyle();
         if (style.isAbsolute() || style.isFixed()) {
@@ -922,19 +922,19 @@ public class InlineBoxing {
     }
 
     private static InlineLayoutBox addOpenInlineBoxes(
-            LayoutContext c, LineBox line, List openParents, int cbWidth, Map iBMap) {
-        ArrayList result = new ArrayList();
+            LayoutContext c, LineBox line, List<InlineBox> openParents, int cbWidth, Map<InlineBox, InlineLayoutBox> iBMap) {
+        ArrayList<InlineBox> result = new ArrayList<InlineBox>();
 
         InlineLayoutBox currentIB = null;
         InlineLayoutBox previousIB = null;
 
         boolean first = true;
-        for (Iterator i = openParents.iterator(); i.hasNext();) {
-            InlineBox iB = (InlineBox)i.next();
+        for (Iterator<InlineBox> i = openParents.iterator(); i.hasNext();) {
+            InlineBox iB = i.next();
             currentIB = new InlineLayoutBox(
                     c, iB.getElement(), iB.getStyle(), cbWidth);
 
-            InlineLayoutBox prev = (InlineLayoutBox)iBMap.get(iB);
+            InlineLayoutBox prev = iBMap.get(iB);
             if (prev != null) {
                 currentIB.setPending(prev.isPending());
             }

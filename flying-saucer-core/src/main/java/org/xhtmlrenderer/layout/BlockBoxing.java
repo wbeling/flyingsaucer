@@ -354,17 +354,17 @@ public class BlockBoxing {
     }
 
     private static class RelayoutDataList {
-        private List _hints;
+        private List<RelayoutData> _hints;
 
         public RelayoutDataList(int size) {
-            _hints = new ArrayList(size);
+            _hints = new ArrayList<RelayoutData>(size);
             for (int i = 0; i < size; i++) {
                 _hints.add(new RelayoutData());
             }
         }
 
         public RelayoutData get(int index) {
-            return (RelayoutData) _hints.get(index);
+            return _hints.get(index);
         }
 
         public void markRun(int offset, BlockBox previous, BlockBox current) {

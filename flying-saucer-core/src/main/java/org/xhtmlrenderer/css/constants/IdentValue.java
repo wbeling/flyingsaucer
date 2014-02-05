@@ -220,7 +220,7 @@ public class IdentValue implements FSDerivedValue {
     /**
      * Description of the Field
      */
-    private static Map ALL_IDENT_VALUES;
+    private static Map<String, IdentValue> ALL_IDENT_VALUES;
 
     /**
      * Constructor for the IdentValue object
@@ -252,7 +252,7 @@ public class IdentValue implements FSDerivedValue {
      * @return see desc.
      */
     public static IdentValue getByIdentString(String ident) {
-        IdentValue val = (IdentValue) ALL_IDENT_VALUES.get(ident);
+        IdentValue val = ALL_IDENT_VALUES.get(ident);
         if (val == null) {
             throw new XRRuntimeException("Ident named " + ident + " has no IdentValue instance assigned to it.");
         }
@@ -263,11 +263,11 @@ public class IdentValue implements FSDerivedValue {
      * TODO: doc
      */
     public static boolean looksLikeIdent(String ident) {
-        return (IdentValue) ALL_IDENT_VALUES.get(ident) != null;
+        return ALL_IDENT_VALUES.get(ident) != null;
     }
 
     public static IdentValue valueOf(String ident) {
-        return (IdentValue)ALL_IDENT_VALUES.get(ident);
+        return ALL_IDENT_VALUES.get(ident);
     }
 
     public static int getIdentCount() {
@@ -282,7 +282,7 @@ public class IdentValue implements FSDerivedValue {
      */
     private final static synchronized IdentValue addValue(String ident) {
         if (ALL_IDENT_VALUES == null) {
-            ALL_IDENT_VALUES = new HashMap();
+            ALL_IDENT_VALUES = new HashMap<String, IdentValue>();
         }
         IdentValue val = new IdentValue(ident);
         ALL_IDENT_VALUES.put(ident, val);

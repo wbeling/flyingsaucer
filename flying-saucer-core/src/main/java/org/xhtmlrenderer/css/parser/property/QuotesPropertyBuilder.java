@@ -34,7 +34,7 @@ import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 
 public class QuotesPropertyBuilder extends AbstractPropertyBuilder {
 
-    public List buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             PropertyValue value = (PropertyValue)values.get(0);
             if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
@@ -53,7 +53,7 @@ public class QuotesPropertyBuilder extends AbstractPropertyBuilder {
                     "Mismatched quotes " + values, -1);
         }
         
-        List resultValues = new ArrayList();
+        List<String> resultValues = new ArrayList<String>();
         for (Iterator i = values.iterator(); i.hasNext(); ) {
             PropertyValue value = (PropertyValue)i.next();
             

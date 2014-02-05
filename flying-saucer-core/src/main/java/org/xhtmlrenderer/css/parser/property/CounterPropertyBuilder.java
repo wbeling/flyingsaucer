@@ -38,7 +38,7 @@ public abstract class CounterPropertyBuilder extends AbstractPropertyBuilder {
     
     // XXX returns a PropertyValue of type VALUE_TYPE_LIST, but the List contains
     // CounterData objects and not PropertyValue objects
-    public List buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             PropertyValue value = (PropertyValue)values.get(0);
             
@@ -62,7 +62,7 @@ public abstract class CounterPropertyBuilder extends AbstractPropertyBuilder {
             
             throw new CSSParseException("The syntax of the " + cssName + " property is invalid", -1);
         } else {
-            List result = new ArrayList();
+            List<CounterData> result = new ArrayList<CounterData>();
             for (int i = 0; i < values.size(); i++) {
                 PropertyValue value = (PropertyValue)values.get(i);
                 

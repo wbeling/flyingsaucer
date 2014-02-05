@@ -33,14 +33,14 @@ import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
  * @author patrick
  */
 public class DelegatingReplacedElementFactory implements ReplacedElementFactory {
-    private final List replacers;
-    private final Map byNameReplacers;
-    private final List elementReplacements;
+    private final List<ElementReplacer> replacers;
+    private final Map<String, ElementReplacer> byNameReplacers;
+    private final List<ERItem> elementReplacements;
 
     public DelegatingReplacedElementFactory() {
-        replacers = new ArrayList();
-        elementReplacements = new ArrayList();
-        byNameReplacers = new HashMap();
+        replacers = new ArrayList<ElementReplacer>();
+        elementReplacements = new ArrayList<ERItem>();
+        byNameReplacers = new HashMap<String, ElementReplacer>();
     }
 
     public ReplacedElement createReplacedElement(final LayoutContext context,
@@ -49,12 +49,12 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
                                                  final int cssWidth,
                                                  final int cssHeight
     ) {
-        final ElementReplacer nameReplacer = (ElementReplacer) byNameReplacers.get(box.getElement().getNodeName());
+        final ElementReplacer nameReplacer = byNameReplacers.get(box.getElement().getNodeName());
         if (nameReplacer != null) {
             return replaceUsing(context, box, uac, cssWidth, cssHeight, nameReplacer);
         }
-        for (Iterator iterator = replacers.iterator(); iterator.hasNext();) {
-            ElementReplacer replacer = (ElementReplacer) iterator.next();
+        for (Iterator<ElementReplacer> iterator = replacers.iterator(); iterator.hasNext();) {
+            ElementReplacer replacer = iterator.next();
             if (replacer.accept(context, box.getElement())) {
                 return replaceUsing(context, box, uac, cssWidth, cssHeight, replacer);
             }
@@ -71,18 +71,18 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
     public void reset() {
         System.out.println("\n\n***Factory reset()");
         elementReplacements.clear();
-        for (Iterator iterator = replacers.iterator(); iterator.hasNext();) {
-            ElementReplacer elementReplacer = (ElementReplacer) iterator.next();
+        for (Iterator<ElementReplacer> iterator = replacers.iterator(); iterator.hasNext();) {
+            ElementReplacer elementReplacer = iterator.next();
             elementReplacer.reset();
         }
-        for (Iterator iterator = byNameReplacers.values().iterator(); iterator.hasNext();) {
-            ((ElementReplacer)iterator.next()).reset();
+        for (Iterator<ElementReplacer> iterator = byNameReplacers.values().iterator(); iterator.hasNext();) {
+            iterator.next().reset();
         }
     }
 
     public void remove(final Element element) {
         final int idx = elementReplacements.indexOf(element);
-        ERItem item = (ERItem) elementReplacements.get(idx);
+        ERItem item = elementReplacements.get(idx);
         elementReplacements.remove(idx);
         item.elementReplacer.clear(element);
     }

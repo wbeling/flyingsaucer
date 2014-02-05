@@ -28,7 +28,7 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.render.RenderingContext;
 
 public class TableSectionBox extends BlockBox {
-    private List _grid = new ArrayList();
+    private List<RowData> _grid = new ArrayList<RowData>();
     
     private boolean _needCellWidthCalc;
     private boolean _needCellRecalc;
@@ -50,24 +50,24 @@ public class TableSectionBox extends BlockBox {
         return result;
     }
     
-    public List getGrid() {
+    public List<RowData> getGrid() {
         return _grid;
     }
 
-    public void setGrid(List grid) {
+    public void setGrid(List<RowData> grid) {
         _grid = grid;
     }
     
     public void extendGridToColumnCount(int columnCount) {
-        for (Iterator i = _grid.iterator(); i.hasNext(); ) {
-            RowData row = (RowData)i.next();
+        for (Iterator<RowData> i = _grid.iterator(); i.hasNext(); ) {
+            RowData row = i.next();
             row.extendToColumnCount(columnCount);
         }
     }
     
     public void splitColumn(int pos) {
-        for (Iterator i = _grid.iterator(); i.hasNext(); ) {
-            RowData row = (RowData)i.next();
+        for (Iterator<RowData> i = _grid.iterator(); i.hasNext(); ) {
+            RowData row = i.next();
             row.splitColumn(pos);
         }
     }
@@ -100,13 +100,13 @@ public class TableSectionBox extends BlockBox {
     
     public TableCellBox cellAt(int row, int col) {
         if (row >= _grid.size()) return null;
-        RowData rowData = (RowData)_grid.get(row);
+        RowData rowData = _grid.get(row);
         if (col >= rowData.getRow().size()) return null;
         return (TableCellBox)rowData.getRow().get(col);
     }
     
     private void setCellAt(int row, int col, TableCellBox cell) {
-        ((RowData)_grid.get(row)).getRow().set(col, cell);
+        _grid.get(row).getRow().set(col, cell);
     }
     
     private void ensureRows(int numRows) {
@@ -195,8 +195,8 @@ public class TableSectionBox extends BlockBox {
     {
         int[] columnPos = getTable().getColumnPos();
         
-        for (Iterator i = _grid.iterator(); i.hasNext(); ) {
-            RowData row = (RowData)i.next();
+        for (Iterator<RowData> i = _grid.iterator(); i.hasNext(); ) {
+            RowData row = i.next();
             List cols = row.getRow();
             int hspacing = getTable().getStyle().getBorderHSpacing(c);
             for (int j = 0; j < cols.size(); j++) {

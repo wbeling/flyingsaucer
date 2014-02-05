@@ -60,8 +60,8 @@ public class FontFaceRule implements RulesetContainer {
     }
 
     public boolean hasFontFamily() {
-        for (Iterator i = _ruleset.getPropertyDeclarations().iterator(); i.hasNext(); ) {
-            PropertyDeclaration decl = (PropertyDeclaration)i.next();
+        for (Iterator<PropertyDeclaration> i = _ruleset.getPropertyDeclarations().iterator(); i.hasNext(); ) {
+            PropertyDeclaration decl = i.next();
             if (decl.getPropertyName().equals("font-family")) {
                 return true;
             }

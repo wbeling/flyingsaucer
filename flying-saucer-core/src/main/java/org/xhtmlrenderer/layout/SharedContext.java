@@ -63,7 +63,7 @@ public class SharedContext {
 
     private boolean interactive = true;
 
-    private Map idMap;
+    private Map<String, Box> idMap;
 
     /*
      * used to adjust fonts, ems, points, into screen resolution
@@ -90,7 +90,7 @@ public class SharedContext {
 
     private int dotsPerPixel = 1;
 
-    private Map styleMap;
+    private Map<Element, CalculatedStyle> styleMap;
 
     private ReplacedElementFactory replacedElementFactory;
     private Rectangle temp_canvas;
@@ -314,16 +314,16 @@ public class SharedContext {
 
     public void addBoxId(String id, Box box) {
         if (idMap == null) {
-            idMap = new HashMap();
+            idMap = new HashMap<String, Box>();
         }
         idMap.put(id, box);
     }
 
     public Box getBoxById(String id) {
         if (idMap == null) {
-            idMap = new HashMap();
+            idMap = new HashMap<String, Box>();
         }
-        return (Box) idMap.get(id);
+        return idMap.get(id);
     }
 
     public void removeBoxId(String id) {
@@ -332,7 +332,7 @@ public class SharedContext {
         }
     }
 
-    public Map getIdMap()
+    public Map<String, Box> getIdMap()
     {
         return idMap;
     }
@@ -550,12 +550,12 @@ public class SharedContext {
 
     public CalculatedStyle getStyle(Element e, boolean restyle) {
         if (styleMap == null) {
-            styleMap = new HashMap(1024, 0.75f);
+            styleMap = new HashMap<Element, CalculatedStyle>(1024, 0.75f);
         }
 
         CalculatedStyle result = null;
         if (! restyle) {
-            result = (CalculatedStyle)styleMap.get(e);
+            result = styleMap.get(e);
         }
         if (result == null) {
             Node parent = e.getParentNode();

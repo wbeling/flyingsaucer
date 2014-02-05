@@ -59,7 +59,7 @@ import java.util.List;
  * </pre>
  */
 public class Regress {
-    public static final List EXTENSIONS = Arrays.asList(new String[]{"htm", "html", "xht", "xhtml", "xml",});
+    public static final List<String> EXTENSIONS = Arrays.asList(new String[]{"htm", "html", "xht", "xhtml", "xml",});
     public static final String RENDER_SFX = ".render.txt";
     public static final String LAYOUT_SFX = ".layout.txt";
     public static final String PNG_SFX = ".png";
@@ -126,9 +126,9 @@ public class Regress {
         failedCount = 0;
         final boolean wasLogging = enableLogging(false);
         try {
-            Iterator iter = listInputFiles(sourceDir);
+            Iterator<File> iter = listInputFiles(sourceDir);
             while (iter.hasNext()) {
-                File file = (File) iter.next();
+                File file = iter.next();
                 saveBoxModel(file, outputDir, width);
                 saveImage(file, outputDir, width);
             }
@@ -251,7 +251,7 @@ public class Regress {
         return orgVal;
     }
 
-    private Iterator listInputFiles(final File sourceDir) {
+    private Iterator<File> listInputFiles(final File sourceDir) {
         File[] f = sourceDir.listFiles(new FilenameFilter() {
             public boolean accept(File file, String s) {
                 return EXTENSIONS.contains(s.substring(s.lastIndexOf(".") + 1));

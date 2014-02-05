@@ -27,6 +27,7 @@ import org.xhtmlrenderer.render.FSFont;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.io.Serializable;
 import java.util.HashMap;
 
 
@@ -39,11 +40,11 @@ public class AWTFontResolver implements FontResolver {
     /**
      * Description of the Field
      */
-    HashMap instance_hash;
+    HashMap<String, Font> instance_hash;
     /**
      * Description of the Field
      */
-    HashMap available_fonts_hash;
+    HashMap<String, Serializable> available_fonts_hash;
 
     /**
      * Constructor for the FontResolverTest object
@@ -57,13 +58,13 @@ public class AWTFontResolver implements FontResolver {
         String[] available_fonts = gfx.getAvailableFontFamilyNames();
         //Uu.p("available fonts =");
         //Uu.p(available_fonts);
-        instance_hash = new HashMap();
+        instance_hash = new HashMap<String, Font>();
 
         // preload the font map with the font names as keys
         // don't add the actual font objects because that would be a waste of memory
         // we will only add them once we need to use them
         // put empty strings in instead
-        available_fonts_hash = new HashMap();
+        available_fonts_hash = new HashMap<String, Serializable>();
         for (int i = 0; i < available_fonts.length; i++) {
             available_fonts_hash.put(available_fonts[i], "");
         }
@@ -208,7 +209,7 @@ public class AWTFontResolver implements FontResolver {
         // check if the font instance exists in the hash table
         if (instance_hash.containsKey(font_instance_name)) {
             // if so then return it
-            return (Font) instance_hash.get(font_instance_name);
+            return instance_hash.get(font_instance_name);
         }
 
         //Uu.p("font lookup failed for: " + font_instance_name);

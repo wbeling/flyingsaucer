@@ -33,7 +33,7 @@ import java.util.logging.Level;
  * @author empty
  */
 public class XRLog {
-    private static final List LOGGER_NAMES = new ArrayList(20);
+    private static final List<String> LOGGER_NAMES = new ArrayList<String>(20);
     public final static String CONFIG = registerLoggerByName("org.xhtmlrenderer.config");
     public final static String EXCEPTION = registerLoggerByName("org.xhtmlrenderer.exception");
     public final static String GENERAL = registerLoggerByName("org.xhtmlrenderer.general");
@@ -64,9 +64,9 @@ public class XRLog {
      *
      * @return List of loggers, never null.
      */
-    public static List listRegisteredLoggers() {
+    public static List<String> listRegisteredLoggers() {
         // defensive copy
-        return new ArrayList(LOGGER_NAMES);
+        return new ArrayList<String>(LOGGER_NAMES);
     }
 
 

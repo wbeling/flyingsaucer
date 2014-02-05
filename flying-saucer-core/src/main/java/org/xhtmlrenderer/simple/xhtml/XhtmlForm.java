@@ -41,9 +41,9 @@ public class XhtmlForm {
         _method = method;
     }
 
-    protected List _controls = new LinkedList();
+    protected List<FormControl> _controls = new LinkedList<FormControl>();
 
-    private List _listeners = new ArrayList();
+    private List<FormListener> _listeners = new ArrayList<FormListener>();
 
     public void addFormListener(FormListener listener) {
         _listeners.add(listener);
@@ -54,8 +54,8 @@ public class XhtmlForm {
     }
 
     public FormControl getControl(String name) {
-        for (Iterator iter = _controls.iterator(); iter.hasNext();) {
-            FormControl control = (FormControl) iter.next();
+        for (Iterator<FormControl> iter = _controls.iterator(); iter.hasNext();) {
+            FormControl control = iter.next();
             if (control.getName().equals(name)) {
                 return control;
             }
@@ -63,10 +63,10 @@ public class XhtmlForm {
         return null;
     }
 
-    public List getAllControls(String name) {
-        List result = new ArrayList();
-        for (Iterator iter = _controls.iterator(); iter.hasNext();) {
-            FormControl control = (FormControl) iter.next();
+    public List<FormControl> getAllControls(String name) {
+        List<FormControl> result = new ArrayList<FormControl>();
+        for (Iterator<FormControl> iter = _controls.iterator(); iter.hasNext();) {
+            FormControl control = iter.next();
             if (control.getName().equals(name)) {
                 result.add(control);
             }
@@ -74,7 +74,7 @@ public class XhtmlForm {
         return result;
     }
 
-    public Iterator getControls() {
+    public Iterator<FormControl> getControls() {
         return _controls.iterator();
     }
 
@@ -119,16 +119,16 @@ public class XhtmlForm {
     }
 
     public void reset() {
-        for (Iterator iter = _listeners.iterator(); iter.hasNext();) {
-            ((FormListener) iter.next()).resetted(this);
+        for (Iterator<FormListener> iter = _listeners.iterator(); iter.hasNext();) {
+            iter.next().resetted(this);
         }
     }
 
     public void submit() {
         // TODO other encodings than urlencode?
         StringBuffer data = new StringBuffer();
-        for (Iterator iter = getControls(); iter.hasNext();) {
-            FormControl control = (FormControl) iter.next();
+        for (Iterator<FormControl> iter = getControls(); iter.hasNext();) {
+            FormControl control = iter.next();
             if (control.isSuccessful()) {
                 if (control.isMultiple()) {
                     String[] values = control.getMultipleValues();
@@ -157,8 +157,8 @@ public class XhtmlForm {
         System.out.println("Method: ".concat(_method));
         System.out.println("Data: ".concat(data.toString()));
 
-        for (Iterator iter = _listeners.iterator(); iter.hasNext();) {
-            ((FormListener) iter.next()).submitted(this);
+        for (Iterator<FormListener> iter = _listeners.iterator(); iter.hasNext();) {
+            iter.next().submitted(this);
         }
     }
 

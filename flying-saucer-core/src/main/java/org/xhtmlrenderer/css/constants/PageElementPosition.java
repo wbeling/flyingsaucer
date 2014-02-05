@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PageElementPosition {
-    private static final Map ALL = new HashMap();
+    private static final Map<String, PageElementPosition> ALL = new HashMap<String, PageElementPosition>();
     private static int _maxAssigned = 0;
     
     public final int FS_ID;
@@ -51,7 +51,7 @@ public class PageElementPosition {
     }
     
     public static PageElementPosition valueOf(String ident) {
-        return (PageElementPosition)ALL.get(ident);
+        return ALL.get(ident);
     }
     
     public int hashCode() {
