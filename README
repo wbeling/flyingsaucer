@@ -1,3 +1,11 @@
+TODO
++ Remove SWT support
++ Remove itext 5 support
++ Remove jars, etc.
++ Move to Java 1.7
++ Genericize types
++ Support word output
+
 Flying Saucer
 
 http://code.google.com/p/flying-saucer/
