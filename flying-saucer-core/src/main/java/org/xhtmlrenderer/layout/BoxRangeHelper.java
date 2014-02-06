@@ -30,12 +30,12 @@ public class BoxRangeHelper {
     private LinkedList<BoxRangeData> _clipRegionStack = new LinkedList<BoxRangeData>();
     
     private OutputDevice _outputDevice;
-    private List _rangeList;
+    private List<BoxRangeData> _rangeList;
     
     private int _rangeIndex = 0;
     private BoxRangeData _current = null;
     
-    public BoxRangeHelper(OutputDevice outputDevice, List rangeList) {
+    public BoxRangeHelper(OutputDevice outputDevice, List<BoxRangeData> rangeList) {
         _outputDevice = outputDevice;
         _rangeList = rangeList;
         

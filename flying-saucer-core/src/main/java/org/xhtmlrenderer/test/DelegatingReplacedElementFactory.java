@@ -106,12 +106,10 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
 
     private static class ERItem {
         private final Element element;
-        private final ReplacedElement replacedElement;
         private final ElementReplacer elementReplacer;
 
         private ERItem(final Element e, final ReplacedElement re, final ElementReplacer er) {
             element = e;
-            replacedElement = re;
             elementReplacer = er;
         }
 

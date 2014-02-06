@@ -75,7 +75,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     private Box rootBox = null;
     private boolean needRelayout = false;
     private CellRendererPane cellRendererPane;
-    protected Map documentListeners;
+    protected Map<DocumentListener, DocumentListener> documentListeners;
 
     private boolean defaultFontFromComponent;
 
@@ -118,9 +118,10 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     // iterates over all boxes and, if they have a BG url assigned, makes a call to the UAC
     // to request it. when running with async image loading, this means BG images will start
     // loading before the box ever shows on screen
-    private void requestBGImages(final Box box) {
+    @SuppressWarnings("unused")
+	private void requestBGImages(final Box box) {
         if (box.getChildCount() == 0) return;
-        Iterator ci = box.getChildIterator();
+        Iterator<Box> ci = box.getChildIterator();
         while (ci.hasNext()) {
             final Box cb = (Box) ci.next();
             CalculatedStyle style = cb.getStyle();
@@ -213,7 +214,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     protected void init() {
 
 
-        documentListeners = new HashMap();
+        documentListeners = new HashMap<>();
         setBackground(Color.white);
         super.setLayout(null);
     }
@@ -433,7 +434,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     }
 
 	protected void fireDocumentStarted() {
-		Iterator it = this.documentListeners.keySet().iterator();
+		Iterator<DocumentListener> it = this.documentListeners.keySet().iterator();
 		while (it.hasNext()) {
 			DocumentListener list = (DocumentListener) it.next();
             try {
@@ -445,7 +446,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
 	}
 
     protected void fireDocumentLoaded() {
-        Iterator it = this.documentListeners.keySet().iterator();
+        Iterator<DocumentListener> it = this.documentListeners.keySet().iterator();
         while (it.hasNext()) {
             DocumentListener list = (DocumentListener) it.next();
             try {
@@ -457,7 +458,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     }
 
     protected void fireOnLayoutException(Throwable t) {
-        Iterator it = this.documentListeners.keySet().iterator();
+        Iterator<DocumentListener> it = this.documentListeners.keySet().iterator();
         while (it.hasNext()) {
             DocumentListener list = (DocumentListener) it.next();
             try {
@@ -469,7 +470,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     }
 
     protected void fireOnRenderException(Throwable t) {
-        Iterator it = this.documentListeners.keySet().iterator();
+        Iterator<DocumentListener> it = this.documentListeners.keySet().iterator();
         while (it.hasNext()) {
             DocumentListener list = (DocumentListener) it.next();
             try {
@@ -638,7 +639,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
                 new Thread(new Runnable() {
                     public void run() {
                         try {
-                            Thread.currentThread().sleep(Math.min(maxRepaintRequestWaitMs, Math.abs(maxRepaintRequestWaitMs - el)));
+                            Thread.sleep(Math.min(maxRepaintRequestWaitMs, Math.abs(maxRepaintRequestWaitMs - el)));
                             EventQueue.invokeLater(new Runnable() {
                                 public void run() {
                                     XRLog.general(Level.FINE, "--> running queued repaint request");

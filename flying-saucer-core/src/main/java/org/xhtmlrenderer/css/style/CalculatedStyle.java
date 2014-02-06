@@ -319,7 +319,7 @@ public class CalculatedStyle {
             }
         } else {
             ListValue valueList = (ListValue)value;
-            List values = valueList.getValues();
+            List<?> values = valueList.getValues();
             boolean firstAuto = ((PropertyValue)values.get(0)).getIdentValue() == IdentValue.AUTO;
             boolean secondAuto = ((PropertyValue)values.get(1)).getIdentValue() == IdentValue.AUTO;
 
@@ -335,13 +335,13 @@ public class CalculatedStyle {
 
     public BackgroundPosition getBackgroundPosition() {
         ListValue result = (ListValue) valueByName(CSSName.BACKGROUND_POSITION);
-        List values = result.getValues();
+        List<?> values = result.getValues();
 
         return new BackgroundPosition(
                 (PropertyValue) values.get(0), (PropertyValue) values.get(1));
     }
 
-    public List getCounterReset() {
+    public List<?> getCounterReset() {
         FSDerivedValue value = valueByName(CSSName.COUNTER_RESET);
 
         if (value == IdentValue.NONE) {
@@ -351,7 +351,7 @@ public class CalculatedStyle {
         }
     }
 
-    public List getCounterIncrement() {
+    public List<?> getCounterIncrement() {
         FSDerivedValue value = valueByName(CSSName.COUNTER_INCREMENT);
 
         if (value == IdentValue.NONE) {
@@ -600,7 +600,7 @@ public class CalculatedStyle {
             return;
         }//nothing to derive
 
-        Iterator mProps = matched.getCascadedPropertyDeclarations();
+        Iterator<PropertyDeclaration> mProps = matched.getCascadedPropertyDeclarations();
         while (mProps.hasNext()) {
             PropertyDeclaration pd = (PropertyDeclaration) mProps.next();
             FSDerivedValue val = deriveValue(pd.getCSSName(), pd.getValue());
@@ -1160,9 +1160,9 @@ public class CalculatedStyle {
         if (value == IdentValue.NONE) {
             return null;
         } else {
-            List idents = ((ListValue) value).getValues();
+            List<?> idents = ((ListValue) value).getValues();
             List<FSDerivedValue> result = new ArrayList<FSDerivedValue>(idents.size());
-            for (Iterator i = idents.iterator(); i.hasNext();) {
+            for (Iterator<?> i = idents.iterator(); i.hasNext();) {
                 result.add(DerivedValueFactory.newDerivedValue(
                         this, CSSName.TEXT_DECORATION, (PropertyValue) i.next()));
             }

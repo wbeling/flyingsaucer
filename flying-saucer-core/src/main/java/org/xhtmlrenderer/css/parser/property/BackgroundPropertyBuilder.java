@@ -52,7 +52,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
     }
 
     public List<PropertyDeclaration> buildDeclarations(
-            CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+            CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
         List<PropertyDeclaration> result = checkInheritAll(ALL, values, origin, important, inheritAllowed);
         if (result != null) {
             return result;

@@ -51,9 +51,9 @@ public class BlockBoxing {
     public static void layoutContent(LayoutContext c, BlockBox block, int contentStart) {
         int offset = -1;
 
-        List localChildren = block.getChildren();
+        List<Box> localChildren = block.getChildren();
         if (c.isPrint() && ! (localChildren instanceof RandomAccess)) {
-            localChildren = new ArrayList(localChildren);
+            localChildren = new ArrayList<Box>(localChildren);
         }
 
         int childOffset = block.getHeight() + contentStart;
@@ -65,7 +65,7 @@ public class BlockBoxing {
 
         int pageCount = NO_PAGE_TRIM;
         BlockBox previousChildBox = null;
-        for (Iterator i = localChildren.iterator(); i.hasNext();) {
+        for (Iterator<Box> i = localChildren.iterator(); i.hasNext();) {
             BlockBox child = (BlockBox) i.next();
             offset++;
 
@@ -154,7 +154,7 @@ public class BlockBoxing {
     }
 
     private static RelayoutRunResult processPageBreakAvoidRun(final LayoutContext c, final BlockBox block,
-                                                              List localChildren, int offset,
+                                                              List<Box> localChildren, int offset,
                                                               RelayoutDataList relayoutDataList, RelayoutData relayoutData,
                                                               BlockBox childBox) {
         RelayoutRunResult result = new RelayoutRunResult();
@@ -216,7 +216,7 @@ public class BlockBoxing {
     }
 
     private static int relayoutRun(
-            LayoutContext c, List localChildren, BlockBox block,
+            LayoutContext c, List<Box> localChildren, BlockBox block,
             RelayoutDataList relayoutDataList, int start, int end, boolean onNewPage) {
         int childOffset = relayoutDataList.get(start).getChildOffset();
 
@@ -482,11 +482,13 @@ public class BlockBoxing {
             _childOffset = childOffset;
         }
 
-        public int getListIndex() {
+        @SuppressWarnings("unused")
+		public int getListIndex() {
             return _listIndex;
         }
 
-        public void setListIndex(int listIndex) {
+        @SuppressWarnings("unused")
+		public void setListIndex(int listIndex) {
             _listIndex = listIndex;
         }
     }

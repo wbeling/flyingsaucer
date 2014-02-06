@@ -55,7 +55,7 @@ import org.xhtmlrenderer.util.XRLog;
  *
  * @author Patrick Wright
  */
-public final class CSSName implements Comparable {
+public final class CSSName implements Comparable<CSSName> {
     /**
      * marker var, used for initialization
      */
@@ -1765,7 +1765,7 @@ public final class CSSName implements Comparable {
     }
 
     //Assumed to be consistent with equals because CSSName is in essence an enum
-    public int compareTo(Object object) {
+    public int compareTo(CSSName object) {
         if (object == null) throw new NullPointerException();//required by Comparable
         return FS_ID - ((CSSName) object).FS_ID;//will throw ClassCastException according to Comparable if not a CSSName
     }

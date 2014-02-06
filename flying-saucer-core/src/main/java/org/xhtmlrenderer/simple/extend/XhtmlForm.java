@@ -149,10 +149,10 @@ public class XhtmlForm {
         StringBuffer data = new StringBuffer();
         String action = _parentFormElement.getAttribute("action");
         data.append(action).append("?");
-        Iterator fields = _componentCache.entrySet().iterator();
+        Iterator<Map.Entry<Element, FormField>> fields = _componentCache.entrySet().iterator();
         boolean first=true;
         while (fields.hasNext()) {
-            Map.Entry entry = (Map.Entry) fields.next();
+            Map.Entry<Element, FormField> entry = fields.next();
 
             FormField field = (FormField) entry.getValue();
             

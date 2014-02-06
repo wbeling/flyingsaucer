@@ -23,7 +23,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -46,7 +45,8 @@ class ImageField extends InputField {
         super(e, form, context, box);
     }
 
-    public JComponent create() {
+    @SuppressWarnings("serial")
+	public JComponent create() {
         JButton button;
         Image image = null;
 

@@ -138,9 +138,10 @@ public class CascadedStyle {
     private void addProperties(java.util.Iterator<PropertyDeclaration> iter) {
         //do a bucket-sort on importance and origin
         //properties should already be in order of specificity
-        java.util.List[] buckets = new java.util.List[PropertyDeclaration.IMPORTANCE_AND_ORIGIN_COUNT];
+        @SuppressWarnings("unchecked")
+		java.util.List<PropertyDeclaration>[] buckets = new java.util.List[PropertyDeclaration.IMPORTANCE_AND_ORIGIN_COUNT];
         for (int i = 0; i < buckets.length; i++) {
-            buckets[i] = new java.util.LinkedList();
+            buckets[i] = new java.util.LinkedList<PropertyDeclaration>();
         }
 
         while (iter.hasNext()) {
@@ -149,7 +150,7 @@ public class CascadedStyle {
         }
 
         for (int i = 0; i < buckets.length; i++) {
-            for (java.util.Iterator it = buckets[i].iterator(); it.hasNext();) {
+            for (java.util.Iterator<PropertyDeclaration> it = buckets[i].iterator(); it.hasNext();) {
                 PropertyDeclaration prop = (PropertyDeclaration) it.next();
                 cascadedProperties.put(prop.getCSSName(), prop);
             }

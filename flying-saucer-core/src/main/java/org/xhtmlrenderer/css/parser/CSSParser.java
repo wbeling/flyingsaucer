@@ -124,7 +124,7 @@ public class CSSParser {
                     cssName == CSSName.FS_PDF_FONT_ENCODING);
 
             PropertyBuilder builder = CSSName.getPropertyBuilder(cssName);
-            List props;
+            List<PropertyDeclaration> props;
             try {
                 props = builder.buildDeclarations(cssName, values, origin, false);
             } catch (CSSParseException e) {

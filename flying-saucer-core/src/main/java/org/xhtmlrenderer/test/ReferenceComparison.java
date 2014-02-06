@@ -47,7 +47,7 @@ public class ReferenceComparison {
 
         boolean wasEnabled = enableLogging(false);
         try {
-            Iterator fileIt = listSourceFiles(sourceDirectory);
+            Iterator<File> fileIt = listSourceFiles(sourceDirectory);
             CompareStatistics stats = new CompareStatistics();
             while (fileIt.hasNext()) {
                 File file = (File) fileIt.next();
@@ -93,7 +93,7 @@ public class ReferenceComparison {
         return isVerbose;
     }
 
-    private Iterator listSourceFiles(File sourceDirectory) {
+    private Iterator<File> listSourceFiles(File sourceDirectory) {
         return Arrays.asList(
                 sourceDirectory.listFiles(new FilenameFilter() {
                     public boolean accept(File file, String s) {
@@ -252,10 +252,10 @@ public class ReferenceComparison {
     private static class CompareStatistics {
         private File currentFile;
         private static final Result OK = new ResultOK();
-        private Map files;
+        private Map<File, Result> files;
 
         public CompareStatistics() {
-            files = new HashMap();
+            files = new HashMap<>();
         }
 
         public void failedToRender(Exception e) {
@@ -278,7 +278,8 @@ public class ReferenceComparison {
             files.put(currentFile, new FailedIO(e));
         }
 
-        public boolean failed() {
+        @SuppressWarnings("unused")
+		public boolean failed() {
             return files.get(currentFile) instanceof FailedResult;
         }
 
@@ -287,13 +288,14 @@ public class ReferenceComparison {
             files.put(currentFile, OK);
         }
 
-        public boolean succeeded() {
+        @SuppressWarnings("unused")
+		public boolean succeeded() {
             return files.get(currentFile) instanceof ResultOK;
         }
 
         public void report() {
             int failed = 0;
-            for (Iterator it = files.keySet().iterator(); it.hasNext();) {
+            for (Iterator<File> it = files.keySet().iterator(); it.hasNext();) {
                 File file = (File) it.next();
                 Result result = (Result) files.get(file);
 

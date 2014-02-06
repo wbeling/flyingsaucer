@@ -53,7 +53,8 @@ public class AddNodeToDocument {
                 initPanel();
 
                 // here's where the real work takes place
-                Action addDocAction = new AbstractAction("Add Node") {
+                @SuppressWarnings("serial")
+				Action addDocAction = new AbstractAction("Add Node") {
                     public void actionPerformed(ActionEvent event) {
                         // we'll add a single node on each click
                         documentRoot.appendChild(domDocument.createTextNode("adding node at " + new Date()));

@@ -23,7 +23,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 
-import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.util.ImageUtil;
 import org.xhtmlrenderer.util.Configuration;
@@ -136,7 +135,8 @@ public class DeferredImageReplacedElement extends ImageReplacedElement {
                         if (true) {
                             throw new RuntimeException("image is not a buffered image! " + _imageResource.getImageUri());
                         }
-                        String scalingType = Configuration.valueFor("xr.image.scale", "HIGH").trim();
+                        @SuppressWarnings("unused")
+						String scalingType = Configuration.valueFor("xr.image.scale", "HIGH").trim();
 
                         if (scalingType.equalsIgnoreCase("HIGH") || scalingType.equalsIgnoreCase("MID")) {
                             image = image.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);

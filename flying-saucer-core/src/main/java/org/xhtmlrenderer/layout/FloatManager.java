@@ -39,8 +39,8 @@ public class FloatManager {
     private static final int LEFT = 1;
     private static final int RIGHT = 2;
 
-    private List _leftFloats = new ArrayList();
-    private List _rightFloats = new ArrayList();
+    private List<BoxOffset> _leftFloats = new ArrayList<BoxOffset>();
+    private List<BoxOffset> _rightFloats = new ArrayList<BoxOffset>();
 
     private Box _master;
 
@@ -346,7 +346,7 @@ public class FloatManager {
 
     private BoxDistance getFloatDistance(CssContext cssCtx, BlockFormattingContext bfc,
                                  LineBox line, int containingBlockContentWidth,
-                                 List floatsList, int direction) {
+                                 List<BoxOffset> floatsList, int direction) {
         if (floatsList.size() == 0) {
             return new BoxDistance(null, 0);
         }

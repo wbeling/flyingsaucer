@@ -55,10 +55,10 @@ public class StylesheetFactoryImpl implements StylesheetFactory {
      * an LRU cache
      */
     private java.util.LinkedHashMap<Object, Stylesheet> _cache =
-            new java.util.LinkedHashMap(_cacheCapacity, 0.75f, true) {
+            new java.util.LinkedHashMap<Object, Stylesheet>(_cacheCapacity, 0.75f, true) {
                 private static final long serialVersionUID = 1L;
 
-                protected boolean removeEldestEntry(java.util.Map.Entry eldest) {
+                protected boolean removeEldestEntry(java.util.Map.Entry<Object, Stylesheet> eldest) {
                     return size() > _cacheCapacity;
                 }
             };

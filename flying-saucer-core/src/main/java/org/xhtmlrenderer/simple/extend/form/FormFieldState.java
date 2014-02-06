@@ -62,7 +62,7 @@ public class FormFieldState {
         return stateObject;
     }
     
-    public static FormFieldState fromList(List list) {
+    public static FormFieldState fromList(List<Integer> list) {
         FormFieldState stateObject = new FormFieldState();
         
         int [] indices = new int [list.size()];

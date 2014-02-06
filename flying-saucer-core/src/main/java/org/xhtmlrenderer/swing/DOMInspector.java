@@ -295,7 +295,7 @@ class ElementPropertiesPanel extends JPanel {
             Toolkit.getDefaultToolkit().beep();
             return _defaultTableModel;
         }
-        Map props = _sr.getCascadedPropertiesMap((Element) node);
+        Map<String, CSSPrimitiveValue> props = _sr.getCascadedPropertiesMap((Element) node);
         return new PropertiesTableModel(props);
     }
 
@@ -343,7 +343,7 @@ class ElementPropertiesPanel extends JPanel {
                 label.setFont(propLabelFont);
             } else if (col == 2) {
                 PropertiesTableModel pmodel = (PropertiesTableModel) this.getModel();
-                Map.Entry me = (Map.Entry) pmodel._properties.entrySet().toArray()[row];
+                Map.Entry<String, CSSPrimitiveValue> me = (Map.Entry<String, CSSPrimitiveValue>) pmodel._properties.entrySet().toArray()[row];
                 CSSPrimitiveValue cpv = (CSSPrimitiveValue) me.getValue();
                 if (cpv.getCssText().startsWith("rgb")) {
                     label.setBackground(org.xhtmlrenderer.css.util.ConversionUtil.rgbToColor(cpv.getRGBColorValue()));
@@ -370,14 +370,14 @@ class ElementPropertiesPanel extends JPanel {
         /**
          * Description of the Field
          */
-        Map _properties;
+        Map<String, CSSPrimitiveValue> _properties;
 
         /**
          * Constructor for the PropertiesTableModel object
          *
          * @param cssProperties PARAM
          */
-        PropertiesTableModel(Map cssProperties) {
+        PropertiesTableModel(Map<String, CSSPrimitiveValue> cssProperties) {
             _properties = cssProperties;
         }
 
@@ -417,7 +417,7 @@ class ElementPropertiesPanel extends JPanel {
          * @return The valueAt value
          */
         public Object getValueAt(int row, int col) {
-            Map.Entry me = (Map.Entry) _properties.entrySet().toArray()[row];
+            Map.Entry<String, CSSPrimitiveValue> me = (Map.Entry<String, CSSPrimitiveValue>) _properties.entrySet().toArray()[row];
             CSSPrimitiveValue cpv = (CSSPrimitiveValue) me.getValue();
 
             Object val = null;
@@ -530,7 +530,7 @@ class DOMTreeModel implements TreeModel {
     /**
      * Description of the Field
      */
-    HashMap<Node, List> displayableNodes;
+    HashMap<Node, List<Node>> displayableNodes;
 
     /**
      * Description of the Field
@@ -543,7 +543,7 @@ class DOMTreeModel implements TreeModel {
      * @param doc PARAM
      */
     public DOMTreeModel(Document doc) {
-        this.displayableNodes = new HashMap<Node, List>();
+        this.displayableNodes = new HashMap<>();
         this.doc = doc;
         setRoot("body");
     }

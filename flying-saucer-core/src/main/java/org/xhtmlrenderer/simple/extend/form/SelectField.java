@@ -53,7 +53,7 @@ class SelectField extends FormField {
 
         // Either a select list or a drop down/combobox
         if (shouldRenderAsList()) {
-            JList select = new JList(optionList.toArray());
+            JList<?> select = new JList<>(optionList.toArray());
             applyComponentStyle(select);
 
             select.setCellRenderer(new CellRenderer());
@@ -80,7 +80,7 @@ class SelectField extends FormField {
 
             return new JScrollPane(select);
         } else {
-            JComboBox select = new JComboBox(optionList.toArray());
+            JComboBox<?> select = new JComboBox<>(optionList.toArray());
             applyComponentStyle(select);
 
             select.setEditable(false);
@@ -109,11 +109,13 @@ class SelectField extends FormField {
     
     protected void applyOriginalState() {
         if (shouldRenderAsList()) {
-            JList select = (JList) ((JScrollPane) getComponent()).getViewport().getView();
+            @SuppressWarnings("unchecked")
+			JList<NameValuePair> select = (JList<NameValuePair>) ((JScrollPane) getComponent()).getViewport().getView();
 
             select.setSelectedIndices(getOriginalState().getSelectedIndices());
         } else {
-            JComboBox select = (JComboBox) getComponent();
+            @SuppressWarnings("unchecked")
+			JComboBox<NameValuePair> select = (JComboBox<NameValuePair>) getComponent();
             
             // This looks strange, but basically since this is a single select, and
             // someone might have put selected="selected" on more than a single option
@@ -131,20 +133,22 @@ class SelectField extends FormField {
 
     protected String[] getFieldValues() {
         if (shouldRenderAsList()) {
-            JList select = (JList) ((JScrollPane) getComponent()).getViewport().getView();
+            @SuppressWarnings("unchecked")
+			JList<NameValuePair> select = (JList<NameValuePair>) ((JScrollPane) getComponent()).getViewport().getView();
+
+            List<NameValuePair> selectedValues = select.getSelectedValuesList();
+            String [] submitValues = new String [selectedValues.size()];
             
-            Object [] selectedValues = select.getSelectedValues();
-            String [] submitValues = new String [selectedValues.length];
-            
-            for (int i = 0; i < selectedValues.length; i++) {
-                NameValuePair pair = (NameValuePair) selectedValues[i];
+            for (int i = 0; i < selectedValues.size(); i++) {
+                NameValuePair pair = (NameValuePair) selectedValues.get(i);
                 if (pair.getValue()!=null)
                     submitValues[i] = pair.getValue();
             }
             
             return submitValues;
         } else {
-            JComboBox select = (JComboBox) getComponent();
+            @SuppressWarnings("unchecked")
+			JComboBox<NameValuePair> select = (JComboBox<NameValuePair>) getComponent();
             
             NameValuePair selectedValue = (NameValuePair) select.getSelectedItem();
             
@@ -250,8 +254,9 @@ class SelectField extends FormField {
     /**
      * Renderer for ordinary items and headings in a List.
      */
-    private static class CellRenderer extends DefaultListCellRenderer {
-        public Component getListCellRendererComponent(JList list, Object value,
+    @SuppressWarnings("serial")
+	private static class CellRenderer extends DefaultListCellRenderer {
+        public Component getListCellRendererComponent(JList<?> list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {
             NameValuePair pair = (NameValuePair)value;
             
@@ -287,7 +292,8 @@ class SelectField extends FormField {
             // only for comboboxes
             if (! (e.getSource() instanceof JComboBox) )
                 return;
-            JComboBox combo = (JComboBox)e.getSource();
+            @SuppressWarnings("unchecked")
+			JComboBox<NameValuePair> combo = (JComboBox<NameValuePair>)e.getSource();
             
             if (((NameValuePair)e.getItem()).getValue() == null) {
                 // header selected: revert to old selection
@@ -302,8 +308,9 @@ class SelectField extends FormField {
             // only for lists
             if (! (e.getSource() instanceof JList) )
                 return;
-            JList list = (JList)e.getSource();
-            ListModel model = list.getModel();
+            @SuppressWarnings("unchecked")
+			JList<NameValuePair> list = (JList<NameValuePair>) e.getSource();
+            ListModel<NameValuePair> model = list.getModel();
             
             // deselect all headings
             for (int i = e.getFirstIndex(); i <= e.getLastIndex(); i++) {

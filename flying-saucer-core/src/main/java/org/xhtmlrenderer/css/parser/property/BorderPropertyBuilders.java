@@ -43,7 +43,7 @@ public class BorderPropertyBuilders {
         }
         
         public List<PropertyDeclaration> buildDeclarations(
-                CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+                CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
             CSSName[][] props = getProperties();
             
             List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(3);
@@ -62,7 +62,7 @@ public class BorderPropertyBuilders {
                 boolean haveBorderColor = false;
                 boolean haveBorderWidth = false;
                 
-                for (Iterator i = values.iterator(); i.hasNext(); ) {
+                for (Iterator<PropertyValue> i = values.iterator(); i.hasNext(); ) {
                     CSSPrimitiveValue value = (CSSPrimitiveValue)i.next();
                     checkInheritAllowed(value, false);
                     boolean matched = false;

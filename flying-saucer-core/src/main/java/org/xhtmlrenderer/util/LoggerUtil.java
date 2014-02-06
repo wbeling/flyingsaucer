@@ -35,7 +35,7 @@ public class LoggerUtil {
      * @param cls  PARAM
      * @return     The debugLogger value
      */
-    public static Logger getDebugLogger( Class cls ) {
+    public static Logger getDebugLogger( Class<?> cls ) {
         Logger l = Logger.getLogger( cls.getName() );
         l.setLevel( Level.ALL );
         return l;

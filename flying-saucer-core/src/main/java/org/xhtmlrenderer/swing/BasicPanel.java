@@ -68,6 +68,7 @@ import org.xml.sax.InputSource;
  *
  * @author Joshua Marinacci
  */
+@SuppressWarnings("serial")
 public abstract class BasicPanel extends RootPanel implements FormSubmissionListener {
     private static final int PAGE_PAINTING_CLEARANCE_WIDTH = 10;
     private static final int PAGE_PAINTING_CLEARANCE_HEIGHT = 10;
@@ -220,7 +221,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         Graphics2D g = ((Java2DOutputDevice)c.getOutputDevice()).getGraphics();
         Shape working = g.getClip();
 
-        List pages = root.getPages();
+        List<PageBox> pages = root.getPages();
         c.setPageCount(pages.size());
         for (int i = 0; i < pages.size(); i++) {
             PageBox page = (PageBox)pages.get(i);
@@ -322,7 +323,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
 
     private void printTree(Box box, String tab) {
         XRLog.layout(Level.FINEST, tab + "Box = " + box);
-        Iterator it = box.getChildIterator();
+        Iterator<Box> it = box.getChildIterator();
         while (it.hasNext()) {
             Box bx = (Box) it.next();
             printTree(bx, tab + " ");
@@ -595,7 +596,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         mouseTracker.removeListener(l);
     }
 
-    public List getMouseTrackingListeners() {
+    public List<FSMouseListener> getMouseTrackingListeners() {
         return mouseTracker.getListeners();
     }
 

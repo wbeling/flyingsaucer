@@ -37,7 +37,7 @@ import org.xhtmlrenderer.layout.Styleable;
  * true.
  */
 public class AnonymousBlockBox extends BlockBox {
-    private List _openInlineBoxes;
+    private List<InlineBox> _openInlineBoxes;
     
     public AnonymousBlockBox(Element element) {
         setElement(element);
@@ -60,17 +60,17 @@ public class AnonymousBlockBox extends BlockBox {
         }
     }
 
-    public List getOpenInlineBoxes() {
+    public List<InlineBox> getOpenInlineBoxes() {
         return _openInlineBoxes;
     }
 
-    public void setOpenInlineBoxes(List openInlineBoxes) {
+    public void setOpenInlineBoxes(List<InlineBox> openInlineBoxes) {
         _openInlineBoxes = openInlineBoxes;
     }
     
     public boolean isSkipWhenCollapsingMargins() {
         // An anonymous block will already have its children provided to it
-        for (Iterator i = getInlineContent().iterator(); i.hasNext(); ) {
+        for (Iterator<Styleable> i = getInlineContent().iterator(); i.hasNext(); ) {
             Styleable styleable = (Styleable)i.next();
             CalculatedStyle style = styleable.getStyle();
             if (! (style.isFloated() || style.isAbsolute() || style.isFixed() || style.isRunning())) {
@@ -81,7 +81,7 @@ public class AnonymousBlockBox extends BlockBox {
     }
     
     public void provideSiblingMarginToFloats(int margin) {
-        for (Iterator i = getInlineContent().iterator(); i.hasNext(); ) {
+        for (Iterator<Styleable> i = getInlineContent().iterator(); i.hasNext(); ) {
             Styleable styleable = (Styleable)i.next();
             if (styleable instanceof BlockBox) {
                 BlockBox b = (BlockBox)styleable;

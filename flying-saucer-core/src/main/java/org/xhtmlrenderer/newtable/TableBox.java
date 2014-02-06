@@ -87,8 +87,8 @@ public class TableBox extends BlockBox {
         _styleColumns.add(col);
     }
 
-    public List getStyleColumns() {
-        return _styleColumns == null ? Collections.EMPTY_LIST : _styleColumns;
+    public List<TableColumn> getStyleColumns() {
+        return _styleColumns == null ? Collections.<TableColumn>emptyList() : _styleColumns;
     }
 
     public int[] getColumnPos() {
@@ -131,7 +131,7 @@ public class TableBox extends BlockBox {
 
         _columns.add(data);
 
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableSectionBox section = (TableSectionBox)i.next();
             section.extendGridToColumnCount(_columns.size());
         }
@@ -168,7 +168,7 @@ public class TableBox extends BlockBox {
         ColumnData leftOver = _columns.get(pos+1);
         leftOver.setSpan(leftOver.getSpan() - firstSpan);
 
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableSectionBox section = (TableSectionBox)i.next();
             section.splitColumn(pos);
         }
@@ -199,7 +199,7 @@ public class TableBox extends BlockBox {
 
     private void recalcSections(LayoutContext c) {
         ensureChildren(c);
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableSectionBox section = (TableSectionBox)i.next();
             section.recalcCells(c);
         }
@@ -207,7 +207,7 @@ public class TableBox extends BlockBox {
 
     private void calcBorders(LayoutContext c) {
         ensureChildren(c);
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableSectionBox section = (TableSectionBox)i.next();
             section.calcBorders(c);
         }
@@ -384,7 +384,7 @@ public class TableBox extends BlockBox {
             container.updateBottom(c, getAbsY() + getHeight());
         }
 
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.analyzePageBreaks(c, _contentLimitContainer);
         }
@@ -545,7 +545,7 @@ public class TableBox extends BlockBox {
                 TableRowBox row = getFirstRow();
                 if (row != null) {
                     int spill = 0;
-                    for (Iterator i = row.getChildIterator(); i.hasNext(); ) {
+                    for (Iterator<Box> i = row.getChildIterator(); i.hasNext(); ) {
                         TableCellBox cell = (TableCellBox)i.next();
                         BorderPropertySet collapsed = cell.getCollapsedPaintingBorder();
                         int tmp = (int)collapsed.top() / 2;
@@ -577,7 +577,7 @@ public class TableBox extends BlockBox {
     }
 
     public TableRowBox getFirstRow() {
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableSectionBox section = (TableSectionBox)i.next();
             if (section.getChildCount() > 0) {
                 return (TableRowBox)section.getChild(0);
@@ -588,7 +588,7 @@ public class TableBox extends BlockBox {
     }
 
     public TableRowBox getFirstBodyRow() {
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableSectionBox section = (TableSectionBox)i.next();
             if (section.isHeader() || section.isFooter()) {
                 continue;
@@ -602,7 +602,7 @@ public class TableBox extends BlockBox {
     }
 
     private void setCellWidths(LayoutContext c) {
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             BlockBox box = (BlockBox)i.next();
             if (box.getStyle().isTableSection()) {
                 ((TableSectionBox)box).setCellWidths(c);
@@ -649,12 +649,12 @@ public class TableBox extends BlockBox {
     }
 
     public TableColumn colElement(int col) {
-        List styleColumns = getStyleColumns();
+        List<TableColumn> styleColumns = getStyleColumns();
         if (styleColumns.size() == 0) {
             return null;
         }
         int cCol = 0;
-        for (Iterator i = styleColumns.iterator(); i.hasNext();) {
+        for (Iterator<TableColumn> i = styleColumns.iterator(); i.hasNext();) {
             TableColumn colElem = (TableColumn)i.next();
             int span = colElem.getStyle().getColSpan();
             cCol += span;
@@ -837,9 +837,9 @@ public class TableBox extends BlockBox {
         int result = 0;
         boolean found = false;
         OUTER:
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableSectionBox section = (TableSectionBox)i.next();
-            for (Iterator j = section.getChildIterator(); j.hasNext(); ) {
+            for (Iterator<Box> j = section.getChildIterator(); j.hasNext(); ) {
                 TableRowBox row = (TableRowBox)j.next();
                 found = true;
                 result = row.getAbsY() + row.getBaseline() - getAbsY();
@@ -958,7 +958,7 @@ public class TableBox extends BlockBox {
             int nEffCols = table.numEffCols();
             int usedWidth = 0;
 
-            for (Iterator j = table.getStyleColumns().iterator(); j.hasNext();) {
+            for (Iterator<TableColumn> j = table.getStyleColumns().iterator(); j.hasNext();) {
                 TableColumn col = (TableColumn) j.next();
                 int span = col.getStyle().getColSpan();
                 Length w = col.getStyle().asLength(c, CSSName.WIDTH);
@@ -994,7 +994,7 @@ public class TableBox extends BlockBox {
             cCol = 0;
             TableRowBox firstRow = _table.getFirstRow();
             if (firstRow != null) {
-                for (Iterator j = firstRow.getChildIterator(); j.hasNext();) {
+                for (Iterator<Box> j = firstRow.getChildIterator(); j.hasNext();) {
                     TableCellBox cell = (TableCellBox) j.next();
                     Length w = cell.getOuterStyleWidth(c);
                     int span = cell.getStyle().getColSpan();
@@ -1186,7 +1186,7 @@ public class TableBox extends BlockBox {
             int nEffCols = table.numEffCols();
 
             int cCol = 0;
-            for (Iterator j = table.getStyleColumns().iterator(); j.hasNext();) {
+            for (Iterator<TableColumn> j = table.getStyleColumns().iterator(); j.hasNext();) {
                 TableColumn col = (TableColumn) j.next();
                 int span = col.getStyle().getColSpan();
                 Length w = col.getStyle().asLength(c, CSSName.WIDTH);
@@ -1223,7 +1223,7 @@ public class TableBox extends BlockBox {
             Layout l = _layoutStruct[effCol];
 
             // first we iterate over all rows.
-            for (Iterator j = _table.getChildIterator(); j.hasNext();) {
+            for (Iterator<Box> j = _table.getChildIterator(); j.hasNext();) {
                 TableSectionBox section = (TableSectionBox) j.next();
                 int numRows = section.numRows();
                 for (int i = 0; i < numRows; i++) {
@@ -1304,8 +1304,8 @@ public class TableBox extends BlockBox {
                 layoutStruct[i].setEffMaxWidth(layoutStruct[i].maxWidth());
             }
 
-            Collections.sort(_spanCells, new Comparator() {
-                public int compare(Object o1, Object o2) {
+            Collections.sort(_spanCells, new Comparator<TableCellBox>() {
+                public int compare(TableCellBox o1, TableCellBox o2) {
                     TableCellBox c1 = (TableCellBox)o1;
                     TableCellBox c2 = (TableCellBox)o2;
 

@@ -27,7 +27,7 @@ import java.util.List;
 public class CounterFunction {
     private IdentValue _listStyleType;
     private int _counterValue;
-    private List _counterValues;
+    private List<Integer> _counterValues;
     private String _separator;
 
     public CounterFunction(int counterValue, IdentValue listStyleType) {
@@ -35,7 +35,7 @@ public class CounterFunction {
         _listStyleType = listStyleType;
     }
 
-    public CounterFunction(List counterValues, String separator, IdentValue listStyleType) {
+    public CounterFunction(List<Integer> counterValues, String separator, IdentValue listStyleType) {
         _counterValues = counterValues;
         _separator = separator;
         _listStyleType = listStyleType;
@@ -46,7 +46,7 @@ public class CounterFunction {
             return createCounterText(_listStyleType, _counterValue);
         }
         StringBuffer sb = new StringBuffer();
-        for (Iterator i = _counterValues.iterator(); i.hasNext();) {
+        for (Iterator<Integer> i = _counterValues.iterator(); i.hasNext();) {
             Integer value = (Integer) i.next();
             sb.append(createCounterText(_listStyleType, value.intValue()));
             if (i.hasNext()) sb.append(_separator);

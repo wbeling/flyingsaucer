@@ -34,7 +34,7 @@ public class ListStylePropertyBuilder extends AbstractPropertyBuilder {
     private static final CSSName[] ALL = new CSSName[] {
         CSSName.LIST_STYLE_TYPE, CSSName.LIST_STYLE_POSITION, CSSName.LIST_STYLE_IMAGE }; 
     
-    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
         List<PropertyDeclaration> result = checkInheritAll(ALL, values, origin, important, inheritAllowed);
         if (result != null) {
             return result;
@@ -44,7 +44,7 @@ public class ListStylePropertyBuilder extends AbstractPropertyBuilder {
         PropertyDeclaration listStylePosition = null;
         PropertyDeclaration listStyleImage = null;
         
-        for (Iterator i = values.iterator(); i.hasNext(); ) {
+        for (Iterator<PropertyValue> i = values.iterator(); i.hasNext(); ) {
             PropertyValue value = (PropertyValue)i.next();
             checkInheritAllowed(value, false);
             short type = value.getPrimitiveType();

@@ -46,7 +46,7 @@ public class CheckControl extends AbstractControl {
             if (form == null) {
                 return;
             }
-            for (Iterator iter = form.getAllControls(getName()).iterator(); iter
+            for (Iterator<FormControl> iter = form.getAllControls(getName()).iterator(); iter
                 .hasNext();) {
                 FormControl control = (FormControl) iter.next();
                 if (control instanceof CheckControl) {

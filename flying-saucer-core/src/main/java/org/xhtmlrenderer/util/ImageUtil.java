@@ -220,10 +220,10 @@ public class ImageUtil {
      *                   not check for duplicate dimensions.
      * @return List of buffered images in the given dimensions.
      */
-    public static java.util.List<BufferedImage> scaleMultiple(ScalingOptions opt, BufferedImage img, java.util.List dimensions) {
+    public static java.util.List<BufferedImage> scaleMultiple(ScalingOptions opt, BufferedImage img, java.util.List<Dimension> dimensions) {
         java.util.List<BufferedImage> scaledImages = new ArrayList<BufferedImage>(dimensions.size());
 
-        Iterator iter = dimensions.iterator();
+        Iterator<Dimension> iter = dimensions.iterator();
         while (iter.hasNext()) {
             Dimension dim = (Dimension) iter.next();
             opt.setTargetDimensions(dim);

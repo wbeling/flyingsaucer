@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-
 import org.w3c.dom.Element;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -58,12 +56,12 @@ public class LineBox extends Box implements InlinePaintable {
     
     private FloatDistances _floatDistances;
     
-    private List _textDecorations;
+    private List<TextDecoration> _textDecorations;
     
     private int _paintingTop;
     private int _paintingHeight;
     
-    private List<BlockBox> _nonFlowContent;
+    private List<Box> _nonFlowContent;
     
     private MarkerData _markerData;
     
@@ -240,7 +238,7 @@ public class LineBox extends Box implements InlinePaintable {
     
     private void adjustChildren(JustificationInfo info) {
         float adjust = 0.0f;
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.setX(b.getX() + Math.round(adjust));
             
@@ -268,7 +266,7 @@ public class LineBox extends Box implements InlinePaintable {
     private CharCounts countJustifiableChars() {
         CharCounts result = new CharCounts();
         
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             if (b instanceof InlineLayoutBox) {
                 ((InlineLayoutBox)b).countJustifiableChars(result);
@@ -341,11 +339,11 @@ public class LineBox extends Box implements InlinePaintable {
         return false;
     }
 
-    public List getTextDecorations() {
+    public List<TextDecoration> getTextDecorations() {
         return _textDecorations;
     }
 
-    public void setTextDecorations(List textDecorations) {
+    public void setTextDecorations(List<TextDecoration> textDecorations) {
         _textDecorations = textDecorations;
     }
 
@@ -378,13 +376,13 @@ public class LineBox extends Box implements InlinePaintable {
         }
     }
     
-    public List getNonFlowContent() {
-        return _nonFlowContent == null ? Collections.EMPTY_LIST : _nonFlowContent;
+    public List<Box> getNonFlowContent() {
+        return _nonFlowContent == null ? Collections.<Box>emptyList() : _nonFlowContent;
     }
     
     public void addNonFlowContent(BlockBox box) {
         if (_nonFlowContent == null) {
-            _nonFlowContent = new ArrayList<BlockBox>();
+            _nonFlowContent = new ArrayList<>();
         }
         
         _nonFlowContent.add(box);
@@ -555,8 +553,8 @@ public class LineBox extends Box implements InlinePaintable {
         return false;
     }
     
-    public void clearSelection(List modified) {
-        for (Iterator i = getNonFlowContent().iterator(); i.hasNext(); ) {
+    public void clearSelection(List<Box> modified) {
+        for (Iterator<Box> i = getNonFlowContent().iterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.clearSelection(modified);
         }
@@ -565,7 +563,7 @@ public class LineBox extends Box implements InlinePaintable {
     }
     
     public void selectAll() {
-        for (Iterator i = getNonFlowContent().iterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getNonFlowContent().iterator(); i.hasNext(); ) {
             BlockBox box = (BlockBox)i.next();
             box.selectAll();
         }
@@ -574,7 +572,7 @@ public class LineBox extends Box implements InlinePaintable {
     }
     
     public void collectText(RenderingContext c, StringBuffer buffer) throws IOException {
-        for (Iterator i = getNonFlowContent().iterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getNonFlowContent().iterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.collectText(c, buffer);
         }
@@ -590,7 +588,7 @@ public class LineBox extends Box implements InlinePaintable {
             exportPageBoxText(c, writer, baselinePos);
         }
         
-        for (Iterator i = getNonFlowContent().iterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getNonFlowContent().iterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.exportText(c, writer);
         }

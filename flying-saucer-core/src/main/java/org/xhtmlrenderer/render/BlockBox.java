@@ -83,7 +83,7 @@ public class BlockBox extends Box implements InlinePaintable {
 
     private int _childrenContentType;
 
-    private List _inlineContent;
+    private List<Styleable> _inlineContent;
 
     private boolean _topMarginCalculated;
     private boolean _bottomMarginCalculated;
@@ -209,7 +209,7 @@ public class BlockBox extends Box implements InlinePaintable {
                 if (which == Box.DUMP_RENDER) {
                     dumpBoxes(c, indent, getChildren(), which, result);
                 } else {
-                    for (Iterator i = getInlineContent().iterator(); i.hasNext();) {
+                    for (Iterator<Styleable> i = getInlineContent().iterator(); i.hasNext();) {
                         Styleable styleable = (Styleable) i.next();
                         if (styleable instanceof BlockBox) {
                             BlockBox b = (BlockBox) styleable;
@@ -990,7 +990,7 @@ public class BlockBox extends Box implements InlinePaintable {
     }
 
     private void justifyText() {
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             LineBox line = (LineBox)i.next();
             line.justify();
         }
@@ -1024,7 +1024,7 @@ public class BlockBox extends Box implements InlinePaintable {
                 setNeedPageClear(true);
             } else {
                 LineBox lastLineBox = (LineBox)getChild(cCount-1);
-                List pages = c.getRootLayer().getPages();
+                List<PageBox> pages = c.getRootLayer().getPages();
                 PageBox lastPage = (PageBox)pages.get(firstPage.getPageNo()+1);
                 while (lastPage.getPageNo() != pages.size() - 1 &&
                         lastPage.getBottom() < lastLineBox.getAbsY()) {
@@ -1069,14 +1069,14 @@ public class BlockBox extends Box implements InlinePaintable {
         _childrenContentType = contentType;
     }
 
-    public List getInlineContent() {
+    public List<Styleable> getInlineContent() {
         return _inlineContent;
     }
 
-    public void setInlineContent(List inlineContent) {
+    public void setInlineContent(List<Styleable> inlineContent) {
         _inlineContent = inlineContent;
         if (inlineContent != null) {
-            for (Iterator i = inlineContent.iterator(); i.hasNext();) {
+            for (Iterator<Styleable> i = inlineContent.iterator(); i.hasNext();) {
                 Styleable child = (Styleable) i.next();
                 if (child instanceof Box) {
                     ((Box) child).setContainingBlock(this);
@@ -1178,7 +1178,7 @@ public class BlockBox extends Box implements InlinePaintable {
                 if (isMayCollapseMarginsWithChildren() && isNoTopPaddingOrBorder(c)) {
                     ensureChildren(c);
                     if (getChildrenContentType() == CONTENT_BLOCK) {
-                        for (Iterator i = getChildIterator(); i.hasNext();) {
+                        for (Iterator<Box> i = getChildIterator(); i.hasNext();) {
                             BlockBox child = (BlockBox) i.next();
                             child.collapseTopMargin(c, false, result);
 
@@ -1261,7 +1261,7 @@ public class BlockBox extends Box implements InlinePaintable {
 
         ensureChildren(c);
         if (getChildrenContentType() == CONTENT_BLOCK) {
-            for (Iterator i = getChildIterator(); i.hasNext();) {
+            for (Iterator<Box> i = getChildIterator(); i.hasNext();) {
                 BlockBox child = (BlockBox) i.next();
                 child.collapseEmptySubtreeMargins(c, result);
             }
@@ -1286,7 +1286,7 @@ public class BlockBox extends Box implements InlinePaintable {
         if (getChildrenContentType() == CONTENT_INLINE) {
             return false;
         } else if (getChildrenContentType() == CONTENT_BLOCK) {
-            for (Iterator i = getChildIterator(); i.hasNext();) {
+            for (Iterator<Box> i = getChildIterator(); i.hasNext();) {
                 BlockBox child = (BlockBox) i.next();
                 if (child.isSkipWhenCollapsingMargins() || ! child.isVerticalMarginsAdjoin(c)) {
                     return false;
@@ -1606,7 +1606,7 @@ public class BlockBox extends Box implements InlinePaintable {
         int childMinWidth = 0;
         int childMaxWidth = 0;
 
-        for (Iterator i = getChildIterator(); i.hasNext();) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext();) {
             BlockBox child = (BlockBox) i.next();
             child.calcMinMaxWidth(c);
             if (child.getMinWidth() > childMinWidth) {
@@ -1636,7 +1636,7 @@ public class BlockBox extends Box implements InlinePaintable {
 
         InlineBox trimmableIB = null;
 
-        for (Iterator i = _inlineContent.iterator(); i.hasNext();) {
+        for (Iterator<Styleable> i = _inlineContent.iterator(); i.hasNext();) {
             Styleable child = (Styleable) i.next();
 
             if (child.getStyle().isAbsolute() || child.getStyle().isFixed() || child.getStyle().isRunning()) {
@@ -1764,7 +1764,7 @@ public class BlockBox extends Box implements InlinePaintable {
         if (getChildrenContentType() == CONTENT_INLINE) {
             LinkedList<CalculatedStyle> styles = new LinkedList<CalculatedStyle>();
             styles.add(style);
-            for (Iterator i = _inlineContent.iterator(); i.hasNext();) {
+            for (Iterator<Styleable> i = _inlineContent.iterator(); i.hasNext();) {
                 Styleable child = (Styleable) i.next();
                 if (child instanceof InlineBox) {
                     InlineBox iB = (InlineBox) child;
@@ -2090,7 +2090,7 @@ public class BlockBox extends Box implements InlinePaintable {
             case CONTENT_EMPTY:
                 return false;
             case CONTENT_BLOCK:
-                for (Iterator i = getChildIterator(); i.hasNext(); ) {
+                for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
                     BlockBox box = (BlockBox)i.next();
                     if (box.isContainsInlineContent(c)) {
                         return true;

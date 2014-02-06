@@ -21,13 +21,9 @@
  */
 package org.xhtmlrenderer.util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.Handler;
 import java.util.logging.Formatter;
@@ -111,7 +107,7 @@ public class JDKXRLogger implements XRLogger {
         // pull logging properties from configuration
         // they are all prefixed as shown
         String prefix = "xr.util-logging.";
-        Iterator iter = Configuration.keysByPrefix(prefix);
+        Iterator<String> iter = Configuration.keysByPrefix(prefix);
         Properties props = new Properties();
         while (iter.hasNext()) {
             String fullkey = (String) iter.next();
@@ -167,7 +163,7 @@ public class JDKXRLogger implements XRLogger {
         Handler handler = handlers.get(handlerClassName);
         if (handler != null) {
             try {
-                Class fclass = Class.forName(formatterClassName);
+                Class<?> fclass = Class.forName(formatterClassName);
                 Formatter f = (Formatter) fclass.newInstance();
                 handler.setFormatter(f);
             } catch (ClassNotFoundException e) {
@@ -188,9 +184,9 @@ public class JDKXRLogger implements XRLogger {
      * be automatically created if they aren't already available.
      */
     private static List<Logger> retrieveLoggers() {
-        List loggerNames = XRLog.listRegisteredLoggers();
+        List<String> loggerNames = XRLog.listRegisteredLoggers();
         List<Logger> loggers = new ArrayList<Logger>(loggerNames.size());
-        Iterator it = loggerNames.iterator();
+        Iterator<String> it = loggerNames.iterator();
         while (it.hasNext()) {
             final String ln = (String) it.next();
             loggers.add(Logger.getLogger(ln));
@@ -214,7 +210,7 @@ public class JDKXRLogger implements XRLogger {
         for (int i = 0; i < names.length; i++) {
             final String name = names[i];
             try {
-                Class handlerClass = Class.forName(name);
+                Class<?> handlerClass = Class.forName(name);
                 Handler handler = (Handler) handlerClass.newInstance();
                 handlers.put(name, handler);
                 String hl = Configuration.valueFor("xr.util-logging." + name + ".level", "INFO");

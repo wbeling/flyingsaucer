@@ -104,9 +104,9 @@ public abstract class Box implements Styleable {
     public abstract String dump(LayoutContext c, String indent, int which);
 
     protected void dumpBoxes(
-            LayoutContext c, String indent, List boxes,
+            LayoutContext c, String indent, List<Box> boxes,
             int which, StringBuffer result) {
-        for (Iterator i = boxes.iterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = boxes.iterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             result.append(b.dump(c, indent + "  ", which));
             if (i.hasNext()) {
@@ -144,8 +144,8 @@ public abstract class Box implements Styleable {
         _boxes.add(child);
     }
 
-    public void addAllChildren(List children) {
-        for (Iterator i = children.iterator(); i.hasNext(); ) {
+    public void addAllChildren(List<Box> children) {
+        for (Iterator<Box> i = children.iterator(); i.hasNext(); ) {
             Box box = (Box)i.next();
             addChild(box);
         }
@@ -160,7 +160,7 @@ public abstract class Box implements Styleable {
     public void removeChild(Box target) {
         if (_boxes != null) {
             boolean found = false;
-            for (Iterator i = getChildIterator(); i.hasNext(); ) {
+            for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
                 Box child = (Box)i.next();
                 if (child.equals(target)) {
                     i.remove();
@@ -220,12 +220,12 @@ public abstract class Box implements Styleable {
         }
     }
 
-    public Iterator getChildIterator() {
-        return _boxes == null ? Collections.EMPTY_LIST.iterator() : _boxes.iterator();
+    public Iterator<Box> getChildIterator() {
+        return _boxes == null ? Collections.<Box>emptyList().iterator() : _boxes.iterator();
     }
 
-    public List getChildren() {
-        return _boxes == null ? Collections.EMPTY_LIST : _boxes;
+    public List<Box> getChildren() {
+        return _boxes == null ? Collections.<Box>emptyList() : _boxes;
     }
 
     public static final int NOTHING = 0;
@@ -478,7 +478,7 @@ public abstract class Box implements Styleable {
             // directly wrapped by an inline relative layer (i.e. block boxes sandwiched
             // between anonymous block boxes)
             if (c.getLayer().isInline()) {
-                List content =
+                List<Box> content =
                     ((InlineLayoutBox)c.getLayer().getMaster()).getElementWithContent();
                 if (content.contains(this)) {
                     setContainingLayer(c.getLayer());
@@ -764,7 +764,7 @@ public abstract class Box implements Styleable {
         }
     }
 
-    public void clearSelection(List modified) {
+    public void clearSelection(List<Box> modified) {
         for (int i = 0; i < getChildCount(); i++) {
             Box child = getChild(i);
             child.clearSelection(modified);
@@ -1006,7 +1006,7 @@ public abstract class Box implements Styleable {
     }
 
     public void collectText(RenderingContext c, StringBuffer buffer) throws IOException {
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.collectText(c, buffer);
         }
@@ -1017,7 +1017,7 @@ public abstract class Box implements Styleable {
             c.setPage(0, (PageBox)c.getRootLayer().getPages().get(0));
             c.getPage().exportLeadingText(c, writer);
         }
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.exportText(c, writer);
         }
@@ -1029,7 +1029,7 @@ public abstract class Box implements Styleable {
     private void exportPageBoxText(RenderingContext c, Writer writer) throws IOException {
         c.getPage().exportTrailingText(c, writer);
         if (c.getPage() != c.getRootLayer().getLastPage()) {
-            List pages = c.getRootLayer().getPages();
+            List<PageBox> pages = c.getRootLayer().getPages();
             do {
                 PageBox next = (PageBox)pages.get(c.getPageNo()+1);
                 c.setPage(next.getPageNo(), next);
@@ -1041,7 +1041,7 @@ public abstract class Box implements Styleable {
 
     protected void exportPageBoxText(RenderingContext c, Writer writer, int yPos) throws IOException {
         c.getPage().exportTrailingText(c, writer);
-        List pages = c.getRootLayer().getPages();
+        List<PageBox> pages = c.getRootLayer().getPages();
         PageBox next = (PageBox)pages.get(c.getPageNo()+1);
         c.setPage(next.getPageNo(), next);
         while (next.getBottom() < yPos) {
@@ -1069,7 +1069,7 @@ public abstract class Box implements Styleable {
 
     public void analyzePageBreaks(LayoutContext c, ContentLimitContainer container) {
         container.updateTop(c, getAbsY());
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             Box b = (Box)i.next();
             b.analyzePageBreaks(c, container);
         }

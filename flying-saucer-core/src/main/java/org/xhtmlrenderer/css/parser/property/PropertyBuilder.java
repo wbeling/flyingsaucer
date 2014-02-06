@@ -23,6 +23,8 @@ package org.xhtmlrenderer.css.parser.property;
 import java.util.List;
 
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 
 public interface PropertyBuilder {
     /**
@@ -30,8 +32,8 @@ public interface PropertyBuilder {
      * property <code>cssName</code>. <code>values</code> must contain
      * <code>CSSPrimitiveValue</code> objects.
      */
-    public List buildDeclarations(
-            CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed);
+    public List<PropertyDeclaration> buildDeclarations(
+            CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed);
     
-    public List buildDeclarations(CSSName cssName, List values, int origin, boolean important);    
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, int origin, boolean important);    
 }

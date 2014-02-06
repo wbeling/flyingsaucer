@@ -145,7 +145,8 @@ class TextAreaField extends FormField {
     }
 
 
-    private class TextAreaFieldJTextArea extends JTextArea {
+    @SuppressWarnings("serial")
+	private class TextAreaFieldJTextArea extends JTextArea {
         int columnWidth = 0;
 
         public TextAreaFieldJTextArea(int rows, int columns) {

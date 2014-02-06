@@ -77,7 +77,7 @@ public class ContentFunctionFactory {
         protected IdentValue getListStyleType(FSFunction function) {
             IdentValue result = IdentValue.DECIMAL;
             
-            List parameters = function.getParameters();
+            List<PropertyValue> parameters = function.getParameters();
             if (parameters.size() == 2) {
                 PropertyValue pValue = (PropertyValue)parameters.get(1);
                 IdentValue iValue = IdentValue.valueOf(pValue.getStringValue());
@@ -91,7 +91,7 @@ public class ContentFunctionFactory {
         
         protected boolean isCounter(FSFunction function, String counterName) {
             if (function.getName().equals("counter")) {
-                List parameters = function.getParameters();
+                List<PropertyValue> parameters = function.getParameters();
                 if (parameters.size() == 1 || parameters.size() == 2) {
                     PropertyValue param = (PropertyValue)parameters.get(0);
                     if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT ||
@@ -168,7 +168,7 @@ public class ContentFunctionFactory {
 
         public boolean canHandle(LayoutContext c, FSFunction function) {
             if (c.isPrint() && function.getName().equals("target-counter")) {
-                List parameters = function.getParameters();
+                List<PropertyValue> parameters = function.getParameters();
                 if (parameters.size() == 2 || parameters.size() == 3) {
                     FSFunction f = ((PropertyValue)parameters.get(0)).getFunction();
                     if (f == null ||
@@ -209,7 +209,7 @@ public class ContentFunctionFactory {
             // Because the leader should fill up the line, we need the correct
             // width and must first compute the target-counter function.
             boolean dynamic = false;
-            Iterator childIterator = lineBox.getChildIterator();
+            Iterator<Box> childIterator = lineBox.getChildIterator();
             while (childIterator.hasNext()) {
                 Box child = (Box)childIterator.next();
                 if (child == iB) {
@@ -279,7 +279,7 @@ public class ContentFunctionFactory {
 
         public boolean canHandle(LayoutContext c, FSFunction function) {
             if (c.isPrint() && function.getName().equals("leader")) {
-                List parameters = function.getParameters();
+                List<PropertyValue> parameters = function.getParameters();
                 if (parameters.size() == 1) {
                     PropertyValue param = (PropertyValue)parameters.get(0);
                     if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_STRING &&

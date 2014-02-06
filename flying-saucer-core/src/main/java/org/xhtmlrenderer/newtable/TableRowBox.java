@@ -110,7 +110,7 @@ public class TableRowBox extends BlockBox {
             return false;
         }
         
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableCellBox cell = (TableCellBox)i.next();
             int baseline = cell.calcBlockBaseline(c);
             if (baseline != BlockBox.NO_BASELINE && baseline < page.getBottom()) {
@@ -131,7 +131,7 @@ public class TableRowBox extends BlockBox {
                 container.updateBottom(c, getAbsY() + getHeight());
             }
             
-            for (Iterator i = getChildIterator(); i.hasNext(); ) {
+            for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
                 Box b = (Box)i.next();
                 b.analyzePageBreaks(c, _contentLimitContainer);
             }
@@ -147,7 +147,7 @@ public class TableRowBox extends BlockBox {
     private void calcExtraSpaceTop(LayoutContext c) {
         int maxBorderAndPadding = 0;
         
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableCellBox cell = (TableCellBox)i.next();
             
             int borderAndPadding = (int)cell.getPadding(c).top() + (int)cell.getBorder(c).top();
@@ -164,9 +164,9 @@ public class TableRowBox extends BlockBox {
         
         int cRow = getIndex();
         int totalRows = getSection().numRows();
-        List grid = getSection().getGrid();
+        List<RowData> grid = getSection().getGrid();
         if ((grid.size() > 0) && (cRow < grid.size())) {
-            List row = ((RowData)grid.get(cRow)).getRow();
+            List<TableCellBox> row = ((RowData)grid.get(cRow)).getRow();
             for (int cCol = 0; cCol < row.size(); cCol++) {
                 TableCellBox cell = (TableCellBox)row.get(cCol);
                 
@@ -198,13 +198,10 @@ public class TableRowBox extends BlockBox {
         }
         
         if (getChildrenContentType() != CONTENT_EMPTY) {
-            int cCol = 0;
-            for (Iterator i = getChildIterator(); i.hasNext(); ) {
+            for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
                 TableCellBox cell = (TableCellBox)i.next();
                 
                 layoutCell(c, cell, 0);
-                
-                cCol++;
             }
         }
         
@@ -255,9 +252,9 @@ public class TableRowBox extends BlockBox {
         
         int cRow = getIndex();
         int totalRows = getSection().numRows();
-        List grid = getSection().getGrid();
+        List<RowData> grid = getSection().getGrid();
         if ((grid.size() > 0) && (cRow < grid.size())) {
-            List row = ((RowData)grid.get(cRow)).getRow();
+            List<TableCellBox> row = ((RowData)grid.get(cRow)).getRow();
             for (int cCol = 0; cCol < row.size(); cCol++) {
                 TableCellBox cell = (TableCellBox)row.get(cCol);
                 
@@ -350,9 +347,9 @@ public class TableRowBox extends BlockBox {
         
         int cRow = getIndex();
         int totalRows = getSection().numRows();
-        List grid = getSection().getGrid();
+        List<RowData> grid = getSection().getGrid();
         if ((grid.size() > 0) && (cRow < grid.size())) {
-            List row = ((RowData)grid.get(cRow)).getRow();
+            List<TableCellBox> row = ((RowData)grid.get(cRow)).getRow();
             for (int cCol = 0; cCol < row.size(); cCol++) {
                 TableCellBox cell = (TableCellBox)row.get(cCol);
                 
@@ -387,9 +384,9 @@ public class TableRowBox extends BlockBox {
         int lowestCellEdge = 0;
         int cRow = getIndex();
         int totalRows = getSection().numRows();
-        List grid = getSection().getGrid();
+        List<RowData> grid = getSection().getGrid();
         if ((grid.size() > 0) && (cRow < grid.size())) {
-            List row = ((RowData)grid.get(cRow)).getRow();
+            List<TableCellBox> row = ((RowData)grid.get(cRow)).getRow();
             for (int cCol = 0; cCol < row.size(); cCol++) {
                 TableCellBox cell = (TableCellBox)row.get(cCol);
                 
@@ -416,9 +413,9 @@ public class TableRowBox extends BlockBox {
     private void setCellHeights(LayoutContext c) {
         int cRow = getIndex();
         int totalRows = getSection().numRows();
-        List grid = getSection().getGrid();
+        List<RowData> grid = getSection().getGrid();
         if ((grid.size() > 0) && (cRow < grid.size())) {
-            List row = ((RowData)grid.get(cRow)).getRow();
+            List<TableCellBox> row = ((RowData)grid.get(cRow)).getRow();
             for (int cCol = 0; cCol < row.size(); cCol++) {
                 TableCellBox cell = (TableCellBox)row.get(cCol);
                 
@@ -520,7 +517,7 @@ public class TableRowBox extends BlockBox {
                 exportPageBoxText(c, writer, yPos);
             }
             
-            for (Iterator i = getChildIterator(); i.hasNext(); ) {
+            for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
                 TableCellBox cell = (TableCellBox)i.next();
                 StringBuffer buffer =  new StringBuffer();
                 cell.collectText(c, buffer);
@@ -571,7 +568,7 @@ public class TableRowBox extends BlockBox {
                 
                 // calculate max spill from the collapsed top borders of each child
                 int spill = 0;
-                for (Iterator i = getChildIterator(); i.hasNext(); ) {
+                for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
                     TableCellBox cell = (TableCellBox)i.next();
                     BorderPropertySet collapsed = cell.getCollapsedPaintingBorder();
                     if (collapsed != null) {

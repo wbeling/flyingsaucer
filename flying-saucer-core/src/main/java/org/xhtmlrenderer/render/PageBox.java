@@ -372,14 +372,14 @@ public class PageBox {
     // HACK Would much prefer to do this in ITextRenderer or ITextOutputDevice
     // but given the existing API, this is about the only place it can be done
     private void retrievePageMetadata(LayoutContext c) {
-        List props = getPageInfo().getXMPPropertyList();
+        List<PropertyDeclaration> props = getPageInfo().getXMPPropertyList();
         if (props != null && props.size() > 0)
         {
-            for (Iterator i = props.iterator(); i.hasNext(); ) {
+            for (Iterator<PropertyDeclaration> i = props.iterator(); i.hasNext(); ) {
                 PropertyDeclaration decl = (PropertyDeclaration)i.next();
                 if (decl.getCSSName() == CSSName.CONTENT) {
                     PropertyValue value = (PropertyValue)decl.getValue();
-                    List values = value.getValues();
+                    List<?> values = value.getValues();
                     if (values.size() == 1) {
                         PropertyValue funcVal = (PropertyValue)values.get(0);
                         if (funcVal.getPropertyValueType() == PropertyValue.VALUE_TYPE_FUNCTION) {
@@ -510,11 +510,13 @@ public class PageBox {
             _marginBoxNames = marginBoxNames;
         }
 
-        public TableBox getTable() {
+        @SuppressWarnings("unused")
+		public TableBox getTable() {
             return _table;
         }
 
-        public void setTable(TableBox table) {
+        @SuppressWarnings("unused")
+		public void setTable(TableBox table) {
             _table = table;
         }
         

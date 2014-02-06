@@ -38,7 +38,7 @@ public abstract class CounterPropertyBuilder extends AbstractPropertyBuilder {
     
     // XXX returns a PropertyValue of type VALUE_TYPE_LIST, but the List contains
     // CounterData objects and not PropertyValue objects
-    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             PropertyValue value = (PropertyValue)values.get(0);
             

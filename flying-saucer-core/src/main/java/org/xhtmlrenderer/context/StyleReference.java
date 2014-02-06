@@ -35,6 +35,7 @@ import org.xhtmlrenderer.css.extend.AttributeResolver;
 import org.xhtmlrenderer.css.extend.lib.DOMTreeResolver;
 import org.xhtmlrenderer.css.newmatch.CascadedStyle;
 import org.xhtmlrenderer.css.newmatch.PageInfo;
+import org.xhtmlrenderer.css.sheet.FontFaceRule;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.Stylesheet;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
@@ -160,7 +161,7 @@ public class StyleReference {
     public java.util.Map<String, CSSPrimitiveValue> getCascadedPropertiesMap(Element e) {
         CascadedStyle cs = _matcher.getCascadedStyle(e, false);//this is only for debug, I think
         java.util.LinkedHashMap<String, CSSPrimitiveValue> props = new java.util.LinkedHashMap<String, CSSPrimitiveValue>();
-        for (java.util.Iterator i = cs.getCascadedPropertyDeclarations(); i.hasNext();) {
+        for (java.util.Iterator<PropertyDeclaration> i = cs.getCascadedPropertyDeclarations(); i.hasNext();) {
             PropertyDeclaration pd = (PropertyDeclaration) i.next();
 
             String propName = pd.getPropertyName();
@@ -276,7 +277,7 @@ public class StyleReference {
         }
     }
     
-    public List getFontFaceRules() {
+    public List<FontFaceRule> getFontFaceRules() {
         return _matcher.getFontFaceRules();
     }
     

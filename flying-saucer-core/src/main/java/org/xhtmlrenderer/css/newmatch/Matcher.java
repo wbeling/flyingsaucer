@@ -31,9 +31,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.xhtmlrenderer.css.constants.MarginBoxName;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
 import org.xhtmlrenderer.css.extend.StylesheetFactory;
 import org.xhtmlrenderer.css.extend.TreeResolver;
+import org.xhtmlrenderer.css.sheet.FontFaceRule;
 import org.xhtmlrenderer.css.sheet.MediaRule;
 import org.xhtmlrenderer.css.sheet.PageRule;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
@@ -61,18 +63,18 @@ public class Matcher {
     private Set<Object> _focusElements;
     private Set<Object> _visitElements;
     
-    private List<Object> _pageRules;
-    private List _fontFaceRules;
+    private List<PageRule> _pageRules;
+    private List<FontFaceRule> _fontFaceRules;
     
     public Matcher(
-            TreeResolver tr, AttributeResolver ar, StylesheetFactory factory, List stylesheets, String medium) {
+            TreeResolver tr, AttributeResolver ar, StylesheetFactory factory, List<Stylesheet> stylesheets, String medium) {
         newMaps();
         _treeRes = tr;
         _attRes = ar;
         _styleFactory = factory;
         
-        _pageRules = new ArrayList<Object>();
-        _fontFaceRules = new ArrayList();
+        _pageRules = new ArrayList<PageRule>();
+        _fontFaceRules = new ArrayList<FontFaceRule>();
         docMapper = createDocumentMapper(stylesheets, medium);
     }
     
@@ -105,10 +107,10 @@ public class Matcher {
     
     public PageInfo getPageCascadedStyle(String pageName, String pseudoPage) {
         List<PropertyDeclaration> props = new ArrayList<PropertyDeclaration>();
-        Map marginBoxes = new HashMap();
+        Map<MarginBoxName, List<PropertyDeclaration>> marginBoxes = new HashMap<MarginBoxName, List<PropertyDeclaration>>();
 
-        for (Iterator<Object> i = _pageRules.iterator(); i.hasNext(); ) {
-            PageRule pageRule = (PageRule)i.next();
+        for (Iterator<PageRule> i = _pageRules.iterator(); i.hasNext(); ) {
+            PageRule pageRule = i.next();
             
             if (pageRule.applies(pageName, pseudoPage)) {
                 props.addAll(pageRule.getRuleset().getPropertyDeclarations());
@@ -126,7 +128,7 @@ public class Matcher {
         return new PageInfo(props, style, marginBoxes);
     }
     
-    public List getFontFaceRules() {
+    public List<FontFaceRule> getFontFaceRules() {
         return _fontFaceRules;
     }
     
@@ -160,35 +162,35 @@ public class Matcher {
         }
     }
 
-    Mapper createDocumentMapper(List stylesheets, String medium) {
+    Mapper createDocumentMapper(List<Stylesheet> stylesheets, String medium) {
         java.util.TreeMap<String, Selector> sorter = new java.util.TreeMap<String, Selector>();
         addAllStylesheets(stylesheets, sorter, medium);
         XRLog.match("Matcher created with " + sorter.size() + " selectors");
         return new Mapper(sorter.values());
     }
     
-    private void addAllStylesheets(List stylesheets, TreeMap<String, Selector> sorter, String medium) {
+    private void addAllStylesheets(List<Stylesheet> stylesheets, TreeMap<String, Selector> sorter, String medium) {
         int count = 0;
         int pCount = 0;
-        for (Iterator i = stylesheets.iterator(); i.hasNext(); ) {
+        for (Iterator<Stylesheet> i = stylesheets.iterator(); i.hasNext(); ) {
             Stylesheet stylesheet = (Stylesheet)i.next();
-            for (Iterator j = stylesheet.getContents().iterator(); j.hasNext(); ) {
+            for (Iterator<Object> j = stylesheet.getContents().iterator(); j.hasNext(); ) {
                 Object obj = (Object)j.next();
                 if (obj instanceof Ruleset) {
-                    for (Iterator k = ((Ruleset)obj).getFSSelectors().iterator(); k.hasNext(); ) {
+                    for (Iterator<Selector> k = ((Ruleset)obj).getFSSelectors().iterator(); k.hasNext(); ) {
                         Selector selector = (Selector)k.next();
                         selector.setPos(++count);
                         sorter.put(selector.getOrder(), selector);
                     }
                 } else if (obj instanceof PageRule) {
                     ((PageRule)obj).setPos(++pCount);
-                    _pageRules.add(obj);
+                    _pageRules.add((PageRule) obj);
                 } else if (obj instanceof MediaRule) {
                     MediaRule mediaRule = (MediaRule)obj;
                     if (mediaRule.matches(medium)) {
-                        for (Iterator k = mediaRule.getContents().iterator(); k.hasNext(); ) {
+                        for (Iterator<Ruleset> k = mediaRule.getContents().iterator(); k.hasNext(); ) {
                             Ruleset ruleset = (Ruleset)k.next();
-                            for (Iterator l = ruleset.getFSSelectors().iterator(); l.hasNext(); ) {
+                            for (Iterator<Selector> l = ruleset.getFSSelectors().iterator(); l.hasNext(); ) {
                                 Selector selector = (Selector)l.next();
                                 selector.setPos(++count);
                                 sorter.put(selector.getOrder(), selector);
@@ -201,8 +203,8 @@ public class Matcher {
             _fontFaceRules.addAll(stylesheet.getFontFaceRules());
         }
         
-        Collections.sort(_pageRules, new Comparator() {
-            public int compare(Object o1, Object o2) {
+        Collections.sort(_pageRules, new Comparator<PageRule>() {
+            public int compare(PageRule o1, PageRule o2) {
                 PageRule p1 = (PageRule)o1;
                 PageRule p2 = (PageRule)o2;
                 
@@ -238,16 +240,16 @@ public class Matcher {
         return m;
     }
 
-    private static java.util.Iterator getMatchedRulesets(final List<Selector> mappedSelectors) {
+    private static java.util.Iterator<Ruleset> getMatchedRulesets(final List<Selector> mappedSelectors) {
         return
-                new java.util.Iterator() {
+                new java.util.Iterator<Ruleset>() {
                     java.util.Iterator<Selector> selectors = mappedSelectors.iterator();
 
                     public boolean hasNext() {
                         return selectors.hasNext();
                     }
 
-                    public Object next() {
+                    public Ruleset next() {
                         if (hasNext()) {
                             return selectors.next().getRuleset();
                         } else {
@@ -261,17 +263,17 @@ public class Matcher {
                 };
     }
 
-    private static java.util.Iterator getSelectedRulesets(java.util.List selectorList) {
-        final java.util.List sl = selectorList;
+    private static java.util.Iterator<Ruleset> getSelectedRulesets(java.util.List<Selector> selectorList) {
+        final java.util.List<Selector> sl = selectorList;
         return
-                new java.util.Iterator() {
-                    java.util.Iterator selectors = sl.iterator();
+                new java.util.Iterator<Ruleset>() {
+                    java.util.Iterator<Selector> selectors = sl.iterator();
 
                     public boolean hasNext() {
                         return selectors.hasNext();
                     }
 
-                    public Object next() {
+                    public Ruleset next() {
                         if (hasNext()) {
                             return ((Selector) selectors.next()).getRuleset();
                         } else {
@@ -321,7 +323,7 @@ public class Matcher {
      */
     class Mapper {
         java.util.List<Selector> axes;
-        private HashMap<String, List> pseudoSelectors;
+        private HashMap<String, List<Selector>> pseudoSelectors;
         private List<Selector> mappedSelectors;
         private HashMap<String, Mapper> children;
 
@@ -343,7 +345,7 @@ public class Matcher {
         Mapper mapChild(Object e) {
             //Mapper childMapper = new Mapper();
             java.util.List<Selector> childAxes = new ArrayList<Selector>(axes.size() + 10);
-            java.util.HashMap<String, List> pseudoSelectors = new java.util.HashMap<String, List>();
+            java.util.HashMap<String, List<Selector>> pseudoSelectors = new java.util.HashMap<String, List<Selector>>();
             java.util.List<Selector> mappedSelectors = new java.util.LinkedList<Selector>();
             StringBuffer key = new StringBuffer();
             for (int i = 0, size = axes.size(); i < size; i++) {
@@ -419,7 +421,7 @@ public class Matcher {
                     propList.addAll(nonCssStyling.getPropertyDeclarations());
                 }
                 //these should have been returned in order of specificity
-                for (Iterator i = getMatchedRulesets(mappedSelectors); i.hasNext();) {
+                for (Iterator<Ruleset> i = getMatchedRulesets(mappedSelectors); i.hasNext();) {
                     org.xhtmlrenderer.css.sheet.Ruleset rs = (org.xhtmlrenderer.css.sheet.Ruleset) i.next();
                     propList.addAll(rs.getPropertyDeclarations());
                 }
@@ -443,16 +445,16 @@ public class Matcher {
          * We assume that restyle has already been done by a getCascadedStyle if necessary.
          */
         public CascadedStyle getPECascadedStyle(Object e, String pseudoElement) {
-            java.util.Iterator si = pseudoSelectors.entrySet().iterator();
+            java.util.Iterator<Map.Entry<String, List<Selector>>> si = pseudoSelectors.entrySet().iterator();
             if (!si.hasNext()) {
                 return null;
             }
             CascadedStyle cs = null;
-            java.util.List pe = pseudoSelectors.get(pseudoElement);
+            java.util.List<Selector> pe = pseudoSelectors.get(pseudoElement);
             if (pe == null) return null;
 
             java.util.List<PropertyDeclaration> propList = new java.util.LinkedList<PropertyDeclaration>();
-            for (java.util.Iterator i = getSelectedRulesets(pe); i.hasNext();) {
+            for (java.util.Iterator<Ruleset> i = getSelectedRulesets(pe); i.hasNext();) {
                 org.xhtmlrenderer.css.sheet.Ruleset rs = (org.xhtmlrenderer.css.sheet.Ruleset) i.next();
                 propList.addAll(rs.getPropertyDeclarations());
             }

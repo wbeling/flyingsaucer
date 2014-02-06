@@ -57,7 +57,7 @@ public class PropertyValue implements CSSPrimitiveValue {
     
     private Token _operator;
     
-    private List _values;
+    private List<?> _values;
     private FSFunction _function;
 
     public PropertyValue(short type, float floatValue, String cssText) {
@@ -107,7 +107,7 @@ public class PropertyValue implements CSSPrimitiveValue {
         _identValue = ident;
     }
     
-    public PropertyValue(List values) {
+    public PropertyValue(List<?> values) {
         _type = CSSPrimitiveValue.CSS_UNKNOWN; // HACK
         _cssValueType = CSSValue.CSS_CUSTOM;
         _cssText = values.toString(); // HACK
@@ -209,8 +209,8 @@ public class PropertyValue implements CSSPrimitiveValue {
         return _cssText;
     }
     
-    public List getValues() {
-        return new ArrayList(_values);
+    public List<?> getValues() {
+        return new ArrayList<Object>(_values);
     }
     
     public FSFunction getFunction() {

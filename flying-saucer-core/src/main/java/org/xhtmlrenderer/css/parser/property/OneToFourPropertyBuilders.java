@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 
 public abstract class OneToFourPropertyBuilders {
@@ -30,9 +31,9 @@ public abstract class OneToFourPropertyBuilders {
         protected abstract CSSName[] getProperties();
         protected abstract PropertyBuilder getPropertyBuilder();
         
-        public List buildDeclarations(
-                CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
-            List result = new ArrayList(4);
+        public List<PropertyDeclaration> buildDeclarations(
+                CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
+            List<PropertyDeclaration> result = new ArrayList<>(4);
             checkValueCount(cssName, 1, 4, values.size());
             
             PropertyBuilder builder = getPropertyBuilder();

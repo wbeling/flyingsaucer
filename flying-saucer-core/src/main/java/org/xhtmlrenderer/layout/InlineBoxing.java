@@ -30,6 +30,7 @@ import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
+import org.xhtmlrenderer.css.style.FSDerivedValue;
 import org.xhtmlrenderer.css.style.derived.BorderPropertySet;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.render.AnonymousBlockBox;
@@ -115,7 +116,7 @@ public class InlineBoxing {
 
         int lineOffset = 0;
 
-        for (Iterator i = box.getInlineContent().iterator(); i.hasNext(); ) {
+        for (Iterator<Styleable> i = box.getInlineContent().iterator(); i.hasNext(); ) {
             Styleable node = (Styleable)i.next();
 
             if (node.getStyle().isInline()) {
@@ -615,7 +616,7 @@ public class InlineBoxing {
         List<TextDecoration> result = null;
         CalculatedStyle style = box.getStyle();
 
-        List idents = style.getTextDecorations();
+        List<FSDerivedValue> idents = style.getTextDecorations();
         if (idents != null) {
             result = new ArrayList<TextDecoration>(idents.size());
             if (idents.contains(IdentValue.UNDERLINE)) {

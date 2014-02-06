@@ -56,7 +56,7 @@ public class BoxCollector {
             CssContext c, Shape clip, Layer layer, 
             List<Box> blockContent, List<Box> inlineContent, BoxRangeLists rangeLists) {
         InlineLayoutBox iB = (InlineLayoutBox)layer.getMaster();
-        List content = iB.getElementWithContent();
+        List<Box> content = iB.getElementWithContent();
         
         for (int i = 0; i < content.size(); i++) {
             Box b = (Box)content.get(i);

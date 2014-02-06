@@ -24,9 +24,9 @@ import java.util.List;
 
 public class FSFunction {
     private String _name;
-    private List _parameters;
+    private List<PropertyValue> _parameters;
     
-    public FSFunction(String name, List parameters) {
+    public FSFunction(String name, List<PropertyValue> parameters) {
         _name = name;
         _parameters = parameters;
     }
@@ -35,7 +35,7 @@ public class FSFunction {
         return _name;
     }
     
-    public List getParameters() {
+    public List<PropertyValue> getParameters() {
         return _parameters;
     }
     
@@ -43,7 +43,7 @@ public class FSFunction {
         StringBuffer result = new StringBuffer();
         result.append(_name);
         result.append('(');
-        for (Iterator i = _parameters.iterator(); i.hasNext(); ) {
+        for (Iterator<PropertyValue> i = _parameters.iterator(); i.hasNext(); ) {
             result.append(i.next());  // HACK
             result.append(',');
         }

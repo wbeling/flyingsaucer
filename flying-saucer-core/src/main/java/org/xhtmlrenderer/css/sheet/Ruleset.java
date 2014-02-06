@@ -57,7 +57,7 @@ public class Ruleset {
         _props.add(decl);
     }
     
-    public void addAllProperties(List props) {
+    public void addAllProperties(List<PropertyDeclaration> props) {
         _props.addAll(props);
     }
     

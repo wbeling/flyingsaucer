@@ -108,9 +108,9 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     private DocumentTraversal docTraversal;
 
-    private Map elementBoxMap;
+    private Map<Element, Box> elementBoxMap;
 
-    private Map textInlineMap;
+    private Map<Text, List<InlineText>> textInlineMap;
 
     private String lastHighlightedString = "";
 
@@ -325,7 +325,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         }
         Range r = docRange.createRange();
         r.setStart(firstText, 0);
-        ViewModelInfo firstPoint = new ViewModelInfo(r, (InlineText) ((List) textInlineMap
+        ViewModelInfo firstPoint = new ViewModelInfo(r, (InlineText) (textInlineMap
                 .get(firstText)).get(0));
         r = docRange.createRange();
         try {
@@ -334,7 +334,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         } catch (Exception e) {
             r.setStart(lastText, Math.max(0, lastText.getLength() - 1));
         }
-        List l = (List) textInlineMap.get(firstText);
+        List<InlineText> l = textInlineMap.get(firstText);
 
         ViewModelInfo lastPoint = new ViewModelInfo(r, (InlineText) l.get(l.size() - 1));
         setDot(firstPoint);
@@ -358,7 +358,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     private void updateHighlights() {
 
-        List modified = new ArrayList();
+        List<Box> modified = new ArrayList<>();
         StringBuffer hlText = new StringBuffer();
         if (this.dotInfo == null) {
             getComponent().getRootBox().clearSelection(modified);
@@ -426,7 +426,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
                 } else {
                     lastNodeWasBox = false;
                     Text t = (Text) n;
-                    List iTs = getInlineTextsForText(t);
+                    List<InlineText> iTs = getInlineTextsForText(t);
                     if (iTs == null) {
                         // shouldn't happen
                         continue;
@@ -436,7 +436,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
                             .getNodeValue().length();
 
                     hlText.append(t.getNodeValue().substring(selTxtSt, selTxtEnd));
-                    for (Iterator itr = iTs.iterator(); itr.hasNext();) {
+                    for (Iterator<InlineText> itr = iTs.iterator(); itr.hasNext();) {
                         InlineText iT = (InlineText) itr.next();
 
                         iT.setSelectionStart((short) Math.max(0, Math.min(selTxtSt, iT.getEnd())
@@ -475,7 +475,8 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         return buf.toString();
     }
 
-    private Box getElementContainerBox(InlineText t) {
+    @SuppressWarnings("unused")
+	private Box getElementContainerBox(InlineText t) {
         Box b = t.getParent();
         while (b.getElement() == null) {
             b = b.getParent();
@@ -487,9 +488,9 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         if (panel.getRootBox() == null) {
             return false;
         }
-        textInlineMap = new LinkedHashMap();
-        elementBoxMap = new HashMap();
-        Stack s = new Stack();
+        textInlineMap = new LinkedHashMap<>();
+        elementBoxMap = new HashMap<>();
+        Stack<Box> s = new Stack<>();
         s.push(panel.getRootBox());
         while (!s.empty()) {
             Box b = (Box) s.pop();
@@ -499,21 +500,21 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
             }
             if (b instanceof InlineLayoutBox) {
                 InlineLayoutBox ilb = (InlineLayoutBox) b;
-                for (Iterator it = ilb.getInlineChildren().iterator(); it.hasNext();) {
+                for (Iterator<Object> it = ilb.getInlineChildren().iterator(); it.hasNext();) {
                     Object o = it.next();
                     if (o instanceof InlineText) {
                         InlineText t = (InlineText) o;
                         Text txt = t.getTextNode();
                         if (!textInlineMap.containsKey(txt)) {
-                            textInlineMap.put(txt, new ArrayList());
+                            textInlineMap.put(txt, new ArrayList<InlineText>());
                         }
-                        ((List) textInlineMap.get(txt)).add(t);
+                        (textInlineMap.get(txt)).add(t);
                     } else {
                         s.push((Box) o);
                     }
                 }
             } else {
-                Iterator childIterator = b.getChildIterator();
+                Iterator<Box> childIterator = b.getChildIterator();
                 while (childIterator.hasNext()) {
                     s.push(childIterator.next());
                 }
@@ -523,12 +524,12 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     }
 
-    private List getInlineTextsForText(Text t) {
-        return (List) textInlineMap.get(t);
+    private List<InlineText> getInlineTextsForText(Text t) {
+        return textInlineMap.get(t);
     }
 
     private Box getBoxForElement(Element elt) {
-        return (Box) elementBoxMap.get(elt);
+        return elementBoxMap.get(elt);
     }
 
     private void updateSystemSelection() {
@@ -566,16 +567,16 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         }
     }
 
-    List getInlineLayoutBoxes(Box b, boolean ignoreChildElements) {
-        Stack boxes = new Stack();
-        List ilbs = new ArrayList();
+    List<Box> getInlineLayoutBoxes(Box b, boolean ignoreChildElements) {
+        Stack<Box> boxes = new Stack<>();
+        List<Box> ilbs = new ArrayList<>();
         boxes.push(b);
         while (!boxes.empty()) {
             b = (Box) boxes.pop();
             if (b instanceof InlineLayoutBox) {
                 ilbs.add((InlineLayoutBox) b);
             } else {
-                for (Iterator it = b.getChildIterator(); it.hasNext();) {
+                for (Iterator<Box> it = b.getChildIterator(); it.hasNext();) {
                     Box child = (Box) it.next();
                     if (!ignoreChildElements || child.getElement() == null) {
                         boxes.push(child);
@@ -594,7 +595,6 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         if (box == null) {
             return null;
         }
-        Element elt = null;
         int offset = 0;
         InlineLayoutBox ilb = null;
         boolean containsWholeIlb = false;
@@ -602,7 +602,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
             ilb = (InlineLayoutBox) box;
         } else {
             for (; ilb == null;) {
-                List ilbs = getInlineLayoutBoxes(box, false);
+                List<Box> ilbs = getInlineLayoutBoxes(box, false);
                 for (int i = ilbs.size() - 1; i >= 0; i--) {
                     InlineLayoutBox ilbt = (InlineLayoutBox) ilbs.get(i);
                     if (ilbt.getAbsY() <= e.getY() && ilbt.getAbsX() <= e.getX()) {
@@ -611,9 +611,9 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
                             if (ilbt.isContainsVisibleContent()) {
                                 boolean hasDecentTextNode = false;
-                                int x = ilbt.getAbsX();
+                                ilbt.getAbsX();
 
-                                for (Iterator it = ilbt.getInlineChildren().iterator(); it
+                                for (Iterator<Object> it = ilbt.getInlineChildren().iterator(); it
                                         .hasNext();) {
                                     Object o = it.next();
                                     if (o instanceof InlineText) {
@@ -642,7 +642,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         }
         int x = ilb.getAbsX();
         InlineText lastItxt = null;
-        for (Iterator it = ilb.getInlineChildren().iterator(); it.hasNext();) {
+        for (Iterator<Object> it = ilb.getInlineChildren().iterator(); it.hasNext();) {
             Object o = it.next();
             if (o instanceof InlineText) {
                 InlineText txt = (InlineText) o;
@@ -800,7 +800,8 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     public static final String copyAction = "Copy";
 
-    public static class CopyAction extends AbstractAction {
+    @SuppressWarnings("serial")
+	public static class CopyAction extends AbstractAction {
 
         private SelectionHighlighter caret;
 

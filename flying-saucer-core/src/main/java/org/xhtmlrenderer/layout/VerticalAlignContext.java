@@ -157,8 +157,8 @@ public class VerticalAlignContext {
         return result;
     }
     
-    public List getChildren() {
-        return _children == null ? Collections.EMPTY_LIST : _children;
+    public List<ChildContextData> getChildren() {
+        return _children == null ? Collections.<ChildContextData>emptyList() : _children;
     }
 
     public VerticalAlignContext getParent() {
@@ -183,7 +183,7 @@ public class VerticalAlignContext {
     }
     
     public void alignChildren() {
-        List children = getChildren();
+        List<ChildContextData> children = getChildren();
         for (int i = 0; i < children.size(); i++) {
             ChildContextData data = (ChildContextData)children.get(i);
             data.align();
@@ -200,7 +200,8 @@ public class VerticalAlignContext {
         private VerticalAlignContext _verticalAlignContext;
         
         
-        public ChildContextData() {
+        @SuppressWarnings("unused")
+		public ChildContextData() {
         }
         
         public ChildContextData(Box root, VerticalAlignContext vaContext) {
@@ -208,11 +209,13 @@ public class VerticalAlignContext {
             _verticalAlignContext = vaContext;
         }
         
-        public Box getRoot() {
+        @SuppressWarnings("unused")
+		public Box getRoot() {
             return _root;
         }
         
-        public void setRoot(Box root) {
+        @SuppressWarnings("unused")
+		public void setRoot(Box root) {
             _root = root;
         }
         
@@ -220,7 +223,8 @@ public class VerticalAlignContext {
             return _verticalAlignContext;
         }
         
-        public void setVerticalAlignContext(VerticalAlignContext verticalAlignContext) {
+        @SuppressWarnings("unused")
+		public void setVerticalAlignContext(VerticalAlignContext verticalAlignContext) {
             _verticalAlignContext = verticalAlignContext;
         }
         

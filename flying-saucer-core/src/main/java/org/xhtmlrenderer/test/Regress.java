@@ -23,9 +23,6 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.swing.BoxRenderer;
 import org.xhtmlrenderer.swing.Java2DRenderer;
 import org.xhtmlrenderer.util.FSImageWriter;
-import org.xhtmlrenderer.util.IOUtil;
-import org.xhtmlrenderer.util.Zipper;
-
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Arrays;
@@ -213,7 +210,8 @@ public class Regress {
         }
     }
 
-    private static File getArgOutputZipFile(String[] args) throws IOException {
+    @SuppressWarnings("unused")
+	private static File getArgOutputZipFile(String[] args) throws IOException {
         if (args.length < 2) {
             usageAndExit("Need file name which will contain rendered files as a Zip.");
         }

@@ -123,8 +123,8 @@ public abstract class AbstractOutputDevice implements OutputDevice {
     public void drawTextDecoration(RenderingContext c, LineBox lineBox) {
         setColor(lineBox.getStyle().getColor());
         Box parent = lineBox.getParent();
-        List decorations = lineBox.getTextDecorations();
-        for (Iterator i = decorations.iterator(); i.hasNext(); ) {
+        List<TextDecoration> decorations = lineBox.getTextDecorations();
+        for (Iterator<TextDecoration> i = decorations.iterator(); i.hasNext(); ) {
             TextDecoration textDecoration = (TextDecoration)i.next();
             if (parent.getStyle().isIdent(
                     CSSName.FS_TEXT_DECORATION_EXTENT, IdentValue.BLOCK)) {

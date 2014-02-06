@@ -214,13 +214,13 @@ public class BoxBuilder {
 
         if (direction == MARGIN_BOX_VERTICAL && cellCount > 0) {
             int rHeight = 0;
-            for (Iterator i = section.getChildIterator(); i.hasNext(); ) {
+            for (Iterator<Box> i = section.getChildIterator(); i.hasNext(); ) {
                 TableRowBox r = (TableRowBox)i.next();
                 r.setHeightOverride(height / cellCount);
                 rHeight += r.getHeightOverride();
             }
 
-            for (Iterator i = section.getChildIterator(); i.hasNext() && rHeight < height; ) {
+            for (Iterator<Box> i = section.getChildIterator(); i.hasNext() && rHeight < height; ) {
                 TableRowBox r = (TableRowBox)i.next();
                 r.setHeightOverride(r.getHeightOverride()+1);
                 rHeight++;
@@ -529,7 +529,7 @@ public class BoxBuilder {
         Box footer = null;
         List<Box> bottomCaptions = new LinkedList<Box>();
 
-        for (Iterator i = table.getChildIterator(); i.hasNext();) {
+        for (Iterator<Box> i = table.getChildIterator(); i.hasNext();) {
             Box b = (Box) i.next();
             IdentValue display = b.getStyle().getIdent(CSSName.DISPLAY);
             if (display == IdentValue.TABLE_CAPTION) {
@@ -672,7 +672,7 @@ public class BoxBuilder {
 
     private static boolean isAttrFunction(FSFunction function) {
         if (function.getName().equals("attr")) {
-            List params = function.getParameters();
+            List<PropertyValue> params = function.getParameters();
             if (params.size() == 1) {
                 PropertyValue value = (PropertyValue) params.get(0);
                 return value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT;
@@ -684,7 +684,7 @@ public class BoxBuilder {
 
     public static boolean isElementFunction(FSFunction function) {
         if (function.getName().equals("element")) {
-            List params = function.getParameters();
+            List<PropertyValue> params = function.getParameters();
             if (params.size() < 1 || params.size() > 2) {
                 return false;
             }
@@ -704,7 +704,7 @@ public class BoxBuilder {
 
     private static CounterFunction makeCounterFunction(FSFunction function, LayoutContext c, CalculatedStyle style) {
         if (function.getName().equals("counter")) {
-            List params = function.getParameters();
+            List<PropertyValue> params = function.getParameters();
             if (params.size() < 1 || params.size() > 2) {
                 return null;
             }
@@ -739,7 +739,7 @@ public class BoxBuilder {
 
             return new CounterFunction(counterValue, listStyleType);
         } else if (function.getName().equals("counters")) {
-            List params = function.getParameters();
+            List<PropertyValue> params = function.getParameters();
             if (params.size() < 2 || params.size() > 3) {
                 return null;
             }
@@ -772,7 +772,7 @@ public class BoxBuilder {
                 }
             }
 
-            List counterValues = c.getCounterContext(style).getCurrentCounterValues(counter);
+            List<Integer> counterValues = c.getCounterContext(style).getCurrentCounterValues(counter);
 
             return new CounterFunction(counterValues, separator, listStyleType);
         } else {
@@ -788,16 +788,16 @@ public class BoxBuilder {
     private static List<Styleable> createGeneratedContentList(
             LayoutContext c, Element element, PropertyValue propValue,
             String peName, CalculatedStyle style, int mode, ChildBoxInfo info) {
-        List values = propValue.getValues();
+        List<?> values = propValue.getValues();
 
         if (values == null) {
             // content: normal or content: none
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<Styleable> result = new ArrayList<Styleable>(values.size());
 
-        for (Iterator i = values.iterator(); i.hasNext();) {
+        for (Iterator<?> i = values.iterator(); i.hasNext();) {
             PropertyValue value = (PropertyValue) i.next();
 
             ContentFunction contentFunction = null;
@@ -878,7 +878,7 @@ public class BoxBuilder {
     }
 
     public static BlockBox getRunningBlock(LayoutContext c, PropertyValue value) {
-        List params = value.getFunction().getParameters();
+        List<PropertyValue> params = value.getFunction().getParameters();
         String ident = ((PropertyValue)params.get(0)).getStringValue();
         PageElementPosition position = null;
         if (params.size() == 2) {
@@ -934,7 +934,7 @@ public class BoxBuilder {
             CalculatedStyle style, PropertyValue property, ChildBoxInfo info) {
         if (style.isDisplayNone() || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)
                 || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<Styleable> inlineBoxes = createGeneratedContentList(

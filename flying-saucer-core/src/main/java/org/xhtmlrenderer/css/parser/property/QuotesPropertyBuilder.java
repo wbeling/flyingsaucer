@@ -34,11 +34,11 @@ import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 
 public class QuotesPropertyBuilder extends AbstractPropertyBuilder {
 
-    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List values, int origin, boolean important, boolean inheritAllowed) {
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             PropertyValue value = (PropertyValue)values.get(0);
             if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             } else if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.QUOTES, value);
                 if (ident == IdentValue.NONE) {
@@ -54,7 +54,7 @@ public class QuotesPropertyBuilder extends AbstractPropertyBuilder {
         }
         
         List<String> resultValues = new ArrayList<String>();
-        for (Iterator i = values.iterator(); i.hasNext(); ) {
+        for (Iterator<PropertyValue> i = values.iterator(); i.hasNext(); ) {
             PropertyValue value = (PropertyValue)i.next();
             
             if (value.getOperator() != null) {
@@ -84,7 +84,7 @@ public class QuotesPropertyBuilder extends AbstractPropertyBuilder {
             return Collections.singletonList(
                     new PropertyDeclaration(CSSName.QUOTES, new PropertyValue(resultValues), important, origin));
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 }

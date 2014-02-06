@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
+import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.RenderingContext;
 
 public class TableSectionBox extends BlockBox {
@@ -76,10 +77,10 @@ public class TableSectionBox extends BlockBox {
         int cRow = 0;
         _grid.clear();
         ensureChildren(c);
-        for (Iterator i = getChildIterator(); i.hasNext(); cRow++) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); cRow++) {
             TableRowBox row = (TableRowBox)i.next();
             row.ensureChildren(c);
-            for (Iterator j = row.getChildIterator(); j.hasNext(); ) {
+            for (Iterator<Box> j = row.getChildIterator(); j.hasNext(); ) {
                 TableCellBox cell = (TableCellBox)j.next();
                 addCell(row, cell, cRow);
             }
@@ -88,10 +89,10 @@ public class TableSectionBox extends BlockBox {
     
     public void calcBorders(LayoutContext c) {
         ensureChildren(c);
-        for (Iterator i = getChildIterator(); i.hasNext(); ) {
+        for (Iterator<Box> i = getChildIterator(); i.hasNext(); ) {
             TableRowBox row = (TableRowBox)i.next();
             row.ensureChildren(c);
-            for (Iterator j = row.getChildIterator(); j.hasNext(); ) {
+            for (Iterator<Box> j = row.getChildIterator(); j.hasNext(); ) {
                 TableCellBox cell = (TableCellBox)j.next();
                 cell.calcCollapsedBorder(c);
             }
@@ -143,7 +144,7 @@ public class TableSectionBox extends BlockBox {
         int rSpan = cell.getStyle().getRowSpan();
         int cSpan = cell.getStyle().getColSpan();
         
-        List columns = getTable().getColumns();
+        List<ColumnData> columns = getTable().getColumns();
         int nCols = columns.size();
         int cCol = 0;
         
@@ -197,7 +198,7 @@ public class TableSectionBox extends BlockBox {
         
         for (Iterator<RowData> i = _grid.iterator(); i.hasNext(); ) {
             RowData row = i.next();
-            List cols = row.getRow();
+            List<TableCellBox> cols = row.getRow();
             int hspacing = getTable().getStyle().getBorderHSpacing(c);
             for (int j = 0; j < cols.size(); j++) {
                 TableCellBox cell = (TableCellBox)cols.get(j);
