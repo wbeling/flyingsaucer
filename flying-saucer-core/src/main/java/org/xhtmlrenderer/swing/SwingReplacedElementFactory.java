@@ -19,8 +19,8 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
@@ -267,11 +267,11 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         Node node = e;
 
         do {
-            node = node.getParentNode();
-        } while (node.getNodeType() == Node.ELEMENT_NODE &&
+            node = node.parentNode();
+        } while (node instanceof Element &&
                 !context.getNamespaceHandler().isFormElement((Element) node));
 
-        if (node.getNodeType() != Node.ELEMENT_NODE) {
+        if (!(node instanceof Element)) {
             return null;
         }
 

@@ -1,6 +1,6 @@
 package org.xhtmlrenderer.test;
 
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.extend.FSImage;
@@ -149,5 +149,4 @@ public class SwingImageReplacer extends ElementReplacer {
         }
         return mre;
     }
-
 }

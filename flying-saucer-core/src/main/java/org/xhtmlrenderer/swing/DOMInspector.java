@@ -19,10 +19,11 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.jsoup.nodes.Comment;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.css.constants.ValueConstants;
@@ -43,6 +44,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -291,7 +293,7 @@ class ElementPropertiesPanel extends JPanel {
      * @throws Exception Throws
      */
     private TableModel tableModel(Node node) {
-        if (node.getNodeType() != Node.ELEMENT_NODE) {
+        if (!(node instanceof Element)) {
             Toolkit.getDefaultToolkit().beep();
             return _defaultTableModel;
         }
@@ -549,11 +551,12 @@ class DOMTreeModel implements TreeModel {
     }
 
     private void setRoot(String rootNodeName) {
-        Node tempRoot = doc.getDocumentElement();
-        NodeList nl = tempRoot.getChildNodes();
-        for (int i = 0; i < nl.getLength(); i++) {
-            if (nl.item(i).getNodeName().toLowerCase().equals(rootNodeName)) {
-                this.root = nl.item(i);
+        Node tempRoot = doc;
+        for (Node node : tempRoot.childNodes())
+        {
+            if (node.nodeName().toLowerCase(Locale.US).equals(rootNodeName))
+            {
+                this.root = node;
             }
         }
     }
@@ -698,7 +701,7 @@ class DOMTreeModel implements TreeModel {
 
         Node node = (Node) nd;
 
-        return !node.hasChildNodes();
+        return (node.childNodeSize() <= 0);
     }
 
     // only adds displayable nodes--not stupid DOM text filler nodes
@@ -713,14 +716,15 @@ class DOMTreeModel implements TreeModel {
         if (children == null) {
             children = new ArrayList<Node>();
             this.displayableNodes.put(parent, children);
-            NodeList nl = parent.getChildNodes();
-            for (int i = 0, len = nl.getLength(); i < len; i++) {
-                Node child = nl.item(i);
-                if (child.getNodeType() == Node.ELEMENT_NODE ||
-                        child.getNodeType() == Node.COMMENT_NODE ||
-                        (child.getNodeType() == Node.TEXT_NODE && (child.getNodeValue().trim().length() > 0))) {
-                    children.add(child);
-                }
+            for (Node child : parent.childNodes())
+            {
+            	if (child instanceof Element ||
+            		child instanceof Comment ||
+            		(child instanceof TextNode &&
+            		 !((TextNode) child).text().trim().isEmpty()))
+            	{
+            		children.add(child);
+            	}
             }
             return children;
         } else {
@@ -758,29 +762,29 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
 
         Node node = (Node) value;
 
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node instanceof Element) {
 
             String cls = "";
-            if (node.hasAttributes()) {
-                Node cn = node.getAttributes().getNamedItem("class");
+            if (node.attributes().size() > 0) {
+                String cn = node.attr("class");
                 if (cn != null) {
-                    cls = " class='" + cn.getNodeValue() + "'";
+                    cls = " class='" + cn + "'";
                 }
             }
-            value = "<" + node.getNodeName() + cls + ">";
+            value = "<" + node.nodeName() + cls + ">";
 
         }
 
-        if (node.getNodeType() == Node.TEXT_NODE) {
+        if (node instanceof TextNode) {
 
-            if (node.getNodeValue().trim().length() > 0) {
-                value = "\"" + node.getNodeValue() + "\"";
+            if (((TextNode) node).text().trim().length() > 0) {
+                value = "\"" + ((TextNode) node).text() + "\"";
             }
         }
 
-        if (node.getNodeType() == Node.COMMENT_NODE) {
+        if (node instanceof Comment) {
 
-            value = "<!-- " + node.getNodeValue() + " -->";
+            value = "<!-- " + ((Comment) node).getData() + " -->";
 
         }
 
@@ -790,71 +794,4 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
 
         return super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     }
-}//}}}
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.18  2009/05/09 14:15:14  pdoubleya
- * FindBugs: inner class could be static
- *
- * Revision 1.17  2007/05/20 23:25:33  peterbrant
- * Various code cleanups (e.g. remove unused imports)
- *
- * Patch from Sean Bright
- *
- * Revision 1.16  2005/10/27 00:09:08  tobega
- * Sorted out Context into RenderingContext and LayoutContext
- *
- * Revision 1.15  2005/06/22 23:48:46  tobega
- * Refactored the css package to allow a clean separation from the core.
- *
- * Revision 1.14  2005/06/16 07:24:53  tobega
- * Fixed background image bug.
- * Caching images in browser.
- * Enhanced LinkListener.
- * Some house-cleaning, playing with Idea's code inspection utility.
- *
- * Revision 1.13  2005/01/29 20:22:17  pdoubleya
- * Clean/reformat code. Removed commented blocks, checked copyright.
- *
- * Revision 1.12  2005/01/25 14:45:54  pdoubleya
- * Added support for IdentValue mapping on property declarations. On both CascadedStyle and PropertyDeclaration you can now request the value as an IdentValue, for object-object comparisons. Updated 99% of references that used to get the string value of PD to return the IdentValue instead; remaining cases are for pseudo-elements where the PD content needs to be manipulated as a String.
- *
- * Revision 1.11  2005/01/24 14:36:35  pdoubleya
- * Mass commit, includes: updated for changes to property declaration instantiation, and new use of DerivedValue. Removed any references to older XR... classes (e.g. XRProperty). Cleaned imports.
- *
- * Revision 1.10  2005/01/03 23:40:40  tobega
- * Cleaned out unnecessary styling/matching code. styling/matching is now called during boxing/rendering rather than as a separate stage.
- *
- * Revision 1.9  2004/12/29 10:39:35  tobega
- * Separated current state Context into LayoutContext and the rest into SharedContext.
- *
- * Revision 1.8  2004/12/12 04:18:58  tobega
- * Now the core compiles at least. Now we must make it work right. Table layout is one point that really needs to be looked over
- *
- * Revision 1.7  2004/12/11 18:18:12  tobega
- * Still broken, won't even compile at the moment. Working hard to fix it, though. Replace the StyleReference interface with our only concrete implementation, it was a bother changing in two places all the time.
- *
- * Revision 1.6  2004/11/07 01:17:56  tobega
- * DOMInspector now works with any StyleReference
- *
- * Revision 1.5  2004/10/28 13:46:33  joshy
- * removed dead code
- * moved code about specific elements to the layout factory (link and br)
- * fixed form rendering bug
- *
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.4  2004/10/23 13:51:54  pdoubleya
- * Re-formatted using JavaStyle tool.
- * Cleaned imports to resolve wildcards except for common packages (java.io, java.util, etc).
- * Added CVS log comments at bottom.
- *
- *
- */
-
+}

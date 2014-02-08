@@ -21,7 +21,7 @@ package org.xhtmlrenderer.simple.extend.form;
 
 import javax.swing.JComponent;
 
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
@@ -96,11 +96,11 @@ public abstract class FormField {
     }
     
     protected boolean hasAttribute(String attributeName) {
-        return getElement().getAttribute(attributeName).length() > 0;
+        return getElement().attr(attributeName).length() > 0;
     }
 
     protected String getAttribute(String attributeName) {
-        return getElement().getAttribute(attributeName);
+        return getElement().attr(attributeName);
     }
     
     private void initialize() {
@@ -114,7 +114,7 @@ public abstract class FormField {
 
             _component.setSize(getIntrinsicSize());
 
-            String d = _element.getAttribute("disabled");
+            String d = _element.attr("disabled");
             if (d.equalsIgnoreCase("disabled")) {
                 _component.setEnabled(false);
             }

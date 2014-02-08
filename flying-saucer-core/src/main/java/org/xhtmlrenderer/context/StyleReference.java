@@ -21,14 +21,13 @@ package org.xhtmlrenderer.context;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
@@ -180,10 +179,10 @@ public class StyleReference {
      */
     public CascadedStyle getPseudoElementStyle(Node node, String pseudoElement) {
         Element e = null;
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node instanceof Element) {
             e = (Element) node;
         } else {
-            e = (Element) node.getParentNode();
+            e = (Element) node.parent();
         }
         return _matcher.getPECascadedStyle(e, pseudoElement);
     }
@@ -238,30 +237,42 @@ public class StyleReference {
         List<StylesheetInfo> infos = new LinkedList<StylesheetInfo>();
         long st = System.currentTimeMillis();
 
-        StylesheetInfo defaultStylesheet = _nsh.getDefaultStylesheet(_stylesheetFactory);
-        if (defaultStylesheet != null) {
-            infos.add(defaultStylesheet);
-        }
+        if (!_context.haveLookedUpDefaultStylesheet())
+        {
+        	_context.setLookedUpDefaultStylesheet(true);
+        	StylesheetInfo defaultStylesheet = _nsh.getDefaultStylesheet(_stylesheetFactory);
 
-        StylesheetInfo[] refs = _nsh.getStylesheets(_doc);
+        	if (defaultStylesheet != null) 
+        	{
+        		_context.setDefaultStylesheet(defaultStylesheet);
+        		infos.add(defaultStylesheet);
+        	}
+        }
+        else if (_context.getDefaultStylesheet() != null)
+        {
+        	infos.add(_context.getDefaultStylesheet());
+        }
+        
+        
+        List<StylesheetInfo> refs = _nsh.getStylesheets(_doc);
         int inlineStyleCount = 0;
         if (refs != null) {
-            for (int i = 0; i < refs.length; i++) {
+            for (int i = 0; i < refs.size(); i++) {
                 String uri;
                 
-                if (! refs[i].isInline()) {
-                    uri = _uac.resolveURI(refs[i].getUri());
-                    refs[i].setUri(uri);
+                if (! refs.get(i).isInline()) {
+                    uri = _uac.resolveURI(refs.get(i).getUri());
+                    refs.get(i).setUri(uri);
                 } else {
-                    refs[i].setUri(_uac.getBaseURL() + "#inline_style_" + (++inlineStyleCount));
+                    refs.get(i).setUri(_uac.getBaseURL() + "#inline_style_" + (++inlineStyleCount));
                     Stylesheet sheet = _stylesheetFactory.parse(
-                            new StringReader(refs[i].getContent()), refs[i]);
-                    refs[i].setStylesheet(sheet);
-                    refs[i].setUri(null);
+                            new StringReader(refs.get(i).getContent()), refs.get(i));
+                    refs.get(i).setStylesheet(sheet);
+                    refs.get(i).setUri(null);
                 }
             }
         }
-        infos.addAll(Arrays.asList(refs));
+        infos.addAll(refs);
 
         // TODO: here we should also get user stylesheet from userAgent
 

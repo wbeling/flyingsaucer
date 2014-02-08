@@ -40,8 +40,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -67,7 +67,6 @@ import org.xhtmlrenderer.render.ViewportBox;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
-
 
 public class RootPanel extends JPanel implements ComponentListener, UserInterface, FSCanvas, RepaintListener {
     static final long serialVersionUID = 1L;
@@ -503,21 +502,21 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
 
     public Element focus_element = null;
 
-    public boolean isHover(org.w3c.dom.Element e) {
+    public boolean isHover(Element e) {
         if (e == hovered_element) {
             return true;
         }
         return false;
     }
 
-    public boolean isActive(org.w3c.dom.Element e) {
+    public boolean isActive(Element e) {
         if (e == active_element) {
             return true;
         }
         return false;
     }
 
-    public boolean isFocus(org.w3c.dom.Element e) {
+    public boolean isFocus(Element e) {
         if (e == focus_element) {
             return true;
         }

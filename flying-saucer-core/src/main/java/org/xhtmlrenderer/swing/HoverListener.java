@@ -20,8 +20,9 @@
 package org.xhtmlrenderer.swing;
 
 import java.awt.Rectangle;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.layout.PaintingInfo;
@@ -123,8 +124,8 @@ public class HoverListener extends DefaultFSMouseListener {
         Element element = ib.getElement();
 
         while (element != null && !style.isHoverStyled(element)) {
-            Node node = element.getParentNode();
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
+            Node node = element.parentNode();
+            if (node instanceof Element) {
                 element = (Element) node;
             } else {
                 element = null;

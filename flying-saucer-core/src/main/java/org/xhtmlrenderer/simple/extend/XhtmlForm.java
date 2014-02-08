@@ -30,9 +30,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
+import org.jsoup.nodes.DataNode;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
@@ -94,7 +95,7 @@ public class XhtmlForm {
     }
 
     private static boolean isFormField(Element e) {
-        String nodeName = e.getNodeName();
+        String nodeName = e.nodeName();
         
         if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea")) {
             return true;
@@ -116,7 +117,7 @@ public class XhtmlForm {
             field = FormFieldFactory.create(this, context, box);
     
             if (field == null) {
-                XRLog.layout("Unknown field type: " + e.getNodeName());
+                XRLog.layout("Unknown field type: " + e.nodeName());
 
                 return null;
             }
@@ -147,7 +148,7 @@ public class XhtmlForm {
         }
 
         StringBuffer data = new StringBuffer();
-        String action = _parentFormElement.getAttribute("action");
+        String action = _parentFormElement.attr("action");
         data.append(action).append("?");
         Iterator<Map.Entry<Element, FormField>> fields = _componentCache.entrySet().iterator();
         boolean first=true;
@@ -175,15 +176,20 @@ public class XhtmlForm {
 
     public static String collectText(Element e) {
         StringBuffer result = new StringBuffer();
-        Node node = e.getFirstChild();
-        if (node != null) {
-            do {
-                short nodeType = node.getNodeType();
-                if (nodeType == Node.TEXT_NODE || nodeType == Node.CDATA_SECTION_NODE) {
-                    Text text = (Text) node;
-                    result.append(text.getData());
+
+        if (e.childNodeSize() > 0) {
+            Node node = e.childNode(0);
+        	do {
+                if (node instanceof TextNode) {
+                    TextNode text = (TextNode) node;
+                    result.append(text.text());
                 }
-            } while ((node = node.getNextSibling()) != null);
+                else if (node instanceof DataNode) {
+                	DataNode data = (DataNode) node;
+                	result.append(data.getWholeData());
+                }
+                
+            } while ((node = node.nextSibling()) != null);
         }
         return result.toString().trim();
     }

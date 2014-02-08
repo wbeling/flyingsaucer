@@ -23,12 +23,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.w3c.dom.Document;
+import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
-import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler;
 import org.xhtmlrenderer.swing.BasicPanel;
 import org.xhtmlrenderer.swing.CursorListener;
 import org.xhtmlrenderer.swing.HoverListener;
@@ -178,7 +177,7 @@ public class XHTMLPanel extends BasicPanel {
      */
     public void setDocument(Document doc, String url) {
         resetListeners();
-        setDocument(doc, url, new XhtmlNamespaceHandler());
+        setDocument(doc, url, new HtmlNamespaceHandler());
     }
 
     /**
@@ -192,7 +191,7 @@ public class XHTMLPanel extends BasicPanel {
     public void setDocument(InputStream stream, String url)
             throws Exception {
         resetListeners();
-        setDocument(stream, url, new XhtmlNamespaceHandler());
+        setDocument(stream, url, new HtmlNamespaceHandler());
     }
 
     /**

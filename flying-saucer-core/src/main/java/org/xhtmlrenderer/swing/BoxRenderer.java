@@ -19,8 +19,8 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.extend.NamespaceHandler;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.extend.UserInterface;
@@ -31,7 +31,7 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.render.ViewportBox;
-import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler;
+import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.ImageUtil;
 
@@ -232,7 +232,7 @@ public class BoxRenderer {
 	 */
 	public Box render() {
 		if (!rendered) {
-			setDocument(loadDocument(sourceDocument), sourceDocumentBase, new XhtmlNamespaceHandler());
+			setDocument(loadDocument(sourceDocument), sourceDocumentBase, new HtmlNamespaceHandler());
 
 			layout(this.width);
 

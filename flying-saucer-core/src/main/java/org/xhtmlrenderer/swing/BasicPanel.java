@@ -29,9 +29,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.print.PrinterGraphics;
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -40,7 +38,7 @@ import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
-import org.w3c.dom.Document;
+import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.event.DocumentListener;
@@ -52,15 +50,11 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.resource.XMLResource;
-import org.xhtmlrenderer.simple.NoNamespaceHandler;
+import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
-import org.xml.sax.InputSource;
-
-
-
 
 /**
  * A Swing {@link javax.swing.JPanel} that encloses the Flying Saucer renderer
@@ -368,18 +362,17 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
     }
 
     public void setDocumentFromString(String content, String url, NamespaceHandler nsh) {
-        InputSource is = new InputSource(new BufferedReader(new StringReader(content)));
-        Document dom = XMLResource.load(is).getDocument();
+        Document dom = XMLResource.load(content).getDocument();
 
         setDocument(dom, url, nsh);
     }
 
     public void setDocument(Document doc, String url) {
-        setDocument(doc, url, new NoNamespaceHandler());
+        setDocument(doc, url, new HtmlNamespaceHandler());
     }
 
     public void setDocument(String url) {
-        setDocument(loadDocument(url), url, new NoNamespaceHandler());
+        setDocument(loadDocument(url), url, new HtmlNamespaceHandler());
     }
 
     public void setDocument(String url, NamespaceHandler nsh) {
@@ -389,7 +382,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
     // TODO: should throw more specific exception (PWW 25/07/2006)
     protected void setDocument(InputStream stream, String url)
             throws Exception {
-        setDocument(stream, url, new NoNamespaceHandler());
+        setDocument(stream, url, new HtmlNamespaceHandler());
     }
 
     /**

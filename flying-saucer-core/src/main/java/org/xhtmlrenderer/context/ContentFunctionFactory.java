@@ -146,7 +146,7 @@ public class ContentFunctionFactory {
         }
 
         public String calculate(RenderingContext c, FSFunction function, InlineText text) {
-            String uri = text.getParent().getElement().getAttribute("href");
+            String uri = text.getParent().getElement().attr("href");
             if (uri != null && uri.startsWith("#")) {
                 String anchor = uri.substring(1);
                 Box target = c.getBoxById(anchor);

@@ -1,10 +1,22 @@
 TODO
-+ Remove SWT support
-+ Remove itext 5 support
-+ Remove jars, etc.
-+ Move to Java 1.7
-+ Genericize types
-+ Support word output
++ Support MS Word output.
++ Make interupptible.
++ Make case insensitive and locale insensitive.
++ Gradients.
++ Border radius.
++ Repace StringBuffer with StringBuilder.
++ Remove redundant casts.
++ Update LICENSE.
++ Move to latest dependencies.
+
+DONE
++ Replace XML parser with JSoup HTML5 parser.
++ Move to Java 1.7.
++ Genericize types.
++ Remove SWT & itext5 support.
++ Delete extra files, jars, etc.
+
+
 
 Flying Saucer
 

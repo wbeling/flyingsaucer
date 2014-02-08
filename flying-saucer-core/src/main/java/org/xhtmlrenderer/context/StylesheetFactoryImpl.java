@@ -90,7 +90,7 @@ public class StylesheetFactoryImpl implements StylesheetFactory {
         CSSResource cr = _userAgentCallback.getCSSResource(info.getUri());
         // Whether by accident or design, InputStream will never be null
         // since the null resource stream is wrapped in a BufferedInputStream
-        InputStream is = cr.getResourceInputSource().getByteStream();
+        InputStream is = cr.getResourceInputStream();
         try {
             return parse(new InputStreamReader(is, "UTF-8"), info);
         } catch (UnsupportedEncodingException e) {

@@ -1,5 +1,6 @@
 package org.xhtmlrenderer.simple.extend.form;
 
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.FSDerivedValue;
 import org.xhtmlrenderer.css.style.derived.BorderPropertySet;
@@ -11,7 +12,6 @@ import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
-import org.w3c.dom.Element;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;

@@ -18,8 +18,8 @@
  */
 package org.xhtmlrenderer.render;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.extend.ContentFunction;
 import org.xhtmlrenderer.css.parser.FSFunction;
@@ -66,12 +66,12 @@ public class InlineBox implements Styleable {
 
     private String _pseudoElementOrClass;
 
-    private final Text _textNode;
+    private final Node _textNode;
 
-    public InlineBox(String text, Text textNode) {
+    public InlineBox(String text, Node node) {
         _text = text;
         _originalText = text;
-        _textNode = textNode;
+        _textNode = node;
     }
 
     public String getText() {
@@ -382,7 +382,7 @@ public class InlineBox implements Styleable {
         result.append("InlineBox: ");
         if (getElement() != null) {
             result.append("<");
-            result.append(getElement().getNodeName());
+            result.append(getElement().nodeName());
             result.append("> ");
         } else {
             result.append("(anonymous) ");
@@ -459,7 +459,7 @@ public class InlineBox implements Styleable {
         _originalText = "";
     }
 
-    public Text getTextNode() {
+    public Node getTextNode() {
         return this._textNode;
     }
 }

@@ -19,8 +19,8 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.render.Box;
 
 
@@ -70,7 +70,7 @@ public class LinkListener extends DefaultFSMouseListener {
     private String findLink(BasicPanel panel, Element e) {
         String uri = null;
 
-        for (Node node = e; node.getNodeType() == Node.ELEMENT_NODE; node = node.getParentNode()) {
+        for (Node node = e; node instanceof Element; node = node.parent()) {
             uri = panel.getSharedContext().getNamespaceHandler().getLinkUri((Element) node);
 
             if (uri != null) {
@@ -81,4 +81,3 @@ public class LinkListener extends DefaultFSMouseListener {
         return uri;
     }
 }
-

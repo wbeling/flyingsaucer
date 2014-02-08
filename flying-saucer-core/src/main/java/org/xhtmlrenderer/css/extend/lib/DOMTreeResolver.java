@@ -19,9 +19,10 @@
  */
 package org.xhtmlrenderer.css.extend.lib;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import java.util.List;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.css.extend.TreeResolver;
 
 /**
@@ -31,75 +32,76 @@ import org.xhtmlrenderer.css.extend.TreeResolver;
  */
 public class DOMTreeResolver implements TreeResolver {
     public Object getParentElement(Object element) {
-        Node parent = ((org.w3c.dom.Element) element).getParentNode();
-        if (parent.getNodeType() != Node.ELEMENT_NODE) parent = null;
+        Node parent = ((Element) element).parentNode();
+        if (!(parent instanceof Element)) parent = null;
         return parent;
     }
 
     public Object getPreviousSiblingElement(Object element) {
-        Node sibling = ((Element) element).getPreviousSibling();
-        while (sibling != null && sibling.getNodeType() != Node.ELEMENT_NODE) {
-            sibling = sibling.getPreviousSibling();
+        Node sibling = ((Element) element).previousSibling();
+        while (sibling != null && !(sibling instanceof Element)) {
+            sibling = sibling.previousSibling();
         }
-        if (sibling == null || sibling.getNodeType() != Node.ELEMENT_NODE) {
+        if (sibling == null || !(sibling instanceof Element)) {
             return null;
         }
         return sibling;
     }
 
     public String getElementName(Object element) {
-        String name = ((Element) element).getLocalName();
-        if (name == null) name = ((Element) element).getNodeName();
+        String name = ((Element) element).nodeName();
+//        if (name == null) name = ((Element) element).getNodeName();
         return name;
     }
 
     public boolean isFirstChildElement(Object element) {
-        org.w3c.dom.Node parent = ((org.w3c.dom.Element) element).getParentNode();
-        Node currentChild = parent.getFirstChild();
-        while (currentChild != null && currentChild.getNodeType() != Node.ELEMENT_NODE) {
-            currentChild = currentChild.getNextSibling();
+        Node parent = ((Element) element).parentNode();
+        Node currentChild = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
+        while (currentChild != null && !(currentChild instanceof Element)) {
+            currentChild = currentChild.nextSibling();
         }
         return currentChild == element;
     }
 
     public boolean isLastChildElement(Object element) {
-        org.w3c.dom.Node parent = ((org.w3c.dom.Element) element).getParentNode();
-        Node currentChild = parent.getLastChild();
-        while (currentChild != null && currentChild.getNodeType() != Node.ELEMENT_NODE) {
-            currentChild = currentChild.getPreviousSibling();
+        Node parent = ((Element) element).parentNode();
+        Node currentChild = parent.childNodeSize() > 0 ? parent.childNode(parent.childNodeSize() - 1) : null;
+        while (currentChild != null && !(currentChild instanceof Element)) {
+            currentChild = currentChild.previousSibling();
         }
         return currentChild == element;
     }
 
     public boolean matchesElement(Object element, String namespaceURI, String name) {
         Element e = (Element)element;
-        String localName = e.getLocalName();
-        String eName;
+        String localName = e.nodeName();
+        String eName = localName;
 
-        if (localName == null) {
-            eName = e.getNodeName();
-        } else {
-            eName = localName;
-        }
+//        if (localName == null) {
+//            eName = e.getNodeName();
+//        } else {
+//            eName = localName;
+//        }
 
         if (namespaceURI != null) {
-            return name.equals(localName) && namespaceURI.equals(e.getNamespaceURI());
+        	return (namespaceURI + ':' + name).equals(localName);
+//        	return name.equals(localName) && namespaceURI.equals(e.getNamespaceURI());
         } else if (namespaceURI == TreeResolver.NO_NAMESPACE) {
-            return name.equals(eName) && e.getNamespaceURI() == null;
+            return name.equals(eName) && eName.indexOf(':') == -1;
         } else /* if (namespaceURI == null) */ {
             return name.equals(eName);
         }
     }
     
     public int getPositionOfElement(Object element) {
-        org.w3c.dom.Node parent = ((org.w3c.dom.Element) element).getParentNode();
-        NodeList nl = parent.getChildNodes();
+        Node parent = ((Element) element).parentNode();
+        List<Node> nl = parent.childNodes();
 
         int elt_count = 0;
         int i = 0;
-        while (i < nl.getLength()) {
-            if (nl.item(i).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-                if(nl.item(i) == element) {
+        while (i < nl.size()) {
+            if (nl.get(i) instanceof Element) {
+                if(nl.get(i) == element) {
                     return elt_count;
                 } else {
                     elt_count++;

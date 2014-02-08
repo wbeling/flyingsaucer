@@ -24,9 +24,7 @@ import org.xhtmlrenderer.swing.DelegatingUserAgent;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.GeneralUtil;
-import org.xml.sax.InputSource;
 
-import javax.xml.transform.sax.SAXSource;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -129,11 +127,10 @@ public class PanelManager extends DelegatingUserAgent {
             //Maybe should popup a choice when content/unknown!
             if (contentType.equals("text/plain") || contentType.equals("content/unknown")) {
                 inputStream = uc.getInputStream();
-                SAXSource source = new SAXSource(new PlainTextXMLReader(inputStream), new InputSource());
-                xr = XMLResource.load(source);
+                xr = XMLResource.load(inputStream);
             } else if (contentType.startsWith("image")) {
                 String doc = "<img src='" + uri + "'/>";
-                xr = XMLResource.load(new StringReader(doc));
+                xr = XMLResource.load(doc);
             } else {
                 inputStream = uc.getInputStream();
                 xr = XMLResource.load(inputStream);
