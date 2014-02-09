@@ -33,17 +33,9 @@ import java.io.Writer;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.extend.NamespaceHandler;
@@ -56,10 +48,10 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.render.ViewportBox;
-import org.xhtmlrenderer.resource.XMLResource;
-import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler;
+import org.xhtmlrenderer.resource.HTMLResource;
+import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.util.Configuration;
-import org.xml.sax.InputSource;
+import org.xhtmlrenderer.util.JsoupUtil;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
@@ -140,7 +132,7 @@ public class ITextRenderer {
     }
 
     public void setDocument(Document doc, String url) {
-        setDocument(doc, url, new XhtmlNamespaceHandler());
+        setDocument(doc, url, new HtmlNamespaceHandler());
     }
 
     public void setDocument(File file) throws IOException {
@@ -153,10 +145,9 @@ public class ITextRenderer {
         setDocumentFromString(content, null);
     }
 
-    public void setDocumentFromString(String content, String baseUrl) {
-        InputSource is = new InputSource(new BufferedReader(new StringReader(content)));
-        Document dom = XMLResource.load(is).getDocument();
-
+    public void setDocumentFromString(String content, String baseUrl) 
+    {
+        Document dom = HTMLResource.load(content).getDocument();
         setDocument(dom, baseUrl);
     }
 
@@ -423,37 +414,29 @@ public class ITextRenderer {
         }
     }
 
-    private String stringfyMetadata(Element element) {
+    private String stringfyMetadata(Element element) 
+    {
         Element target = getFirstChildElement(element);
-        if (target == null) {
+
+        if (target == null) 
             return null;
-        }
 
-        try {
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            StringWriter output = new StringWriter();
-            transformer.transform(new DOMSource(target), new StreamResult(output));
-
-            return output.toString();
-        } catch (TransformerConfigurationException e) {
-            // Things must be in pretty bad shape to get here so
-            // rethrow as runtime exception
-            throw new RuntimeException(e);
-        } catch (TransformerException e) {
-            throw new RuntimeException(e);
-        }
+        // TODO: I think we need valid xml here.
+        return target.html();
     }
 
-    private static Element getFirstChildElement(Element element) {
-        Node n = element.getFirstChild();
-        while (n != null) {
-            if (n.getNodeType() == Node.ELEMENT_NODE) {
+    private static Element getFirstChildElement(Element element) 
+    {
+        Node n = JsoupUtil.firstChild(element);
+
+        while (n != null) 
+        {
+            if (JsoupUtil.isElement(n))
                 return (Element) n;
-            }
-            n = n.getNextSibling();
+
+            n = n.nextSibling();
         }
+        
         return null;
     }
 

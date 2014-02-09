@@ -23,21 +23,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.util.*;
+import static org.xhtmlrenderer.util.GeneralUtil.ciEquals;
 
 import com.lowagie.text.pdf.PdfAnnotation;
 import com.lowagie.text.pdf.PdfAppearance;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfFormField;
 import com.lowagie.text.pdf.PdfWriter;
+
 
 public class SelectFormField extends AbstractFormField {
     private static final String FIELD_TYPE = "Select";
@@ -116,26 +117,25 @@ public class SelectFormField extends AbstractFormField {
         }
     }
     
-    private List readOptions(Element e) {
-        List result = new ArrayList();
+    private List<Option> readOptions(Element e) {
+        List<Option> result = new ArrayList<>();
         
-        Node n = e.getFirstChild();
+        Node n = e.childNodeSize() > 0 ? e.childNode(0) : null;
         while (n != null) {
-            if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equalsIgnoreCase("option")) {
+            if (n instanceof Element && ciEquals(n.nodeName(), "option")) 
+            {
                 Element optionElem = (Element)n;
-                
-                
                 String label = collectText(optionElem);
-                Attr valueAttr = optionElem.getAttributeNode("value");
                 String value;
-                if (valueAttr == null) {
+
+                if (!optionElem.hasAttr("value")) {
                     value = label;
                 } else {
-                    value = valueAttr.getValue();
+                    value = optionElem.attr("value");
                 }
                 
                 if (label != null) {
-                    Option option =  new Option();
+                    Option option = new Option();
                     option.setLabel(label);
                     option.setValue(value);
                     if (isSelected(optionElem)) {
@@ -145,23 +145,22 @@ public class SelectFormField extends AbstractFormField {
                 }
             }
             
-            n = n.getNextSibling();
+            n = n.nextSibling();
         }
         
         return result;
     }
     
     private String collectText(Element e) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         
-        Node n = e.getFirstChild();
-        while (n != null) {
-            short nodeType = n.getNodeType();
-            if (nodeType == Node.TEXT_NODE || nodeType == Node.CDATA_SECTION_NODE) {
-                Text t = (Text)n;
-                result.append(t.getData());
-            }
-            n = n.getNextSibling();
+        Node n = e.childNodeSize() > 0 ? e.childNode(0) : null;
+        while (n != null) 
+        {
+        	if (n instanceof TextNode)
+            	result.append(((TextNode) n).text());
+
+            n = n.nextSibling();
         }
         
         return result.length() > 0 ? result.toString() : null;
@@ -184,8 +183,8 @@ public class SelectFormField extends AbstractFormField {
     private int getSize(Element elem) {
         int result = 1;
         try {
-            String v = elem.getAttribute("size").trim();
-            if (v.length() > 0) {
+            String v = elem.hasAttr("size") ? elem.attr("size").trim() : "";
+            if (!v.isEmpty()) {
                 int i = Integer.parseInt(v);
                 if (i > 1) {
                     result = i;
@@ -200,7 +199,7 @@ public class SelectFormField extends AbstractFormField {
     }
     
     protected boolean isMultiple(Element e) {
-        return !Util.isNullOrEmpty(e.getAttribute("multiple"));
+        return !Util.isNullOrEmpty(e.attr("multiple"));
     }
     
     protected String getFieldType() {

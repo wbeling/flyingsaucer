@@ -37,7 +37,7 @@ import javax.imageio.ImageIO;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
-import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.swing.AWTFSImage;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
@@ -140,7 +140,7 @@ public class DemoUserAgent implements UserAgentCallback {
         }
     }    
 
-    public XMLResource getXMLResource(String uri) {
+    public HTMLResource getXMLResource(String uri) {
         uri = resolveURI(uri);
         if (uri != null && uri.startsWith("file:")) {
             File file = null;
@@ -150,14 +150,14 @@ public class DemoUserAgent implements UserAgentCallback {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
-        XMLResource xr = null;
+        HTMLResource xr = null;
         InputStream inputStream = null;
         try {
             URLConnection uc = new URL(uri).openConnection();
             uc.connect();
             // TODO: String contentType = uc.getContentType(); Maybe should popup a choice when content/unknown!
             inputStream = uc.getInputStream();
-            xr = XMLResource.load(inputStream);
+            xr = HTMLResource.load(inputStream);
         } catch (MalformedURLException e) {
             XRLog.exception("bad URL given: " + uri, e);
         } catch (IOException e) {
@@ -171,7 +171,7 @@ public class DemoUserAgent implements UserAgentCallback {
         }
         if (xr == null) {
             String notFound = "<h1>Document not found</h1>";
-            xr = XMLResource.load(new StringReader(notFound));
+            xr = HTMLResource.load(new StringReader(notFound));
         }
         return xr;
     }

@@ -33,15 +33,15 @@ import org.xhtmlrenderer.util.XRRuntimeException;
 /**
  * @author Patrick Wright
  */
-public class XMLResource extends AbstractResource {
+public class HTMLResource extends AbstractResource {
     private Document document;
     
-    private XMLResource(String html)
+    private HTMLResource(String html)
     {
     	setDocument(Jsoup.parse(html));
     }
 
-    private XMLResource(InputStream stream) {
+    private HTMLResource(InputStream stream) {
     	try {
 			document = Jsoup.parse(stream, null, "");
 		} catch (IOException e) {
@@ -50,7 +50,7 @@ public class XMLResource extends AbstractResource {
 		}
     }
     
-    private XMLResource(File file)
+    private HTMLResource(File file)
     {
     	try {
 			document = Jsoup.parse(file, null);
@@ -60,16 +60,16 @@ public class XMLResource extends AbstractResource {
 		}
     }
 
-    public static XMLResource load(String html)
+    public static HTMLResource load(String html)
     {
-    	return new XMLResource(html);
+    	return new HTMLResource(html);
     }
     
-    public static XMLResource load(InputStream stream) {
-        return new XMLResource(stream);
+    public static HTMLResource load(InputStream stream) {
+        return new HTMLResource(stream);
     }
 
-    public static XMLResource load(Reader reader) {
+    public static HTMLResource load(Reader reader) {
     	char[] cbuf = new char[4096];
     	int numChars;
     	
@@ -84,7 +84,7 @@ public class XMLResource extends AbstractResource {
 			throw new XRRuntimeException("Unable to parse reader", e);
 		}
 
-    	return new XMLResource(builder.toString());
+    	return new HTMLResource(builder.toString());
     }
  
     public Document getDocument() {
@@ -95,7 +95,7 @@ public class XMLResource extends AbstractResource {
         this.document = document;
     }
 
-	public static XMLResource load(File file) {
-		return new XMLResource(file);
+	public static HTMLResource load(File file) {
+		return new HTMLResource(file);
 	}
 }

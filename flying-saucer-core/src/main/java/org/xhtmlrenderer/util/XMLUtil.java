@@ -22,7 +22,7 @@ package org.xhtmlrenderer.util;
 
 import java.io.File;
 import org.jsoup.nodes.Document;
-import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.resource.HTMLResource;
 
 
 /**
@@ -33,13 +33,13 @@ public class XMLUtil {
     public static Document documentFromString(final String documentContents)
         throws Exception {
 
-        return XMLResource.load(documentContents).getDocument();
+        return HTMLResource.load(documentContents).getDocument();
     }
 
     public static Document documentFromFile(final String filename)
         throws Exception {
 
-        return XMLResource.load(new File(filename)).getDocument();
+        return HTMLResource.load(new File(filename)).getDocument();
     }
 }
 

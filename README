@@ -10,10 +10,10 @@ TODO
 + Move to latest dependencies.
 
 DONE
-+ Replace XML parser with JSoup HTML5 parser.
++ Replace XML parser with Jsoup HTML5 parser.
 + Move to Java 1.7.
 + Genericize types.
-+ Remove SWT & itext5 support.
++ Remove SWT, itext5 and docbook support.
 + Delete extra files, jars, etc.
 
 

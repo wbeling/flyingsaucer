@@ -49,7 +49,7 @@ import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
-import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.util.Configuration;
@@ -356,13 +356,13 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
 =========== set document utility methods =============== */
 
     public void setDocument(InputStream stream, String url, NamespaceHandler nsh) {
-        Document dom = XMLResource.load(stream).getDocument();
+        Document dom = HTMLResource.load(stream).getDocument();
 
         setDocument(dom, url, nsh);
     }
 
     public void setDocumentFromString(String content, String url, NamespaceHandler nsh) {
-        Document dom = XMLResource.load(content).getDocument();
+        Document dom = HTMLResource.load(content).getDocument();
 
         setDocument(dom, url, nsh);
     }
@@ -467,7 +467,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
     }
 
     protected Document loadDocument(final String uri) {
-        XMLResource xmlResource = sharedContext.getUac().getXMLResource(uri);
+        HTMLResource xmlResource = sharedContext.getUac().getXMLResource(uri);
         return xmlResource.getDocument();
     }
 

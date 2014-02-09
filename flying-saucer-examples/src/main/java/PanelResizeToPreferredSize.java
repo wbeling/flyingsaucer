@@ -19,9 +19,8 @@
  */
 
 
+import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -86,11 +85,11 @@ public class PanelResizeToPreferredSize {
                 // Note that our document doesn't have any width constraints, but that there is very little text
                 // involved, so the document width (calculated from the content) is something reasonable for this demo.
                 panel.setDocumentFromString(
-                        "<html style='position: absolute; background-color: red;'>" +
-                                "    Several words that won't wrap" +
+                        "<html><body style='position: absolute; background-color: red;'>" +
+                                "    <p>Several words that won't wrap</p></body>" +
                                 "</html>",
                         null,
-                        new XhtmlNamespaceHandler());
+                        new HtmlNamespaceHandler());
 
                 Dimension savedSize = panel.getSize();
 

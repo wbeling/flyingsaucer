@@ -19,14 +19,11 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
-import org.w3c.dom.Document;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.layout.SharedContext;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-import org.xhtmlrenderer.pdf.PDFCreationListener;
-import org.xhtmlrenderer.pdf.util.XHtmlMetaToPdfInfoAdapter;
-import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
+import org.xhtmlrenderer.simple.PDFRenderer;
 import org.xhtmlrenderer.swing.ImageResourceLoader;
 import org.xhtmlrenderer.swing.ScalableXHTMLPanel;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
@@ -35,15 +32,12 @@ import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
+import com.lowagie.text.DocumentException;
+
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -371,45 +365,54 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	
 	public void exportToPdf( String path )
 	{
-       if (manager.getBaseURL() != null) {
-           setStatus( "Exporting to " + path + "..." );
-           OutputStream os = null;
-           try {
-               os = new FileOutputStream(path);
-               try {
-               ITextRenderer renderer = new ITextRenderer();
-
-               DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-               DocumentBuilder db = dbf.newDocumentBuilder();
-               Document doc =  db.parse(manager.getBaseURL());
-
-               PDFCreationListener pdfCreationListener = new XHtmlMetaToPdfInfoAdapter( doc );
-               renderer.setListener( pdfCreationListener );
-                              
-               renderer.setDocument(manager.getBaseURL());
-               renderer.layout();
-
-               renderer.createPDF(os);
-               setStatus( "Done export." );
-            } catch (Exception e) {
-                XRLog.general(Level.SEVERE, "Could not export PDF.", e);
-                e.printStackTrace();
-                setStatus( "Error exporting to PDF." );
-               } finally {
-                   try {
-                       os.close();
-                   } catch (IOException e) {
-                       // swallow
-            }
-        }
-           } catch (Exception e) {
-               e.printStackTrace();
-	}
-       }
+		try {
+			PDFRenderer.renderToPDF(manager.getBaseURL(), path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+//       if (manager.getBaseURL() != null) {
+//           setStatus( "Exporting to " + path + "..." );
+//           OutputStream os = null;
+//           try {
+//               os = new FileOutputStream(path);
+//               try {
+//               ITextRenderer renderer = new ITextRenderer();
+//
+//               Document doc = XMLResource.load().getDocument();
+//               
+//               Document doc =  db.parse(manager.getBaseURL().);
+//
+//               PDFCreationListener pdfCreationListener = new XHtmlMetaToPdfInfoAdapter( doc );
+//               renderer.setListener( pdfCreationListener );
+//                              
+//               renderer.setDocument(manager.getBaseURL());
+//               renderer.layout();
+//
+//               renderer.createPDF(os);
+//               setStatus( "Done export." );
+//            } catch (Exception e) {
+//                XRLog.general(Level.SEVERE, "Could not export PDF.", e);
+//                e.printStackTrace();
+//                setStatus( "Error exporting to PDF." );
+//               } finally {
+//                   try {
+//                       os.close();
+//                   } catch (IOException e) {
+//                       // swallow
+//            }
+//        }
+//           } catch (Exception e) {
+//               e.printStackTrace();
+//	}
+//       }
 	}
 
     private void handlePageLoadFailed(String url_text, XRRuntimeException ex) {
-        final XMLResource xr;
+        final HTMLResource xr;
         final String rootCause = getRootCause(ex);
         final String msg = GeneralUtil.escapeHTML(addLineBreaks(rootCause, 80));
         String notFound =
@@ -426,7 +429,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
                         "</body>\n" +
                         "</html>";
 
-        xr = XMLResource.load(new StringReader(notFound));
+        xr = HTMLResource.load(notFound);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 root.panel.view.setDocument(xr.getDocument(), null);

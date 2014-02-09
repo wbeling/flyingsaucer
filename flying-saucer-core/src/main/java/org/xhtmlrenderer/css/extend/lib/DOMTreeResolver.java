@@ -21,6 +21,7 @@ package org.xhtmlrenderer.css.extend.lib;
 
 import java.util.List;
 
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.css.extend.TreeResolver;
@@ -33,7 +34,7 @@ import org.xhtmlrenderer.css.extend.TreeResolver;
 public class DOMTreeResolver implements TreeResolver {
     public Object getParentElement(Object element) {
         Node parent = ((Element) element).parentNode();
-        if (!(parent instanceof Element)) parent = null;
+        if (!(parent instanceof Element) || parent instanceof Document) parent = null;
         return parent;
     }
 

@@ -18,11 +18,11 @@
  * }}}
  */
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.simple.FSScrollPane;
+import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,7 @@ public class AddNodeToDocument {
 				Action addDocAction = new AbstractAction("Add Node") {
                     public void actionPerformed(ActionEvent event) {
                         // we'll add a single node on each click
-                        documentRoot.appendChild(domDocument.createTextNode("adding node at " + new Date()));
+                        documentRoot.appendText("adding node at " + new Date());
                         documentRoot.appendChild(domDocument.createElement("br"));
 
                         // note that we just pass in the same DOM instance we already
@@ -92,14 +92,14 @@ public class AddNodeToDocument {
                             "the same document <br />" +
                             "</html>",
                     null,
-                    new XhtmlNamespaceHandler());
+                    new HtmlNamespaceHandler());
 
             // our panel already has a DOM Document; this is what we'll modify
             domDocument = panel.getDocument();
 
             // root element of the document--you could grab any other element
             // by traversing, XPath, etc.
-            documentRoot = domDocument.getDocumentElement();
+            documentRoot = domDocument.body();
         } catch (Exception e) {
             messageAndExit("Could not render page: " + e.getMessage(), -1);
         }

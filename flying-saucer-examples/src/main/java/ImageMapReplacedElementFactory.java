@@ -18,10 +18,8 @@
  * }}}
  */
 
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.UserAgentCallback;
@@ -41,6 +39,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 
 
@@ -126,13 +125,13 @@ public class ImageMapReplacedElementFactory extends SwingReplacedElementFactory 
 
             if (im != null) {
                final String mapName = usemapAttr.substring(1);
-               Node map = elem.getOwnerDocument().getElementById(mapName);
+               Node map = elem.ownerDocument().getElementById(mapName);
                if (null == map) {
-                  final NodeList maps = elem.getOwnerDocument().getElementsByTagName(MAP_ELT);
-                  for (int i = 0; i < maps.getLength(); i++) {
-                      String mapAttr = ImageMapReplacedElement.getAttribute(maps.item(i).getAttributes(), MAP_NAME_ATTR);
+                  final List<Element> maps = elem.ownerDocument().getElementsByTag(MAP_ELT);
+                  for (int i = 0; i < maps.size(); i++) {
+                      String mapAttr = maps.get(i).attr(MAP_NAME_ATTR);
                       if (areEqual(mapName, mapAttr)) {
-                        map = maps.item(i);
+                        map = maps.get(i);
                         break;
                      }
                   }
@@ -207,17 +206,16 @@ public class ImageMapReplacedElementFactory extends SwingReplacedElementFactory 
       private static Map parseMap(Node map) {
          if (null == map) {
             return Collections.emptyMap();
-         } else if (map.hasChildNodes()) {
-            final NodeList children = map.getChildNodes();
-            final Map areas = new HashMap(children.getLength());
-            for (int i = 0; i < children.getLength(); i++) {
-               final Node area = children.item(i);
-               if (areEqualIgnoreCase(AREA_ELT, area.getNodeName())) {
-                  if (area.hasAttributes()) {
-                     final NamedNodeMap attrs = area.getAttributes();
-                     final String shapeAttr = getAttribute(attrs, AREA_SHAPE_ATTR);
-                     final String[] coords = getAttribute(attrs, AREA_COORDS_ATTR).split(",");
-                     final String href = getAttribute(attrs, AREA_HREF_ATTR);
+         } else if (map.childNodeSize() > 0) {
+            final List<Node> children = map.childNodes();
+            final Map<Shape, String> areas = new HashMap<>(children.size());
+            for (int i = 0; i < children.size(); i++) {
+               final Node area = children.get(i);
+               if (areEqualIgnoreCase(AREA_ELT, area.nodeName())) {
+                  if (area.attributes().size() > 0) {
+                     final String shapeAttr = area.attr(AREA_SHAPE_ATTR);
+                     final String[] coords = area.attr(AREA_COORDS_ATTR).split(","); // TODO 
+                     final String href = area.attr(AREA_HREF_ATTR);
                      if (areEqualIgnoreCase(RECT_SHAPE, shapeAttr) || areEqualIgnoreCase(RECTANGLE_SHAPE, shapeAttr)) {
                         final Shape shape = getCoords(coords, 4);
                         if (null != shape) {
@@ -245,11 +243,6 @@ public class ImageMapReplacedElementFactory extends SwingReplacedElementFactory 
          } else {
             return Collections.emptyMap();
          }
-      }
-
-      private static String getAttribute(NamedNodeMap attrs, String attrName) {
-         final Node node = attrs.getNamedItem(attrName);
-         return null == node ? null : node.getNodeValue();
       }
 
       private static Shape getCoords(String[] coordValues, int length) {

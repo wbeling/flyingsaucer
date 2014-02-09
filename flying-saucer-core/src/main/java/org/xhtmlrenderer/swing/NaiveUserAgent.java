@@ -37,7 +37,7 @@ import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
-import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.util.ImageUtil;
 import org.xhtmlrenderer.util.XRLog;
 
@@ -209,11 +209,11 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
      * @param uri Location of the XML source.
      * @return An XMLResource containing the image.
      */
-    public XMLResource getXMLResource(String uri) {
+    public HTMLResource getXMLResource(String uri) {
         InputStream inputStream = resolveAndOpenStream(uri);
-        XMLResource xmlResource;
+        HTMLResource xmlResource;
         try {
-            xmlResource = XMLResource.load(inputStream);
+            xmlResource = HTMLResource.load(inputStream);
         } finally {
             if (inputStream != null) {
                 try {

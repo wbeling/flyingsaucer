@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
-import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.swing.DelegatingUserAgent;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
@@ -98,7 +98,7 @@ public class PanelManager extends DelegatingUserAgent {
 	/**
 	 * {@inheritDoc}
 	 */
-	public XMLResource getXMLResource(String uri) {
+	public HTMLResource getXMLResource(String uri) {
         uri = resolveURI(uri);
         if (uri != null && uri.startsWith("file:")) {
             File file = null;
@@ -114,10 +114,10 @@ public class PanelManager extends DelegatingUserAgent {
             }
             if (file.isDirectory()) {
                 String dirlist = DirectoryLister.list(file);
-                return XMLResource.load(new StringReader(dirlist));
+                return HTMLResource.load(new StringReader(dirlist));
             }
         }
-        XMLResource xr = null;
+        HTMLResource xr = null;
         URLConnection uc = null;
         InputStream inputStream = null;
         try {
@@ -127,13 +127,13 @@ public class PanelManager extends DelegatingUserAgent {
             //Maybe should popup a choice when content/unknown!
             if (contentType.equals("text/plain") || contentType.equals("content/unknown")) {
                 inputStream = uc.getInputStream();
-                xr = XMLResource.load(inputStream);
+                xr = HTMLResource.load(inputStream);
             } else if (contentType.startsWith("image")) {
                 String doc = "<img src='" + uri + "'/>";
-                xr = XMLResource.load(doc);
+                xr = HTMLResource.load(doc);
             } else {
                 inputStream = uc.getInputStream();
-                xr = XMLResource.load(inputStream);
+                xr = HTMLResource.load(inputStream);
             }
         } catch (MalformedURLException e) {
             XRLog.exception("bad URL given: " + uri, e);
@@ -162,14 +162,14 @@ public class PanelManager extends DelegatingUserAgent {
 	 *
 	 * @return An XMLResource containing XML which about the failure.
 	 */
-	private XMLResource getNotFoundDocument(String uri) {
-        XMLResource xr;
+	private HTMLResource getNotFoundDocument(String uri) {
+        HTMLResource xr;
 
         // URI may contain & symbols which can "break" the XHTML we're creating
         String cleanUri = GeneralUtil.escapeHTML(uri);
         String notFound = "<html><h1>Document not found</h1><p>Could not access URI <pre>" + cleanUri + "</pre></p></html>";
 
-        xr = XMLResource.load(new StringReader(notFound));
+        xr = HTMLResource.load(new StringReader(notFound));
         return xr;
     }
 

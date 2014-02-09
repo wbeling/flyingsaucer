@@ -19,22 +19,18 @@
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
-import org.w3c.dom.Document;
+
+import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-import org.xhtmlrenderer.resource.FSEntityResolver;
-import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
+import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler;
 import org.xhtmlrenderer.swing.FSMouseListener;
 import org.xhtmlrenderer.swing.LinkListener;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.DefaultHandler2;
-import org.xml.sax.helpers.XMLReaderFactory;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -296,7 +292,7 @@ public class FontGlyphTableRender {
                         public void run() {
                             try {
                                 curFrom = startAt;
-                                xpanel.setDocument(doc, null, new XhtmlNamespaceHandler());
+                                xpanel.setDocument(doc, null, new HtmlNamespaceHandler());
                                 xpanel.getSharedContext().getCss().getCascadedStyle(null, false);
                             } catch (Throwable e) {
                                 JOptionPane.showMessageDialog(frame, "Can't load document (table of glyphs). Err: " + e.getMessage());
@@ -324,8 +320,7 @@ public class FontGlyphTableRender {
         }
         // DEBUG
         //System.out.println(page);
-        InputSource is = new InputSource(new BufferedReader(new StringReader(page)));
-        return XMLResource.load(is).getDocument();
+        return HTMLResource.load(page).getDocument();
     }
 
     private Table buildGlyphTable(int from, int to) {
@@ -362,7 +357,7 @@ public class FontGlyphTableRender {
         try {
             fos = new FileOutputStream(f);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
-            renderer.setDocument(doc, null, new XhtmlNamespaceHandler());
+            renderer.setDocument(doc, null, new HtmlNamespaceHandler());
             ITextFontResolver resolver = renderer.getFontResolver();
             // TODO: encoding is hard-coded as IDENTITY_H; maybe give user option to override
             resolver.addFont(
@@ -420,51 +415,43 @@ public class FontGlyphTableRender {
     }
 
     private String parseEnt(String html) {
-        try {
+        
             final Table table = new Table(15);
-            XMLReader parser = XMLReaderFactory.createXMLReader();
-            InputSource is = new InputSource(new BufferedReader(new StringReader(html)));
-            try {
-                parser.setFeature("http://xml.org/sax/features/validation", true);
-            } catch (SAXException e) {
-                System.err.println("Cannot activate validation.");
-            }
-            parser.setEntityResolver(FSEntityResolver.instance());
-            DefaultHandler2 dh2 = new DefaultHandler2() {
-                boolean isEnt;
-
-                // we'll get a callback for each DTD loaded; we're interested in the entity includes
-                public void externalEntityDecl(String name, String publicId, String systemId) throws SAXException {
-                    super.externalEntityDecl(name, publicId, systemId);
-                    isEnt = systemId.endsWith(".ent");
-                }
-
-                // we'll get a callback for each entity; those starting with % are elements, can skip
-                public void internalEntityDecl(String name, String value) throws SAXException {
-                    super.internalEntityDecl(name, value);
-                    if (isEnt) {
-                        if (name.startsWith("%")) return;
-                        int codePoint = (int)value.charAt(0);
-                        // FIXME: codePointAt not available in 1.4
-                        //  Character.codePointAt(value.toCharArray(), 0);
-                        table.addColumn("&amp;" + name + ";");
-                        table.addColumn("&amp;#" + codePoint + ";");
-                        table.addGlyph("&#" + codePoint + ";");
-                    }
-                }
-            };
-            parser.setProperty("http://xml.org/sax/properties/declaration-handler", dh2);
-            parser.parse(is);
+//            XMLReader parser = XMLReaderFactory.createXMLReader();
+//            InputSource is = new InputSource(new BufferedReader(new StringReader(html)));
+//            try {
+//                parser.setFeature("http://xml.org/sax/features/validation", true);
+//            } catch (SAXException e) {
+//                System.err.println("Cannot activate validation.");
+//            }
+//            parser.setEntityResolver(FSEntityResolver.instance());
+//            DefaultHandler2 dh2 = new DefaultHandler2() {
+//                boolean isEnt;
+//
+//                // we'll get a callback for each DTD loaded; we're interested in the entity includes
+//                public void externalEntityDecl(String name, String publicId, String systemId) throws SAXException {
+//                    super.externalEntityDecl(name, publicId, systemId);
+//                    isEnt = systemId.endsWith(".ent");
+//                }
+//
+//                // we'll get a callback for each entity; those starting with % are elements, can skip
+//                public void internalEntityDecl(String name, String value) throws SAXException {
+//                    super.internalEntityDecl(name, value);
+//                    if (isEnt) {
+//                        if (name.startsWith("%")) return;
+//                        int codePoint = (int)value.charAt(0);
+//                        // FIXME: codePointAt not available in 1.4
+//                        //  Character.codePointAt(value.toCharArray(), 0);
+//                        table.addColumn("&amp;" + name + ";");
+//                        table.addColumn("&amp;#" + codePoint + ";");
+//                        table.addGlyph("&#" + codePoint + ";");
+//                    }
+//                }
+//            };
+//            parser.setProperty("http://xml.org/sax/properties/declaration-handler", dh2);
+//            parser.parse(is);
             return new Page().toHtml(table.toHtml(getFontFamily(TO_SWING), 0), getFontFamily(TO_SWING));
-        }
-        catch (SAXException e) {
-            e.printStackTrace();
-            return "";
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
+  
 
     }
 

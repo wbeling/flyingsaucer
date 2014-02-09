@@ -50,8 +50,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSCMYKColor;
@@ -76,6 +77,7 @@ import org.xhtmlrenderer.render.JustificationInfo;
 import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.util.Configuration;
+import org.xhtmlrenderer.util.JsoupUtil;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
@@ -993,11 +995,11 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
     }
 
     private void loadBookmarks(Document doc) {
-        Element head = DOMUtil.getChild(doc.getDocumentElement(), "head");
+        Element head = doc.head();
         if (head != null) {
-            Element bookmarks = DOMUtil.getChild(head, "bookmarks");
+            Element bookmarks = JsoupUtil.firstChild(head.select("bookmarks"));
             if (bookmarks != null) {
-                List l = DOMUtil.getChildren(bookmarks, "bookmark");
+                Elements l = bookmarks.select("bookmark");
                 if (l != null) {
                     for (Iterator i = l.iterator(); i.hasNext();) {
                         Element e = (Element) i.next();
@@ -1009,13 +1011,13 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
     }
 
     private void loadBookmark(Bookmark parent, Element bookmark) {
-        Bookmark us = new Bookmark(bookmark.getAttribute("name"), bookmark.getAttribute("href"));
+        Bookmark us = new Bookmark(bookmark.attr("name"), bookmark.attr("href"));
         if (parent == null) {
             _bookmarks.add(us);
         } else {
             parent.addChild(us);
         }
-        List l = DOMUtil.getChildren(bookmark, "bookmark");
+        Elements l = bookmark.select("bookmark");
         if (l != null) {
             for (Iterator i = l.iterator(); i.hasNext();) {
                 Element e = (Element) i.next();
@@ -1139,15 +1141,15 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
      *            the Document level node of the parsed xhtml file.
      */
     private void loadMetadata(Document doc) {
-        Element head = DOMUtil.getChild(doc.getDocumentElement(), "head");
+        Element head = doc.head();
         if (head != null) {
-            List l = DOMUtil.getChildren(head, "meta");
+            Elements l = head.select("meta");
             if (l != null) {
                 for (Iterator i = l.iterator(); i.hasNext();) {
                     Element e = (Element) i.next();
-                    String name = e.getAttribute("name");
+                    String name = e.attr("name");
                     if (name != null) { // ignore non-name metadata data
-                        String content = e.getAttribute("content");
+                        String content = e.attr("content");
                         Metadata m = new Metadata(name, content);
                         _metadata.add(m);
                     }
@@ -1156,9 +1158,9 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
             // If there is no title meta data attribute, use the document title.
             String title = getMetadataByName("title");
             if (title == null) {
-                Element t = DOMUtil.getChild(head, "title");
+                Element t = JsoupUtil.firstChild(head.select("title"));
                 if (t != null) {
-                    title = DOMUtil.getText(t).trim();
+                    title = t.text().trim();
                     Metadata m = new Metadata("title", title);
                     _metadata.add(m);
                 }

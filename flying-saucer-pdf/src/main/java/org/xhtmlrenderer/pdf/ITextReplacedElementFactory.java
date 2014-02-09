@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
@@ -34,6 +34,9 @@ import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
+import org.xhtmlrenderer.util.JsoupUtil;
+
+import static org.xhtmlrenderer.util.GeneralUtil.ciEquals;
 
 public class ITextReplacedElementFactory implements ReplacedElementFactory {
     private ITextOutputDevice _outputDevice;
@@ -52,9 +55,9 @@ public class ITextReplacedElementFactory implements ReplacedElementFactory {
             return null;
         }
 
-        String nodeName = e.getNodeName();
+        String nodeName = e.nodeName();
         if (nodeName.equals("img")) {
-            String srcAttr = e.getAttribute("src");
+            String srcAttr = e.attr("src");
             if (srcAttr != null && srcAttr.length() > 0) {
                 FSImage fsImage = uac.getImageResource(srcAttr).getImage();
                 if (fsImage != null) {
@@ -66,12 +69,12 @@ public class ITextReplacedElementFactory implements ReplacedElementFactory {
             }
 
         } else if (nodeName.equals("input")) {
-            String type = e.getAttribute("type");
-            if (type.equals("hidden")) {
+            String type = e.attr("type");
+            if (ciEquals(type, "hidden")) {
                 return new EmptyReplacedElement(1, 1);
-            } else if (type.equals("checkbox")) {
+            } else if (ciEquals(type, "checkbox")) {
                 return new CheckboxFormField(c, box, cssWidth, cssHeight);
-            } else if (type.equals("radio")) {
+            } else if (ciEquals(type, "radio")) {
                 //TODO finish support for Radio button
                 //RadioButtonFormField result = new RadioButtonFormField(
                 //			this, c, box, cssWidth, cssHeight);
@@ -88,11 +91,11 @@ public class ITextReplacedElementFactory implements ReplacedElementFactory {
              } else if (isTextarea(e)) {//TODO Review if this is needed the textarea item prints fine currently
              return new TextAreaFormField(c, box, cssWidth, cssHeight);
              */
-        } else if (nodeName.equals("bookmark")) {
+        } else if (ciEquals(nodeName, "bookmark")) {
             // HACK Add box as named anchor and return placeholder
             BookmarkElement result = new BookmarkElement();
-            if (e.hasAttribute("name")) {
-                String name = e.getAttribute("name");
+            if (e.hasAttr("name")) {
+                String name = e.attr("name");
                 c.addBoxId(name, box);
                 result.setAnchorName(name);
             }
@@ -103,16 +106,17 @@ public class ITextReplacedElementFactory implements ReplacedElementFactory {
     }
 
     private boolean isTextarea(Element e) {
-        if (!e.getNodeName().equals("textarea")) {
+        if (!ciEquals(e.nodeName(), "textarea"))
             return false;
-        }
 
-        Node n = e.getFirstChild();
-        while (n != null) {
-            short nodeType = n.getNodeType();
-            if (nodeType != Node.TEXT_NODE && nodeType != Node.CDATA_SECTION_NODE) {
+        Node n = JsoupUtil.firstChild(e);
+
+        while (n != null) 
+        {
+        	if (!JsoupUtil.isText(n)) 
                 return false;
-            }
+
+        	n = n.nextSibling();
         }
 
         return true;
