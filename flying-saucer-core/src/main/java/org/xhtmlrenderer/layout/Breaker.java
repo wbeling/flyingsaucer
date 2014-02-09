@@ -20,6 +20,7 @@
  */
 package org.xhtmlrenderer.layout;
 
+import java.text.BreakIterator;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.render.FSFont;
@@ -79,6 +80,7 @@ public class Breaker {
                 whitespace == IdentValue.PRE_WRAP ||
                 whitespace == IdentValue.PRE_LINE) {
             int n = context.getStartSubstring().indexOf(WhitespaceStripper.EOL);
+
             if (n > -1) {
                 context.setEnd(context.getStart() + n + 1);
                 context.setWidth(c.getTextRenderer().getWidth(
@@ -104,71 +106,85 @@ public class Breaker {
 
     private static void doBreakText(LayoutContext c,
             LineBreakContext context, int avail, CalculatedStyle style,
-            boolean tryToBreakAnywhere) {
-        FSFont font = style.getFSFont(c);
+            boolean tryToBreakAnywhere)
+    {
         String currentString = context.getStartSubstring();
-        int left = 0;
-        int right = tryToBreakAnywhere ? 1 : currentString.indexOf(WhitespaceStripper.SPACE, left + 1);
-        int lastWrap = 0;
-        int graphicsLength = 0;
-        int lastGraphicsLength = 0;
 
-        while (right > 0 && graphicsLength <= avail) {
-            lastGraphicsLength = graphicsLength;
-            graphicsLength += c.getTextRenderer().getWidth(
-                    c.getFontContext(), font, currentString.substring(left, right));
-            lastWrap = left;
-            left = right;
-            if ( tryToBreakAnywhere ) {
-                right = ( right + 1 ) % currentString.length();
+        BreakIterator iter = c.getTextBreaker();
+        iter.setText(currentString);
+
+        FSFont font = style.getFSFont(c);
+        int width = 0;
+        int next = 0;
+        int last = 0;
+        
+        if (currentString.length() >= 5)
+        {
+        	// First we get the width of the first five characters.
+        	// This should give us a crude idea of the average width of a char.
+        	float widthChar5 = c.getTextRenderer().getWidth(
+        			c.getFontContext(), font, currentString.substring(0, 4));
+        	
+        	float sampledCharLength = widthChar5 / 5; 
+
+        	int estimate = 0;
+        	        	
+        	if (sampledCharLength != 0)
+        		estimate = (int) (avail / sampledCharLength); 
+
+            // Now iterate the possible line breaks until we reach the estimate.
+            do
+            {
+            	next = iter.next();
+            	if (next == BreakIterator.DONE)
+            		break;
+            	last = next;
             }
-            else { // break only on whitespace
-                right = currentString.indexOf(WhitespaceStripper.SPACE, left + 1);
-            }
+            while (next < estimate);
+
+            // Next, measure our text at the break point.
+            String broken = currentString.substring(0, last);
+            width = c.getTextRenderer().getWidth(c.getFontContext(), font, broken);
         }
 
-        if (graphicsLength <= avail) {
-            //try for the last bit too!
-            lastWrap = left;
-            lastGraphicsLength = graphicsLength;
-            graphicsLength += c.getTextRenderer().getWidth(
-                    c.getFontContext(), font, currentString.substring(left));
+        // If we still have room go to one break past.
+        while (width < avail)
+        {
+        	next = iter.next();
+        	if (next == BreakIterator.DONE)
+        		break;
+        	last = next;
+        	String broken = currentString.substring(0, next);
+        	width = c.getTextRenderer().getWidth(c.getFontContext(), font, broken);
         }
-
-        if (graphicsLength <= avail) {
-            context.setWidth(graphicsLength);
-            context.setEnd(context.getMaster().length());
-            //It fit!
-            return;
+        
+        if (width >= avail)
+        	context.setNeedsNewLine(true);
+        
+        while (width >= avail)
+        {
+        	next = iter.previous();
+        	if (next == 0 || next == BreakIterator.DONE)
+        		break;
+        	last = next;
+        	String broken = currentString.substring(0, next);
+        	width = c.getTextRenderer().getWidth(c.getFontContext(), font, broken);        	
         }
-
-        context.setNeedsNewLine(true);
-        if ( lastWrap == 0 && style.getWordWrap() == IdentValue.BREAK_WORD ) {
-            if ( ! tryToBreakAnywhere ) {
-                doBreakText(c, context, avail, style, true);
-                return;
+        
+        if (width >= avail && !tryToBreakAnywhere)
+        	context.setUnbreakable(true);
+        else if (width >= avail)
+        {
+            while (width >= avail && last > 0)
+            {
+            	String broken = currentString.substring(0, last);
+            	width = c.getTextRenderer().getWidth(c.getFontContext(), font, broken);
+            	last--;
             }
         }
-
-        if (lastWrap != 0) {//found a place to wrap
-            context.setEnd(context.getStart() + lastWrap);
-            context.setWidth(lastGraphicsLength);
-        } else {//unbreakable string
-            if (left == 0) {
-                left = currentString.length();
-            }
-
-            context.setEnd(context.getStart() + left);
-            context.setUnbreakable(true);
-
-            if (left == currentString.length()) {
-                context.setWidth(c.getTextRenderer().getWidth(
-                        c.getFontContext(), font, context.getCalculatedSubstring()));
-            } else {
-                context.setWidth(graphicsLength);
-            }
-        }
-        return;
+        
+        context.setWidth(width);
+        context.setEnd(context.getStart() + last);
     }
 
 }

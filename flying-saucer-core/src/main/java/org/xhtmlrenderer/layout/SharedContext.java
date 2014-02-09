@@ -24,6 +24,7 @@ import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.jsoup.nodes.Element;
@@ -68,7 +69,7 @@ public class SharedContext {
 
     private StylesheetInfo defaultStylesheet;
     private boolean lookedUpDefaultStylesheet;
-    
+    private Locale locale = Locale.US;
     /*
      * used to adjust fonts, ems, points, into screen resolution
      */
@@ -648,5 +649,13 @@ public class SharedContext {
 	public void setLookedUpDefaultStylesheet(boolean lookedUpDefaultStylesheet)
 	{
 		this.lookedUpDefaultStylesheet = lookedUpDefaultStylesheet;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 }

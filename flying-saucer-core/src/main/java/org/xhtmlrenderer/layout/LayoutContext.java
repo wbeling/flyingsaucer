@@ -20,11 +20,13 @@
 package org.xhtmlrenderer.layout;
 
 import java.awt.Rectangle;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.xhtmlrenderer.context.ContentFunctionFactory;
@@ -82,6 +84,12 @@ public class LayoutContext implements CssContext {
     
     private BreakAtLineContext _breakAtLineContext;
     
+    // TODO: Should this go in shared context as break iterators may be slow to
+    // start up?
+    
+    // TODO: Give user choice of locale.
+    private final BreakIterator _breakit;
+    
     public TextRenderer getTextRenderer() {
         return _sharedContext.getTextRenderer();
     }
@@ -107,7 +115,7 @@ public class LayoutContext implements CssContext {
         _sharedContext = sharedContext;
         _bfcs = new LinkedList<BlockFormattingContext>();
         _layers = new LinkedList<Layer>();
-
+        _breakit = BreakIterator.getLineInstance(sharedContext.getLocale());
         _firstLines = new StyleTracker();
         _firstLetters = new StyleTracker();
     }
@@ -520,4 +528,9 @@ public class LayoutContext implements CssContext {
     public void setBreakAtLineContext(BreakAtLineContext breakAtLineContext) {
         _breakAtLineContext = breakAtLineContext;
     }
+
+	public BreakIterator getTextBreaker()
+	{
+		return _breakit;
+	}
 }

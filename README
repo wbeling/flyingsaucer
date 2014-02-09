@@ -8,10 +8,11 @@ TODO
 + Remove redundant casts.
 + Update LICENSE.
 + Move to latest dependencies.
-+ Use a better text-breaker to handle more languages.
+
 
 DONE
 + Replace XML parser with Jsoup HTML5 parser.
++ Use a better text-breaker (Java's BreakIterator) to handle more languages.
 + Move to Java 1.7.
 + Genericize types.
 + Remove SWT, itext5 and docbook support.

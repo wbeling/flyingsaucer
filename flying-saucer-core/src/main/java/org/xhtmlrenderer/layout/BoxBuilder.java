@@ -1190,7 +1190,7 @@ public class BoxBuilder {
                     child = createInlineBox(text.toString(), parent, parentStyle, textNode);
                     */
 
-                    child = createInlineBox(textNode instanceof DataNode ? ((DataNode) textNode).getWholeData() : ((TextNode) textNode).text(), parent, parentStyle, textNode);
+                    child = createInlineBox(textNode instanceof DataNode ? ((DataNode) textNode).getWholeData() : ((TextNode) textNode).getWholeText(), parent, parentStyle, textNode);
 
                     InlineBox iB = (InlineBox) child;
                     iB.setEndsHere(true);
