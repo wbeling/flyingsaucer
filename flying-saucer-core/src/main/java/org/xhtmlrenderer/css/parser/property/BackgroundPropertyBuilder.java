@@ -45,9 +45,9 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
         } else if (type != CSSPrimitiveValue.CSS_IDENT) {
             return false;
         } else {
-            IdentValue ident = IdentValue.valueOf(value.getStringValue());
+            IdentValue ident = IdentValue.fsValueOf(value.getStringValue());
             return ident != null && 
-                PrimitivePropertyBuilders.BACKGROUND_POSITIONS.get(ident.FS_ID);
+                PrimitivePropertyBuilders.BACKGROUND_POSITIONS.get(ident.fsId);
         }
     }
 
@@ -86,7 +86,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                 
                 IdentValue ident = checkIdent(CSSName.BACKGROUND_SHORTHAND, value);
                 
-                if (PrimitivePropertyBuilders.BACKGROUND_REPEATS.get(ident.FS_ID)) {
+                if (PrimitivePropertyBuilders.BACKGROUND_REPEATS.get(ident.fsId)) {
                     if (backgroundRepeat != null) {
                         throw new CSSParseException("A background-repeat value cannot be set twice", -1);
                     }
@@ -95,7 +95,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                             CSSName.BACKGROUND_REPEAT, value, important, origin);
                 }
                 
-                if (PrimitivePropertyBuilders.BACKGROUND_ATTACHMENTS.get(ident.FS_ID)) {
+                if (PrimitivePropertyBuilders.BACKGROUND_ATTACHMENTS.get(ident.fsId)) {
                     if (backgroundAttachment != null) {
                         throw new CSSParseException("A background-attachment value cannot be set twice", -1);
                     }
@@ -122,7 +122,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                             CSSName.BACKGROUND_IMAGE, value, important, origin);
                 }
                 
-                if (PrimitivePropertyBuilders.BACKGROUND_POSITIONS.get(ident.FS_ID)) {
+                if (PrimitivePropertyBuilders.BACKGROUND_POSITIONS.get(ident.fsId)) {
                     processingBackgroundPosition = true;
                 }
             } else if (type == CSSPrimitiveValue.CSS_RGBCOLOR) {

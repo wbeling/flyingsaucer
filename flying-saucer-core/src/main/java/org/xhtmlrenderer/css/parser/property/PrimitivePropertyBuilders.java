@@ -114,7 +114,7 @@ public class PrimitivePropertyBuilders {
         BitSet result = new BitSet(IdentValue.getIdentCount());
         for (int i = 0; i < values.length; i++) {
             IdentValue ident = values[i];
-            result.set(ident.FS_ID);
+            result.set(ident.fsId);
         }
         return result;
     }

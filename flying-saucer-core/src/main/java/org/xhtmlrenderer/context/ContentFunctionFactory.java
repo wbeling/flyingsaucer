@@ -20,6 +20,7 @@
 package org.xhtmlrenderer.context;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,20 +37,19 @@ import org.xhtmlrenderer.render.InlineText;
 import org.xhtmlrenderer.render.InlineLayoutBox;
 import org.xhtmlrenderer.render.LineBox;
 import org.xhtmlrenderer.render.RenderingContext;
+import static org.xhtmlrenderer.util.GeneralUtil.ciEquals;
 
-public class ContentFunctionFactory {
-    private List<ContentFunction> _functions = new ArrayList<ContentFunction>();
+public class ContentFunctionFactory 
+{
+    private List<ContentFunction> _functions = new ArrayList<>(Arrays.asList(
+    		new PageCounterFunction(),
+    		new PagesCounterFunction(),
+    		new TargetCounterFunction(),
+    		new LeaderFunction()));
     
+    public ContentFunction lookupFunction(LayoutContext c, FSFunction function) 
     {
-        _functions.add(new PageCounterFunction());
-        _functions.add(new PagesCounterFunction());
-        _functions.add(new TargetCounterFunction());
-        _functions.add(new LeaderFunction());
-    }
-    
-    public ContentFunction lookupFunction(LayoutContext c, FSFunction function) {
-        for (Iterator<ContentFunction> i = _functions.iterator(); i.hasNext(); ) {
-            ContentFunction f = i.next();
+        for (ContentFunction f : _functions) {
             if (f.canHandle(c, function)) {
                 return f;
             }
@@ -62,45 +62,48 @@ public class ContentFunctionFactory {
     }
     
     private static abstract class PageNumberFunction implements ContentFunction {
-        public boolean isStatic() {
+    	@Override
+    	public boolean isStatic() {
             return false;
         }
         
+    	@Override
         public String calculate(LayoutContext c, FSFunction function) {
             return null;
         }
         
+    	@Override
         public String getLayoutReplacementText() {
             return "999";
         }
         
-        protected IdentValue getListStyleType(FSFunction function) {
-            IdentValue result = IdentValue.DECIMAL;
-            
+        protected IdentValue getListStyleType(FSFunction function) 
+        {
             List<PropertyValue> parameters = function.getParameters();
+
             if (parameters.size() == 2) {
-                PropertyValue pValue = (PropertyValue)parameters.get(1);
-                IdentValue iValue = IdentValue.valueOf(pValue.getStringValue());
-                if (iValue != null) {
-                    result = iValue;
-                }
+                PropertyValue pValue = parameters.get(1);
+                IdentValue iValue = IdentValue.fsValueOf(pValue.getStringValue());
+
+                if (iValue != null)
+                    return iValue;
             }
             
-            return result;
+            return IdentValue.DECIMAL;
         }
         
         protected boolean isCounter(FSFunction function, String counterName) {
-            if (function.getName().equals("counter")) {
+            if (ciEquals(function.getName(), "counter")) {
                 List<PropertyValue> parameters = function.getParameters();
                 if (parameters.size() == 1 || parameters.size() == 2) {
-                    PropertyValue param = (PropertyValue)parameters.get(0);
+                    PropertyValue param = parameters.get(0);
                     if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT ||
                             ! param.getStringValue().equals(counterName)) {
                         return false;
                     }
                     
                     if (parameters.size() == 2) {
-                        param = (PropertyValue)parameters.get(1);
+                        param = parameters.get(1);
                         if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT) {
                             return false;
                         }
@@ -115,22 +118,26 @@ public class ContentFunctionFactory {
     }
     
     private static class PageCounterFunction extends PageNumberFunction implements ContentFunction {
-        public String calculate(RenderingContext c, FSFunction function, InlineText text) {
+    	@Override
+    	public String calculate(RenderingContext c, FSFunction function, InlineText text) {
             int value = c.getRootLayer().getRelativePageNo(c) + 1;
             return CounterFunction.createCounterText(getListStyleType(function), value);
         }
-        
+
+        @Override
         public boolean canHandle(LayoutContext c, FSFunction function) {
             return c.isPrint() && isCounter(function, "page");
         }
     }
     
     private static class PagesCounterFunction extends PageNumberFunction implements ContentFunction {
-        public String calculate(RenderingContext c, FSFunction function, InlineText text) {
+    	@Override
+    	public String calculate(RenderingContext c, FSFunction function, InlineText text) {
             int value = c.getRootLayer().getRelativePageCount(c);
             return CounterFunction.createCounterText(getListStyleType(function), value);
         }
 
+    	@Override
         public boolean canHandle(LayoutContext c, FSFunction function) {
             return c.isPrint() && isCounter(function, "pages");
         }
@@ -141,10 +148,12 @@ public class ContentFunctionFactory {
      * http://www.w3.org/TR/2007/WD-css3-gcpm-20070504/#cross-references
      */
     private static class TargetCounterFunction implements ContentFunction {
-        public boolean isStatic() {
+    	@Override
+    	public boolean isStatic() {
             return false;
         }
-
+    	
+    	@Override
         public String calculate(RenderingContext c, FSFunction function, InlineText text) {
             String uri = text.getParent().getElement().attr("href");
             if (uri != null && uri.startsWith("#")) {
@@ -158,14 +167,17 @@ public class ContentFunctionFactory {
             return "";
         }
 
+    	@Override
         public String calculate(LayoutContext c, FSFunction function) {
             return null;
         }
         
+    	@Override
         public String getLayoutReplacementText() {
             return "999";
         }
 
+    	@Override
         public boolean canHandle(LayoutContext c, FSFunction function) {
             if (c.isPrint() && function.getName().equals("target-counter")) {
                 List<PropertyValue> parameters = function.getParameters();
@@ -197,10 +209,12 @@ public class ContentFunctionFactory {
      * http://www.w3.org/TR/2007/WD-css3-gcpm-20070504/#leaders
      */
     private static class LeaderFunction implements ContentFunction {
-        public boolean isStatic() {
+    	@Override
+    	public boolean isStatic() {
             return false;
         }
 
+    	@Override
         public String calculate(RenderingContext c, FSFunction function, InlineText text) {
             InlineLayoutBox iB = text.getParent();
             LineBox lineBox = iB.getLineBox();
@@ -269,14 +283,17 @@ public class ContentFunctionFactory {
             return leaderString;
         }
 
+    	@Override
         public String calculate(LayoutContext c, FSFunction function) {
             return null;
         }
         
+    	@Override
         public String getLayoutReplacementText() {
             return " . ";
         }
 
+    	@Override
         public boolean canHandle(LayoutContext c, FSFunction function) {
             if (c.isPrint() && function.getName().equals("leader")) {
                 List<PropertyValue> parameters = function.getParameters();

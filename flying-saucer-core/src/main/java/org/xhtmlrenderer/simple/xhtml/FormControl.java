@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.simple.xhtml;
 
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 
 /**
  * Interface describing a form control.

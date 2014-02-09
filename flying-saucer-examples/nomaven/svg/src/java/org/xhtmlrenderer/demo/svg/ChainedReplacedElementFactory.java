@@ -26,8 +26,6 @@ import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 
-import org.w3c.dom.Element;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;

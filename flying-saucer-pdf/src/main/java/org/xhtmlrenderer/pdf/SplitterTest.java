@@ -20,14 +20,7 @@
 package org.xhtmlrenderer.pdf;
 
 import java.util.Iterator;
-
-import javax.xml.parsers.SAXParserFactory;
-
-import org.w3c.dom.Document;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
+import org.jsoup.nodes.Document;
 
 public class SplitterTest {
     public static void main(String[] args) throws Exception {
@@ -58,7 +51,6 @@ public class SplitterTest {
         
         for (Iterator i = splitter.getDocuments().iterator(); i.hasNext(); ) {
             Document doc = (Document)i.next();
-            System.out.println(doc.getDocumentElement());
         }
     }
 }

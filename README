@@ -1,6 +1,6 @@
 TODO
 + Support MS Word output.
-+ Make interupptible.
++ Make cancelable/interrupted support.
 + Make case insensitive and locale insensitive.
 + Gradients.
 + Border radius.
@@ -8,6 +8,7 @@ TODO
 + Remove redundant casts.
 + Update LICENSE.
 + Move to latest dependencies.
++ Use a better text-breaker to handle more languages.
 
 DONE
 + Replace XML parser with Jsoup HTML5 parser.

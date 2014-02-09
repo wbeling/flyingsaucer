@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.xhtmlrenderer.simple.xhtml.FormControl;
 import org.xhtmlrenderer.simple.xhtml.FormControlListener;
 import org.xhtmlrenderer.simple.xhtml.FormListener;
 import org.xhtmlrenderer.simple.xhtml.XhtmlForm;
+import org.xhtmlrenderer.util.JsoupUtil;
 
 public abstract class AbstractControl implements FormControl {
 
@@ -47,13 +48,13 @@ public abstract class AbstractControl implements FormControl {
     public AbstractControl(XhtmlForm form, Element e) {
         _form = form;
         _element = e;
-        _name = e.getAttribute("name");
+        _name = e.attr("name");
         if (_name.length() == 0) {
-            _name = e.getAttribute("id");
+            _name = e.attr("id");
         }
-        _initialValue = e.getAttribute("value");
+        _initialValue = e.attr("value");
         _value = _initialValue;
-        _enabled = (e.getAttribute("disabled").length() == 0);
+        _enabled = (e.attr("disabled").length() == 0);
         _successful = _enabled;
 
         if (form != null) {
@@ -169,22 +170,22 @@ public abstract class AbstractControl implements FormControl {
     }
 
     public static String collectText(Element e) {
-        StringBuffer result = new StringBuffer();
-        Node node = e.getFirstChild();
+        StringBuilder result = new StringBuilder();
+        Node node = JsoupUtil.firstChild(e);
         if (node != null) {
             do {
-                if (node.getNodeType() == Node.TEXT_NODE) {
-                    Text text = (Text) node;
-                    result.append(text.getData());
+                if (JsoupUtil.isText(node)) {
+                    TextNode text = (TextNode) node;
+                    result.append(text.text());
                 }
-            } while ((node = node.getNextSibling()) != null);
+            } while ((node = node.nextSibling()) != null);
         }
         return result.toString().trim();
     }
 
     public static int getIntAttribute(Element e, String attribute, int def) {
         int result = def;
-        String str = e.getAttribute(attribute);
+        String str = e.attr(attribute);
         if (str.length() > 0) {
             try {
                 result = Integer.parseInt(str);

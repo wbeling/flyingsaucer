@@ -39,6 +39,7 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.event.DocumentListener;
@@ -474,21 +475,21 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
     /* ====== hover and active utility methods
 ========= */
 
-    public boolean isHover(org.w3c.dom.Element e) {
+    public boolean isHover(Element e) {
         if (e == hovered_element) {
             return true;
         }
         return false;
     }
 
-    public boolean isActive(org.w3c.dom.Element e) {
+    public boolean isActive(Element e) {
         if (e == active_element) {
             return true;
         }
         return false;
     }
 
-    public boolean isFocus(org.w3c.dom.Element e) {
+    public boolean isFocus(Element e) {
         if (e == focus_element) {
             return true;
         }

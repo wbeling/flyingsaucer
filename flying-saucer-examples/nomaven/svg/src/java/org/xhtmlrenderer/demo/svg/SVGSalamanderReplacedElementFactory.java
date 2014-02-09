@@ -22,7 +22,6 @@ package org.xhtmlrenderer.demo.svg;
 
 import com.kitfox.svg.SVGException;
 import com.kitfox.svg.app.beans.SVGPanel;
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.extend.FSCanvas;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;

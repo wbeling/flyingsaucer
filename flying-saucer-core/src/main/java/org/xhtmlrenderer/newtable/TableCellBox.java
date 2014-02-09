@@ -62,14 +62,14 @@ public class TableCellBox extends BlockBox {
     private static final int[] BORDER_PRIORITIES = new int[IdentValue.getIdentCount()];
     
     static {
-        BORDER_PRIORITIES[IdentValue.DOUBLE.FS_ID] = 1;
-        BORDER_PRIORITIES[IdentValue.SOLID.FS_ID] = 2;
-        BORDER_PRIORITIES[IdentValue.DASHED.FS_ID] = 3;
-        BORDER_PRIORITIES[IdentValue.DOTTED.FS_ID] = 4;
-        BORDER_PRIORITIES[IdentValue.RIDGE.FS_ID] = 5;
-        BORDER_PRIORITIES[IdentValue.OUTSET.FS_ID] = 6;
-        BORDER_PRIORITIES[IdentValue.GROOVE.FS_ID] = 7;
-        BORDER_PRIORITIES[IdentValue.INSET.FS_ID] = 8;
+        BORDER_PRIORITIES[IdentValue.DOUBLE.fsId] = 1;
+        BORDER_PRIORITIES[IdentValue.SOLID.fsId] = 2;
+        BORDER_PRIORITIES[IdentValue.DASHED.fsId] = 3;
+        BORDER_PRIORITIES[IdentValue.DOTTED.fsId] = 4;
+        BORDER_PRIORITIES[IdentValue.RIDGE.fsId] = 5;
+        BORDER_PRIORITIES[IdentValue.OUTSET.fsId] = 6;
+        BORDER_PRIORITIES[IdentValue.GROOVE.fsId] = 7;
+        BORDER_PRIORITIES[IdentValue.INSET.fsId] = 8;
     }
     
     private static final int BCELL = 10;
@@ -455,8 +455,8 @@ public class TableCellBox extends BlockBox {
 
         // The borders have equal width. Sort by border style.
         if (border1.style() != border2.style()) {
-            return BORDER_PRIORITIES[border1.style().FS_ID] > 
-                BORDER_PRIORITIES[border2.style().FS_ID] ? border1 : border2;
+            return BORDER_PRIORITIES[border1.style().fsId] > 
+                BORDER_PRIORITIES[border2.style().fsId] ? border1 : border2;
         }
 
         // The border have the same width and style. Rely on precedence (cell

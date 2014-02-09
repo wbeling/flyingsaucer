@@ -1,5 +1,3 @@
-
-
 /* 
 
  * {{{ header & license 
@@ -37,16 +35,6 @@
  * }}} 
 
  */
-
-
-
 package org.xhtmlrenderer;
 
-
-
-public class DefaultCSSMarker {
-
-
-
-}
-
+public class DefaultCSSMarker {}

@@ -121,12 +121,12 @@ public class BorderPropertyBuilders {
                 return false;
             }
             
-            IdentValue ident = IdentValue.valueOf(value.getCssText());
+            IdentValue ident = IdentValue.fsValueOf(value.getCssText());
             if (ident == null) {
                 return false;
             }
             
-            return PrimitivePropertyBuilders.BORDER_STYLES.get(ident.FS_ID);
+            return PrimitivePropertyBuilders.BORDER_STYLES.get(ident.fsId);
         }
         
         private CSSPrimitiveValue convertToBorderWidth(CSSPrimitiveValue value) {
@@ -138,12 +138,12 @@ public class BorderPropertyBuilders {
             if (isLength(value)) {
                 return value;
             } else {
-                IdentValue ident = IdentValue.valueOf(value.getStringValue());
+                IdentValue ident = IdentValue.fsValueOf(value.getStringValue());
                 if (ident == null) {
                     return null;
                 }
                 
-                if (PrimitivePropertyBuilders.BORDER_WIDTHS.get(ident.FS_ID)) {
+                if (PrimitivePropertyBuilders.BORDER_WIDTHS.get(ident.fsId)) {
                     return Conversions.getBorderWidth(ident.toString());
                 } else {
                     return null;
@@ -165,7 +165,7 @@ public class BorderPropertyBuilders {
                     return new PropertyValue(color);
                 }
                 
-                IdentValue ident = IdentValue.valueOf(value.getCssText());
+                IdentValue ident = IdentValue.fsValueOf(value.getCssText());
                 if (ident == null || ident != IdentValue.TRANSPARENT) {
                     return null;
                 }

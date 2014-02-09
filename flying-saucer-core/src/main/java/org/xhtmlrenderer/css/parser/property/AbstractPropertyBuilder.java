@@ -163,13 +163,13 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
     }
     
     protected void checkValidity(CSSName cssName, BitSet validValues, IdentValue value) {
-        if (! validValues.get(value.FS_ID)) {
+        if (! validValues.get(value.fsId)) {
             throw new CSSParseException("Ident " + value + " is an invalid or unsupported value for " + cssName, -1);
         }
     }
     
     protected IdentValue checkIdent(CSSName cssName, CSSPrimitiveValue value) {
-        IdentValue result = IdentValue.valueOf(value.getStringValue());
+        IdentValue result = IdentValue.fsValueOf(value.getStringValue());
         if (result == null) {
             throw new CSSParseException("Value " + value.getStringValue() + " is not a recognized identifier", -1);
         }

@@ -222,7 +222,7 @@ public class PropertyValue implements CSSPrimitiveValue {
             if (_identValue == null) {
                 _identValue = IdentValue.getByIdentString(getStringValue());
             }
-            return "I" + _identValue.FS_ID;
+            return "I" + _identValue.fsId;
         } else {
             return getCssText();
         }

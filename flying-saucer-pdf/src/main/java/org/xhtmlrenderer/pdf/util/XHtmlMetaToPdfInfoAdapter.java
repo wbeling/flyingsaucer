@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.DefaultPDFCreationListener;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.pdf.PDFCreationListener;
@@ -156,20 +156,14 @@ public class XHtmlMetaToPdfInfoAdapter extends DefaultPDFCreationListener {
         }
     }
     
-    private void parseHtmlTitleTag( Document doc ) {
-        
-        NodeList headNodeList = doc.getDocumentElement().getElementsByTagName( HTML_TAG_HEAD );
-        XRLog.render(Level.FINEST, "headNodeList=" + headNodeList );
-        Element rootHeadNodeElement = (Element) headNodeList.item( 0 );
-        NodeList titleNodeList = rootHeadNodeElement.getElementsByTagName( HTML_TAG_TITLE );
-        XRLog.render(Level.FINEST, "titleNodeList=" + titleNodeList );
-        Element titleElement = (Element) titleNodeList.item( 0 );
+    private void parseHtmlTitleTag( Document doc ) 
+    {
+        Element rootHeadNodeElement = doc.head();
+        Elements titleElements = rootHeadNodeElement.getElementsByTag("title");
+        Element titleElement = titleElements.isEmpty() ? null : titleElements.get(0); 
+
         if ( titleElement != null ) {
-            XRLog.render(Level.FINEST, "titleElement=" + titleElement );
-            XRLog.render(Level.FINEST, "titleElement.name=" + titleElement.getTagName() );
-            XRLog.render(Level.FINEST, "titleElement.value=" + titleElement.getNodeValue() );
-            XRLog.render(Level.FINEST, "titleElement.content=" + titleElement.getTextContent() );
-            String titleContent = titleElement.getTextContent();
+            String titleContent = titleElement.text();
             PdfName pdfName = PdfName.TITLE;
             PdfString pdfString = new PdfString( titleContent );
             this.pdfInfoValues.put( pdfName, pdfString );
@@ -178,18 +172,16 @@ public class XHtmlMetaToPdfInfoAdapter extends DefaultPDFCreationListener {
     
     private void parseHtmlMetaTags( Document doc ) {
         
-        NodeList headNodeList = doc.getDocumentElement().getElementsByTagName( HTML_TAG_HEAD );
-        XRLog.render(Level.FINEST, "headNodeList=" + headNodeList );
-        Element rootHeadNodeElement = (Element) headNodeList.item( 0 );
-        NodeList metaNodeList = rootHeadNodeElement.getElementsByTagName( HTML_TAG_META );
+        Element rootHeadNodeElement = (Element) doc.head();
+        Elements metaNodeList = rootHeadNodeElement.getElementsByTag("meta");
         XRLog.render(Level.FINEST, "metaNodeList=" + metaNodeList );        
 
-        for (int inode = 0; inode < metaNodeList.getLength(); ++inode) {
-            XRLog.render(Level.FINEST, "node " + inode + " = "+ metaNodeList.item( inode ).getNodeName() );            
-            Element thisNode = (Element) metaNodeList.item( inode );
+        for (int inode = 0; inode < metaNodeList.size(); ++inode) {
+            XRLog.render(Level.FINEST, "node " + inode + " = "+ metaNodeList.get(inode).nodeName() );            
+            Element thisNode = (Element) metaNodeList.get(inode);
             XRLog.render(Level.FINEST, "node " + thisNode );            
-            String metaName = thisNode.getAttribute( HTML_META_ATTR_NAME );
-            String metaContent = thisNode.getAttribute( HTML_META_ATTR_CONTENT );
+            String metaName = thisNode.attr("name");
+            String metaContent = thisNode.attr("content");
             XRLog.render(Level.FINEST, "metaName=" + metaName + ", metaContent=" + metaContent );            
             if (metaName.length() != 0 && metaContent.length() != 0) {
 

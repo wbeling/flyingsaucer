@@ -24,13 +24,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.simple.extend.URLUTF8Encoder;
 import org.xhtmlrenderer.simple.xhtml.controls.ButtonControl;
 import org.xhtmlrenderer.simple.xhtml.controls.CheckControl;
 import org.xhtmlrenderer.simple.xhtml.controls.HiddenControl;
 import org.xhtmlrenderer.simple.xhtml.controls.SelectControl;
 import org.xhtmlrenderer.simple.xhtml.controls.TextControl;
+import static org.xhtmlrenderer.util.GeneralUtil.ciEquals;
 
 public class XhtmlForm {
 
@@ -87,26 +88,26 @@ public class XhtmlForm {
             return null;
 
         FormControl control;
-        String name = e.getNodeName();
+        String name = e.nodeName();
         if (name.equals("input")) {
-            String type = e.getAttribute("type");
-            if (type.equals("text") || type.equals("password")) {
+            String type = e.attr("type");
+            if (ciEquals(type, "text") || ciEquals(type, "password")) {
                 control = new TextControl(form, e);
-            } else if (type.equals("hidden")) {
+            } else if (ciEquals(type, "hidden")) {
                 control = new HiddenControl(form, e);
-            } else if (type.equals("button") || type.equals("submit")
-                    || type.equals("reset")) {
+            } else if (ciEquals(type, "button") || ciEquals(type, "submit")
+                    || ciEquals(type, "reset")) {
                 control = new ButtonControl(form, e);
-            } else if (type.equals("checkbox") || type.equals("radio")) {
+            } else if (ciEquals(type, "checkbox") || ciEquals(type, "radio")) {
                 control = new CheckControl(form, e);
             } else {
                 return null;
             }
-        } else if (name.equals("textarea")) {
+        } else if (ciEquals(name, "textarea")) {
             control = new TextControl(form, e);
-        } else if (name.equals("button")) {
+        } else if (ciEquals(name, "button")) {
             control = new ButtonControl(form, e);
-        } else if (name.equals("select")) {
+        } else if (ciEquals(name, "select")) {
             control = new SelectControl(form, e);
         } else {
             return null;

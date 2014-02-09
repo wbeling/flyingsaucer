@@ -729,7 +729,7 @@ public class BoxBuilder {
                     return null;
                 }
 
-                IdentValue identValue = IdentValue.valueOf(value.getStringValue());
+                IdentValue identValue = IdentValue.fsValueOf(value.getStringValue());
                 if (identValue != null) {
                     value.setIdentValue(identValue);
                     listStyleType = identValue;
@@ -766,7 +766,7 @@ public class BoxBuilder {
                     return null;
                 }
 
-                IdentValue identValue = IdentValue.valueOf(value.getStringValue());
+                IdentValue identValue = IdentValue.fsValueOf(value.getStringValue());
                 if (identValue != null) {
                     value.setIdentValue(identValue);
                     listStyleType = identValue;

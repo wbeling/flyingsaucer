@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.simple.xhtml.XhtmlForm;
+import static org.xhtmlrenderer.util.GeneralUtil.ciEquals;
 
 public class ButtonControl extends AbstractControl {
 
@@ -35,15 +36,15 @@ public class ButtonControl extends AbstractControl {
     public ButtonControl(XhtmlForm form, Element e) {
         super(form, e);
 
-        _extended = e.getNodeName().equalsIgnoreCase("button");
+        _extended = ciEquals(e.nodeName(), "button");
         if (_extended) {
             _label = collectText(e);
         } else {
             _label = getValue();
         }
 
-        _type = e.getAttribute("type").toLowerCase();
-        if (!_type.equals("reset") && !_type.equals("button")) {
+        _type = e.attr("type");
+        if (!ciEquals(_type, "reset") && !ciEquals(_type, "button")) {
             _type = "submit";
         }
     }
