@@ -410,7 +410,7 @@ public class CalculatedStyle {
             return null;
         }
         IdentValue fontSizeIdent = (IdentValue) fontSize;
-        if (PrimitivePropertyBuilders.ABSOLUTE_FONT_SIZES.get(fontSizeIdent.fsId)) {
+        if (PrimitivePropertyBuilders.ABSOLUTE_FONT_SIZES.contains(fontSizeIdent)) {
             return fontSizeIdent;
         }
 

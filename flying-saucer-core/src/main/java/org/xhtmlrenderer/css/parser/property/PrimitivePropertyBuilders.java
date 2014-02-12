@@ -20,8 +20,9 @@
 package org.xhtmlrenderer.css.parser.property;
 
 import java.util.ArrayList;
-import java.util.BitSet;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,39 +39,39 @@ import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 public class PrimitivePropertyBuilders {
     // none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset
-    public static final BitSet BORDER_STYLES = setFor(
+    public static final EnumSet<IdentValue> BORDER_STYLES = setFor(
             new IdentValue[] { IdentValue.NONE, IdentValue.HIDDEN, IdentValue.DOTTED,
                     IdentValue.DASHED, IdentValue.SOLID, IdentValue.DOUBLE,
                     IdentValue.GROOVE, IdentValue.RIDGE, IdentValue.INSET,
                     IdentValue.OUTSET });
 
     // thin | medium | thick
-    public static final BitSet BORDER_WIDTHS = setFor(
+    public static final EnumSet<IdentValue> BORDER_WIDTHS = setFor(
             new IdentValue[] { IdentValue.THIN, IdentValue.MEDIUM, IdentValue.THICK });
 
     // normal | small-caps | inherit
-    public static final BitSet FONT_VARIANTS = setFor(
+    public static final EnumSet<IdentValue> FONT_VARIANTS = setFor(
             new IdentValue[] { IdentValue.NORMAL, IdentValue.SMALL_CAPS });
 
     // normal | italic | oblique | inherit
-    public static final BitSet FONT_STYLES = setFor(
+    public static final EnumSet<IdentValue> FONT_STYLES = setFor(
             new IdentValue[] { IdentValue.NORMAL, IdentValue.ITALIC, IdentValue.OBLIQUE });
 
-    public static final BitSet FONT_WEIGHTS = setFor(
+    public static final EnumSet<IdentValue> FONT_WEIGHTS = setFor(
             new IdentValue[] { IdentValue.NORMAL, IdentValue.BOLD, IdentValue.BOLDER, IdentValue.LIGHTER });
 
-    public static final BitSet PAGE_ORIENTATIONS = setFor(
+    public static final EnumSet<IdentValue> PAGE_ORIENTATIONS = setFor(
             new IdentValue[] { IdentValue.AUTO, IdentValue.PORTRAIT, IdentValue.LANDSCAPE });
 
     // inside | outside | inherit
-    public static final BitSet LIST_STYLE_POSITIONS = setFor(new IdentValue[] {
+    public static final EnumSet<IdentValue> LIST_STYLE_POSITIONS = setFor(new IdentValue[] {
             IdentValue.INSIDE, IdentValue.OUTSIDE });
 
     // disc | circle | square | decimal
     // | decimal-leading-zero | lower-roman | upper-roman
     // | lower-greek | lower-latin | upper-latin | armenian
     // | georgian | lower-alpha | upper-alpha | none | inherit
-    public static final BitSet LIST_STYLE_TYPES = setFor(new IdentValue[] {
+    public static final EnumSet<IdentValue> LIST_STYLE_TYPES = setFor(new IdentValue[] {
             IdentValue.DISC, IdentValue.CIRCLE, IdentValue.SQUARE,
             IdentValue.DECIMAL, IdentValue.DECIMAL_LEADING_ZERO,
             IdentValue.LOWER_ROMAN, IdentValue.UPPER_ROMAN,
@@ -80,28 +81,28 @@ public class PrimitivePropertyBuilders {
             IdentValue.UPPER_ALPHA, IdentValue.NONE });
 
     // repeat | repeat-x | repeat-y | no-repeat | inherit
-    public static final BitSet BACKGROUND_REPEATS = setFor(
+    public static final EnumSet<IdentValue> BACKGROUND_REPEATS = setFor(
             new IdentValue[] {
                     IdentValue.REPEAT, IdentValue.REPEAT_X,
                     IdentValue.REPEAT_Y, IdentValue.NO_REPEAT });
 
     // scroll | fixed | inherit
-    public static final BitSet BACKGROUND_ATTACHMENTS = setFor(
+    public static final EnumSet<IdentValue> BACKGROUND_ATTACHMENTS = setFor(
             new IdentValue[] { IdentValue.SCROLL, IdentValue.FIXED });
 
     // left | right | top | bottom | center
-    public static final BitSet BACKGROUND_POSITIONS = setFor(
+    public static final EnumSet<IdentValue> BACKGROUND_POSITIONS = setFor(
             new IdentValue[] {
                     IdentValue.LEFT, IdentValue.RIGHT, IdentValue.TOP,
                     IdentValue.BOTTOM, IdentValue.CENTER });
 
-    public static final BitSet ABSOLUTE_FONT_SIZES = setFor(
+    public static final EnumSet<IdentValue> ABSOLUTE_FONT_SIZES = setFor(
             new IdentValue[] {
                     IdentValue.XX_SMALL, IdentValue.X_SMALL, IdentValue.SMALL,
                     IdentValue.MEDIUM, IdentValue.LARGE, IdentValue.X_LARGE,
                     IdentValue.XX_LARGE });
 
-    public static final BitSet RELATIVE_FONT_SIZES = setFor(
+    public static final EnumSet<IdentValue> RELATIVE_FONT_SIZES = setFor(
             new IdentValue[] {
                     IdentValue.SMALLER, IdentValue.LARGER });
 
@@ -111,17 +112,13 @@ public class PrimitivePropertyBuilders {
     public static final PropertyBuilder MARGIN = new LengthLikeWithAuto();
     public static final PropertyBuilder PADDING = new NonNegativeLengthLike();
 
-    private static BitSet setFor(IdentValue[] values) {
-        BitSet result = new BitSet(IdentValue.getIdentCount());
-        for (int i = 0; i < values.length; i++) {
-            IdentValue ident = values[i];
-            result.set(ident.fsId);
-        }
+    private static EnumSet<IdentValue> setFor(IdentValue[] values) {
+        EnumSet<IdentValue> result = EnumSet.copyOf(Arrays.asList(values));
         return result;
     }
 
     private static abstract class SingleIdent extends AbstractPropertyBuilder {
-        protected abstract BitSet getAllowed();
+        protected abstract EnumSet<IdentValue> getAllowed();
 
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
@@ -142,7 +139,7 @@ public class PrimitivePropertyBuilders {
     }
 
     private static class GenericColor extends AbstractPropertyBuilder {
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.TRANSPARENT });
 
         public List<PropertyDeclaration> buildDeclarations(
@@ -175,7 +172,7 @@ public class PrimitivePropertyBuilders {
     }
 
     private static class GenericBorderStyle extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return BORDER_STYLES;
         }
     }
@@ -209,7 +206,7 @@ public class PrimitivePropertyBuilders {
     }
 
     private static abstract class LengthWithIdent extends AbstractPropertyBuilder {
-        protected abstract BitSet getAllowed();
+        protected abstract EnumSet<IdentValue> getAllowed();
 
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
@@ -238,7 +235,7 @@ public class PrimitivePropertyBuilders {
     }
 
     private static abstract class LengthLikeWithIdent extends AbstractPropertyBuilder {
-        protected abstract BitSet getAllowed();
+        protected abstract EnumSet<IdentValue> getAllowed();
 
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
@@ -382,7 +379,7 @@ public class PrimitivePropertyBuilders {
 
     /*
     private static abstract class SingleStringWithIdent extends AbstractPropertyBuilder {
-        protected abstract BitSet getAllowed();
+        protected abstract EnumSet<IdentValue> getAllowed();
 
         public List buildDeclarations(
                 CSSName cssName, List values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
@@ -408,9 +405,9 @@ public class PrimitivePropertyBuilders {
 
     /*
     private static class SingleStringWithNone extends SingleStringWithIdent {
-        private static final BitSet ALLOWED = setFor(new IdentValue[] { IdentValue.NONE });
+        private static final EnumSet<IdentValue> ALLOWED = setFor(new IdentValue[] { IdentValue.NONE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -418,37 +415,37 @@ public class PrimitivePropertyBuilders {
 
     private static class LengthLikeWithAuto extends LengthLikeWithIdent {
         // <length> | <percentage> | auto | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.AUTO });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     private static class LengthWithNormal extends LengthWithIdent {
         // <length> | normal | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.NORMAL });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     private static class LengthLikeWithNone extends LengthLikeWithIdent {
         // <length> | <percentage> | none | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.NONE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     private static class GenericURIWithNone extends AbstractPropertyBuilder {
         // <uri> | none | inherit
-        private static final BitSet ALLOWED = setFor(new IdentValue[] { IdentValue.NONE });
+        private static final EnumSet<IdentValue> ALLOWED = setFor(new IdentValue[] { IdentValue.NONE });
 
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
@@ -469,7 +466,7 @@ public class PrimitivePropertyBuilders {
     }
 
     public static class BackgroundAttachment extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return BACKGROUND_ATTACHMENTS;
         }
     }
@@ -481,7 +478,7 @@ public class PrimitivePropertyBuilders {
     }
 
     public static class BackgroundSize extends AbstractPropertyBuilder {
-        private static final BitSet ALL_ALLOWED = setFor(new IdentValue[] {
+        private static final EnumSet<IdentValue> ALL_ALLOWED = setFor(new IdentValue[] {
                 IdentValue.AUTO, IdentValue.CONTAIN, IdentValue.COVER
         });
 
@@ -691,23 +688,23 @@ public class PrimitivePropertyBuilders {
             return Collections.singletonList(result);
         }
 
-        private BitSet getAllowed() {
+        private EnumSet<IdentValue> getAllowed() {
             return BACKGROUND_POSITIONS;
         }
     }
 
     public static class BackgroundRepeat extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return BACKGROUND_REPEATS;
         }
     }
 
     public static class BorderCollapse extends SingleIdent {
         // collapse | separate | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.COLLAPSE, IdentValue.SEPARATE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -753,20 +750,20 @@ public class PrimitivePropertyBuilders {
 
     public static class CaptionSide extends SingleIdent {
         // top | bottom | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.TOP, IdentValue.BOTTOM });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class Clear extends SingleIdent {
         // none | left | right | both | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.NONE, IdentValue.LEFT, IdentValue.RIGHT, IdentValue.BOTH });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -778,7 +775,7 @@ public class PrimitivePropertyBuilders {
         // [ [<uri> ,]* [ auto | crosshair | default | pointer | move | e-resize
         // | ne-resize | nw-resize | n-resize | se-resize | sw-resize | s-resize
         // | w-resize | text | wait | help | progress ] ] | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.AUTO, IdentValue.CROSSHAIR,
                         IdentValue.DEFAULT, IdentValue.POINTER,
@@ -790,7 +787,7 @@ public class PrimitivePropertyBuilders {
                         IdentValue.WAIT, IdentValue.HELP,
                         IdentValue.PROGRESS});
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -800,7 +797,7 @@ public class PrimitivePropertyBuilders {
         // | table-row-group | table-header-group
         // | table-footer-group | table-row | table-column-group | table-column
         // | table-cell | table-caption | none | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.INLINE, IdentValue.BLOCK,
                         IdentValue.LIST_ITEM, /* IdentValue.RUN_IN, */
@@ -811,27 +808,27 @@ public class PrimitivePropertyBuilders {
                         IdentValue.TABLE_COLUMN, IdentValue.TABLE_CELL,
                         IdentValue.TABLE_CAPTION, IdentValue.NONE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class EmptyCells extends SingleIdent {
         // show | hide | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.SHOW, IdentValue.HIDE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class Float extends SingleIdent {
         // left | right | none | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.LEFT, IdentValue.RIGHT, IdentValue.NONE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -913,12 +910,11 @@ public class PrimitivePropertyBuilders {
 
     public static class FontSize extends AbstractPropertyBuilder {
         // <absolute-size> | <relative-size> | <length> | <percentage> | inherit
-        private static final BitSet ALLOWED;
+        private static final EnumSet<IdentValue> ALLOWED;
 
         static {
-            ALLOWED = new BitSet(IdentValue.getIdentCount());
-            ALLOWED.or(ABSOLUTE_FONT_SIZES);
-            ALLOWED.or(RELATIVE_FONT_SIZES);
+            ALLOWED = EnumSet.copyOf(ABSOLUTE_FONT_SIZES);
+            ALLOWED.addAll(RELATIVE_FONT_SIZES);
         }
 
         public List<PropertyDeclaration> buildDeclarations(
@@ -944,13 +940,13 @@ public class PrimitivePropertyBuilders {
     }
 
     public static class FontStyle extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return FONT_STYLES;
         }
     }
 
     public static class FontVariant extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return FONT_VARIANTS;
         }
     }
@@ -990,7 +986,7 @@ public class PrimitivePropertyBuilders {
                     new PropertyDeclaration(cssName, value, important, origin));
         }
 
-        private BitSet getAllowed() {
+        private EnumSet<IdentValue> getAllowed() {
             return FONT_WEIGHTS;
         }
     }
@@ -1018,26 +1014,26 @@ public class PrimitivePropertyBuilders {
 
     public static class FSPageSequence extends SingleIdent {
         // start | auto
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.START, IdentValue.AUTO });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class FSPageOrientation extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return PAGE_ORIENTATIONS;
         }
     }
 
     public static class FSPDFFontEmbed extends SingleIdent {
         // auto | embed
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.AUTO, IdentValue.EMBED });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -1077,19 +1073,19 @@ public class PrimitivePropertyBuilders {
     }
 
     public static class FSTablePaginate extends SingleIdent {
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.PAGINATE, IdentValue.AUTO });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
      }
 
     public static class FSTextDecorationExtent extends SingleIdent {
-       private static final BitSet ALLOWED = setFor(
+       private static final EnumSet<IdentValue> ALLOWED = setFor(
                new IdentValue[] { IdentValue.LINE, IdentValue.BLOCK });
 
-       protected BitSet getAllowed() {
+       protected EnumSet<IdentValue> getAllowed() {
            return ALLOWED;
        }
     }
@@ -1107,30 +1103,30 @@ public class PrimitivePropertyBuilders {
     }
 
     public static class FSDynamicAutoWidth extends SingleIdent {
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.DYNAMIC, IdentValue.STATIC });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class FSKeepWithInline extends SingleIdent {
         // auto | keep
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.AUTO, IdentValue.KEEP });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class FSNamedDestination extends SingleIdent {
         // none | create
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.NONE, IdentValue.CREATE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -1143,7 +1139,7 @@ public class PrimitivePropertyBuilders {
 
     public static class LineHeight extends AbstractPropertyBuilder {
         // normal | <number> | <length> | <percentage> | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.NORMAL });
 
         public List<PropertyDeclaration> buildDeclarations(
@@ -1170,13 +1166,13 @@ public class PrimitivePropertyBuilders {
     }
 
     public static class ListStylePosition extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return LIST_STYLE_POSITIONS;
         }
     }
 
     public static class ListStyleType extends SingleIdent {
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return LIST_STYLE_TYPES;
         }
     }
@@ -1219,14 +1215,14 @@ public class PrimitivePropertyBuilders {
 
     public static class Overflow extends SingleIdent {
         // visible | hidden | scroll | auto | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.VISIBLE, IdentValue.HIDDEN,
                         /* IdentValue.SCROLL, IdentValue.AUTO, */ });
 
         // We only support visible or hidden for now
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -1245,13 +1241,13 @@ public class PrimitivePropertyBuilders {
 
     public static class PageBreakBefore extends SingleIdent {
         // auto | always | avoid | left | right | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.AUTO, IdentValue.ALWAYS,
                         IdentValue.AVOID, IdentValue.LEFT,
                         IdentValue.RIGHT });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -1281,31 +1277,31 @@ public class PrimitivePropertyBuilders {
 
     public static class PageBreakAfter extends SingleIdent {
         // auto | always | avoid | left | right | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.AUTO, IdentValue.ALWAYS,
                         IdentValue.AVOID, IdentValue.LEFT,
                         IdentValue.RIGHT });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class PageBreakInside extends SingleIdent {
         // avoid | auto | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.AVOID, IdentValue.AUTO });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class Position extends AbstractPropertyBuilder {
         // static | relative | absolute | fixed | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.STATIC, IdentValue.RELATIVE,
                         IdentValue.ABSOLUTE, IdentValue.FIXED });
@@ -1346,7 +1342,7 @@ public class PrimitivePropertyBuilders {
 
         }
 
-        private BitSet getAllowed() {
+        private EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -1368,36 +1364,36 @@ public class PrimitivePropertyBuilders {
 
     public static class TableLayout extends SingleIdent {
         // auto | fixed | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.AUTO, IdentValue.FIXED });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class TextAlign extends SingleIdent {
         // left | right | center | justify | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.LEFT, IdentValue.RIGHT,
                         IdentValue.CENTER, IdentValue.JUSTIFY });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class TextDecoration extends AbstractPropertyBuilder {
         // none | [ underline || overline || line-through || blink ] | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         /* IdentValue.NONE, */ IdentValue.UNDERLINE,
                         IdentValue.OVERLINE, IdentValue.LINE_THROUGH,
                         /* IdentValue.BLINK */ });
 
-        private BitSet getAllowed() {
+        private EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
 
@@ -1444,12 +1440,12 @@ public class PrimitivePropertyBuilders {
 
     public static class TextTransform extends SingleIdent {
        // capitalize | uppercase | lowercase | none | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.CAPITALIZE, IdentValue.UPPERCASE,
                         IdentValue.LOWERCASE, IdentValue.NONE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -1457,48 +1453,48 @@ public class PrimitivePropertyBuilders {
     public static class VerticalAlign extends LengthLikeWithIdent {
         // baseline | sub | super | top | text-top | middle
         // | bottom | text-bottom | <percentage> | <length> | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.BASELINE, IdentValue.SUB,
                         IdentValue.SUPER, IdentValue.TOP,
                         IdentValue.TEXT_TOP, IdentValue.MIDDLE,
                         IdentValue.BOTTOM, IdentValue.TEXT_BOTTOM });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class Visibility extends SingleIdent {
         // visible | hidden | collapse | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.VISIBLE, IdentValue.HIDDEN, IdentValue.COLLAPSE });
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class WhiteSpace extends SingleIdent {
         // normal | pre | nowrap | pre-wrap | pre-line | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.NORMAL, IdentValue.PRE, IdentValue.NOWRAP,
                         IdentValue.PRE_WRAP, IdentValue.PRE_LINE});
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
 
     public static class WordWrap extends SingleIdent {
         // normal | break-word
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
                         IdentValue.NORMAL, IdentValue.BREAK_WORD});
 
-        protected BitSet getAllowed() {
+        protected EnumSet<IdentValue> getAllowed() {
             return ALLOWED;
         }
     }
@@ -1521,7 +1517,7 @@ public class PrimitivePropertyBuilders {
 
     public static class ZIndex extends AbstractPropertyBuilder {
         // auto | <integer> | inherit
-        private static final BitSet ALLOWED = setFor(
+        private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.AUTO });
 
         public List<PropertyDeclaration> buildDeclarations(

@@ -62,14 +62,14 @@ public class ListStylePropertyBuilder extends AbstractPropertyBuilder {
                         listStyleImage = new PropertyDeclaration(
                                 CSSName.LIST_STYLE_IMAGE, value, important, origin);
                     }
-                } else if (PrimitivePropertyBuilders.LIST_STYLE_POSITIONS.get(ident.fsId)) {
+                } else if (PrimitivePropertyBuilders.LIST_STYLE_POSITIONS.contains(ident)) {
                     if (listStylePosition != null) {
                         throw new CSSParseException("A list-style-position value cannot be set twice", -1);
                     }
                     
                     listStylePosition = new PropertyDeclaration(
                             CSSName.LIST_STYLE_POSITION, value, important, origin);
-                } else if (PrimitivePropertyBuilders.LIST_STYLE_TYPES.get(ident.fsId)) {
+                } else if (PrimitivePropertyBuilders.LIST_STYLE_TYPES.contains(ident)) {
                     if (listStyleType != null) {
                         throw new CSSParseException("A list-style-type value cannot be set twice", -1);
                     }

@@ -70,17 +70,17 @@ public class FontPropertyBuilder extends AbstractPropertyBuilder {
                 if (ident == IdentValue.NORMAL) { // skip to avoid double set false positives
                     continue;
                 }
-                if (PrimitivePropertyBuilders.FONT_STYLES.get(ident.fsId)) {
+                if (PrimitivePropertyBuilders.FONT_STYLES.contains(ident)) {
                     if (fontStyle != null) {
                         throw new CSSParseException("font-style cannot be set twice", -1);
                     }
                     fontStyle = new PropertyDeclaration(CSSName.FONT_STYLE, value, important, origin);
-                } else if (PrimitivePropertyBuilders.FONT_VARIANTS.get(ident.fsId)) {
+                } else if (PrimitivePropertyBuilders.FONT_VARIANTS.contains(ident)) {
                     if (fontVariant != null) {
                         throw new CSSParseException("font-variant cannot be set twice", -1);
                     }
                     fontVariant = new PropertyDeclaration(CSSName.FONT_VARIANT, value, important, origin);
-                } else if (PrimitivePropertyBuilders.FONT_WEIGHTS.get(ident.fsId)) {
+                } else if (PrimitivePropertyBuilders.FONT_WEIGHTS.contains(ident)) {
                     if (fontWeight != null) {
                         throw new CSSParseException("font-weight cannot be set twice", -1);
                     }

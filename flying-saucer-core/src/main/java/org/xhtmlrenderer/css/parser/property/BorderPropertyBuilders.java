@@ -127,7 +127,7 @@ public class BorderPropertyBuilders {
                 return false;
             }
             
-            return PrimitivePropertyBuilders.BORDER_STYLES.get(ident.fsId);
+            return PrimitivePropertyBuilders.BORDER_STYLES.contains(ident);
         }
         
         private CSSPrimitiveValue convertToBorderWidth(CSSPrimitiveValue value) {
@@ -144,7 +144,7 @@ public class BorderPropertyBuilders {
                     return null;
                 }
                 
-                if (PrimitivePropertyBuilders.BORDER_WIDTHS.get(ident.fsId)) {
+                if (PrimitivePropertyBuilders.BORDER_WIDTHS.contains(ident)) {
                     return Conversions.getBorderWidth(ident.toString());
                 } else {
                     return null;

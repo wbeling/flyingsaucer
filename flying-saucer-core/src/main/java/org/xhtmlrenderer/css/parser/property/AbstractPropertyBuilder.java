@@ -20,7 +20,7 @@
 package org.xhtmlrenderer.css.parser.property;
 
 import java.util.ArrayList;
-import java.util.BitSet;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.w3c.dom.css.CSSPrimitiveValue;
@@ -163,8 +163,8 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
                 || (unit == CSSPrimitiveValue.CSS_NUMBER && value.getFloatValue(CSSPrimitiveValue.CSS_IN) == 0.0f);
     }
     
-    protected void checkValidity(CSSName cssName, BitSet validValues, IdentValue value) {
-        if (! validValues.get(value.fsId)) {
+    protected void checkValidity(CSSName cssName, EnumSet<IdentValue> validValues, IdentValue value) {
+        if (! validValues.contains(value)) {
             throw new CSSParseException("Ident " + value + " is an invalid or unsupported value for " + cssName, -1);
         }
     }

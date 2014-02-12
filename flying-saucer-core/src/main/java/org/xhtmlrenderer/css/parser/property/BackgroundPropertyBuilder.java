@@ -48,7 +48,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
         } else {
             IdentValue ident = IdentValue.fsValueOf(value.getStringValue());
             return ident != null && 
-                PrimitivePropertyBuilders.BACKGROUND_POSITIONS.get(ident.fsId);
+                PrimitivePropertyBuilders.BACKGROUND_POSITIONS.contains(ident);
         }
     }
 
@@ -87,7 +87,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                 
                 IdentValue ident = checkIdent(CSSName.BACKGROUND_SHORTHAND, value);
                 
-                if (PrimitivePropertyBuilders.BACKGROUND_REPEATS.get(ident.fsId)) {
+                if (PrimitivePropertyBuilders.BACKGROUND_REPEATS.contains(ident)) {
                     if (backgroundRepeat != null) {
                         throw new CSSParseException("A background-repeat value cannot be set twice", -1);
                     }
@@ -96,7 +96,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                             CSSName.BACKGROUND_REPEAT, value, important, origin);
                 }
                 
-                if (PrimitivePropertyBuilders.BACKGROUND_ATTACHMENTS.get(ident.fsId)) {
+                if (PrimitivePropertyBuilders.BACKGROUND_ATTACHMENTS.contains(ident)) {
                     if (backgroundAttachment != null) {
                         throw new CSSParseException("A background-attachment value cannot be set twice", -1);
                     }
@@ -123,7 +123,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                             CSSName.BACKGROUND_IMAGE, value, important, origin);
                 }
                 
-                if (PrimitivePropertyBuilders.BACKGROUND_POSITIONS.get(ident.fsId)) {
+                if (PrimitivePropertyBuilders.BACKGROUND_POSITIONS.contains(ident)) {
                     processingBackgroundPosition = true;
                 }
             } else if (type == CSSPrimitiveValue.CSS_RGBCOLOR) {
