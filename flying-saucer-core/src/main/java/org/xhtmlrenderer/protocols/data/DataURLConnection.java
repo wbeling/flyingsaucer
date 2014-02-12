@@ -29,6 +29,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.net.URLCodec;
+import org.xhtmlrenderer.util.XRLog;
 
 public class DataURLConnection extends URLConnection {
 
@@ -128,51 +133,29 @@ public class DataURLConnection extends URLConnection {
             _data = URLByteDecoder.decode(data);
         }
     }
-}
 
-class URLByteDecoder {
-    
-    public static byte [] decode(String s) {
-
-        byte [] buffer = new byte [s.length()];
-        
-        int index = 0;
-        int bindex = 0;
-        char c;
-        
-        while (index < s.length()) {
-            c =  s.charAt(index);
-            
-            switch (c) {
-                case '+':
-                    buffer[bindex++] = ' ';
-                    break;
-                case '%':
-                    buffer[bindex++] = (byte) Integer
-                        .parseInt(s.substring(index + 1, index + 3), 16);
-                    index += 2;
-                    break;
-                default:
-                    buffer[bindex++] = (byte) c;
-                    break;
-            }
-            
-            index++;
-        }
-        
-        byte [] result = new byte [bindex];
-        
-        System.arraycopy(buffer, 0, result, 0, bindex);
-        
-        return result;
-    }
-    
-}
-
-class Base64 {
-    
-    public static byte [] decode(String s) 
+    private static class URLByteDecoder 
     {
-    	return s == null ? new byte[0] : org.apache.commons.codec.binary.Base64.decodeBase64(s);
+        public static byte [] decode(String s) 
+        {
+        	try {
+				return URLCodec.decodeUrl(s.getBytes("ASCII"));
+			} catch (UnsupportedEncodingException | DecoderException e) 
+			{
+				XRLog.load(Level.WARNING, "Unable to decode url");
+				return new byte[0];
+			}
+        }
+    }
+
+    private static class Base64 
+    {
+        public static byte [] decode(String s) 
+        {
+        	return s == null ? new byte[0] : org.apache.commons.codec.binary.Base64.decodeBase64(s);
+        }
     }
 }
+
+
+
