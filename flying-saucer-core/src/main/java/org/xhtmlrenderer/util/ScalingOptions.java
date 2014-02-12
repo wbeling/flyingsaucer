@@ -34,7 +34,6 @@ import java.util.Map;
  */
 public class ScalingOptions {
 	private DownscaleQuality downscalingHint;
-	private Object renderingHint;
 	private int targetWidth;
 	private int targetHeight;
 
@@ -47,9 +46,8 @@ public class ScalingOptions {
 	 * @param interpolationHint Hint for interpolation to AWT image renderer, one of the Object constants from
 	 *                          {@link java.awt.RenderingHints} using {@link java.awt.RenderingHints.KEY_INTERPOLATION}
 	 */
-	public ScalingOptions(DownscaleQuality downscalingHint, Object interpolationHint) {
+	public ScalingOptions(DownscaleQuality downscalingHint) {
 		this.downscalingHint = downscalingHint;
-		this.renderingHint = interpolationHint;
 	}
 
 	/**
@@ -57,7 +55,7 @@ public class ScalingOptions {
 	 * quality.
 	 */
 	public ScalingOptions() {
-		this(DownscaleQuality.FAST, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		this(DownscaleQuality.FAST);
 	}
 
 	/**
@@ -73,8 +71,8 @@ public class ScalingOptions {
 	 * @param hint		 Hint for interpolation to AWT image renderer, one of the Object constants from
 	 *                     {@link java.awt.RenderingHints} using {@link java.awt.RenderingHints.KEY_INTERPOLATION}
 	 */
-	public ScalingOptions(int targetWidth, int targetHeight, int type, DownscaleQuality downscalingHint, Object hint) {
-		this(downscalingHint, hint);
+	public ScalingOptions(int targetWidth, int targetHeight, int type, DownscaleQuality downscalingHint) {
+		this(downscalingHint);
 		this.setTargetHeight(Math.max(1, targetHeight));
 		this.setTargetWidth(Math.max(1, targetWidth));
 	}
@@ -84,36 +82,6 @@ public class ScalingOptions {
 	 */
 	public DownscaleQuality getDownscalingHint() {
 		return downscalingHint;
-	}
-
-	/**
-	 * @return {@link ScalingOptions#ScalingOptions(int,DownscaleQuality,Object)} docs.
-	 */
-	public Object getRenderingHint() {
-		return renderingHint;
-	}
-
-	/**
-	 * Applies any rendering hints configured for these ScalingOptions to a Graphics2D instance before image
-	 * operations are called on it. These might be
-	 *
-	 * @param g2 A Graphics2D instance on which scaled images will be rendered.
-	 */
-	public void applyRenderingHints(Graphics2D g2) {
-		g2.setRenderingHints(getRenderingHints());
-	}
-
-	/**
-	 * Returns a Map of image rendering hints applicable to {@link Graphics2D#setRenderingHints(java.util.Map)}.
-	 * By default, this will only include the interpolation hint specified for this ScalingOptions. Other hints
-	 * could be added in a overridden version in a subclass.
-	 *
-	 * @return Map of rendering hints.
-	 */
-	protected Map<Key, Object> getRenderingHints() {
-		HashMap<Key, Object> map = new HashMap<Key, Object>();
-		map.put(RenderingHints.KEY_INTERPOLATION, getRenderingHint());
-		return map;
 	}
 
 	/**

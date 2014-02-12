@@ -24,12 +24,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
+
+import org.imgscalr.Scalr;
 
 /**
  * Static utility methods for working with images. Meant to suggest "best practices" for the most straightforward
@@ -42,11 +44,11 @@ public class ImageUtil {
     private static final Map<DownscaleQuality, Scaler> qual;
 
     static {
-        qual = new HashMap<DownscaleQuality, Scaler>();
-        qual.put(DownscaleQuality.FAST, new OldScaler());
-        qual.put(DownscaleQuality.HIGH_QUALITY, new HighQualityScaler());
-        qual.put(DownscaleQuality.LOW_QUALITY, new FastScaler());
-        qual.put(DownscaleQuality.AREA, new AreaAverageScaler());
+        qual = new EnumMap<>(DownscaleQuality.class);
+        qual.put(DownscaleQuality.FAST, ScalerInstance.FastScaler);
+        qual.put(DownscaleQuality.HIGH_QUALITY, ScalerInstance.QualityScaler);
+        qual.put(DownscaleQuality.STANDARD, ScalerInstance.StandardScaler);
+        qual.put(DownscaleQuality.MEDIUM, ScalerInstance.BalancedScaler);
     }
 
     /**
@@ -199,13 +201,9 @@ public class ImageUtil {
      * @return The scaled image instance.
      */
     public static BufferedImage getScaledInstance(BufferedImage orgImage, int targetWidth, int targetHeight) {
-        String downscaleQuality = Configuration.valueFor("xr.image.scale", DownscaleQuality.HIGH_QUALITY.asString());
-        DownscaleQuality quality = DownscaleQuality.forString(downscaleQuality, DownscaleQuality.HIGH_QUALITY);
-
-        Object hint = Configuration.valueFromClassConstant("xr.image.render-quality",
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-
-        ScalingOptions opt = new ScalingOptions(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB, quality, hint);
+        String downscaleQuality = Configuration.valueFor("xr.image.scale", DownscaleQuality.HIGH_QUALITY.toString());
+        DownscaleQuality quality = DownscaleQuality.valueOf(downscaleQuality);
+        ScalingOptions opt = new ScalingOptions(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB, quality);
 
         return getScaledInstance(opt, orgImage);
     }
@@ -344,107 +342,40 @@ public class ImageUtil {
         BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt);
     }
 
-    abstract static class AbstractFastScaler implements Scaler {
-        public BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt) {
-            // target is always >= 1
-            Image scaled = img.getScaledInstance(opt.getTargetWidth(), opt.getTargetHeight(), getImageScalingMethod());
+    static enum ScalerInstance implements Scaler
+    {
+    	FastScaler
+    	{
+    		@Override
+			public BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt) 
+			{
+				return Scalr.resize(img, Scalr.Method.SPEED,  Scalr.Mode.FIT_EXACT, opt.getTargetWidth(), opt.getTargetHeight());
+    		}
+    	},
+    	StandardScaler
+    	{
+			@Override
+			public BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt) 
+			{
+				return Scalr.resize(img, Scalr.Method.AUTOMATIC,  Scalr.Mode.FIT_EXACT, opt.getTargetWidth(), opt.getTargetHeight());
+			}
+    	},
+    	BalancedScaler
+    	{
+			@Override
+			public BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt) 
+			{
+				return Scalr.resize(img, Scalr.Method.BALANCED,  Scalr.Mode.FIT_EXACT, opt.getTargetWidth(), opt.getTargetHeight());
+			}
+    	},
+    	QualityScaler
+    	{
 
-            return ImageUtil.convertToBufferedImage(scaled, img.getType());
-        }
-
-        abstract protected int getImageScalingMethod();
-    }
-
-    /**
-     * Old AWT-style scaling, poor quality
-     */
-    static class OldScaler extends AbstractFastScaler {
-        protected int getImageScalingMethod() {
-            return Image.SCALE_FAST;
-        }
-    }
-
-    /**
-     * AWT-style one-step scaling, using area averaging
-     */
-    static class AreaAverageScaler extends AbstractFastScaler {
-        protected int getImageScalingMethod() {
-            return Image.SCALE_AREA_AVERAGING;
-        }
-    }
-
-    /**
-     * Fast but decent scaling
-     */
-    static class FastScaler implements Scaler {
-        public BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt) {
-            int w, h;
-
-            // Use one-step technique: scale directly from original
-            // size to target size with a single drawImage() call
-            w = opt.getTargetWidth();
-            h = opt.getTargetHeight();
-
-            BufferedImage scaled = ImageUtil.createCompatibleBufferedImage(w, h, img.getType());
-            Graphics2D g2 = scaled.createGraphics();
-            opt.applyRenderingHints(g2);
-            g2.drawImage(img, 0, 0, w, h, null);
-            g2.dispose();
-
-            return scaled;
-        }
-    }
-
-    /**
-     * Step-wise downscaling
-     */
-    static class HighQualityScaler implements Scaler {
-        public BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt) {
-            int w, h;
-            int imgw = img.getWidth(null);
-            int imgh = img.getHeight(null);
-
-            // multi-pass only if higher quality requested and we are shrinking image
-            if (opt.getTargetWidth() < imgw && opt.getTargetHeight() < imgh) {
-                // Use multi-step technique: start with original size, then
-                // scale down in multiple passes with drawImage()
-                // until the target size is reached
-                w = imgw;
-                h = imgh;
-            } else {
-                // Use one-step technique: scale directly from original
-                // size to target size with a single drawImage() call
-                w = opt.getTargetWidth();
-                h = opt.getTargetHeight();
-            }
-
-            BufferedImage scaled = img;
-
-            do {
-                if (w > opt.getTargetWidth()) {
-                    w /= 2;
-                    if (w < opt.getTargetWidth()) {
-                        w = opt.getTargetWidth();
-                    }
-                }
-
-                if (h > opt.getTargetHeight()) {
-                    h /= 2;
-                    if (h < opt.getTargetHeight()) {
-                        h = opt.getTargetHeight();
-                    }
-                }
-
-                BufferedImage tmp = ImageUtil.createCompatibleBufferedImage(w, h, img.getType());
-                Graphics2D g2 = tmp.createGraphics();
-                opt.applyRenderingHints(g2);
-                g2.drawImage(scaled, 0, 0, w, h, null);
-                g2.dispose();
-
-                scaled = tmp;
-
-            } while (w != opt.getTargetWidth() || h != opt.getTargetHeight());
-            return scaled;
-        }
-    }
+			@Override
+			public BufferedImage getScaledInstance(BufferedImage img, ScalingOptions opt)
+			{
+				return Scalr.resize(img, Scalr.Method.QUALITY,  Scalr.Mode.FIT_EXACT, opt.getTargetWidth(), opt.getTargetHeight());
+			}
+    	};
+   	}
 }
