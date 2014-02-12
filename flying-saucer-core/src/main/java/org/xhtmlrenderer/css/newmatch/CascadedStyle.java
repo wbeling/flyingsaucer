@@ -71,7 +71,7 @@ public class CascadedStyle {
         CSSPrimitiveValue val = new PropertyValue(display);
         
         List<PropertyDeclaration> props = Collections.singletonList(
-                new PropertyDeclaration(CSSName.DISPLAY, val, true, StylesheetInfo.USER));
+                new PropertyDeclaration(CSSName.DISPLAY, val, true, StylesheetInfo.CSSOrigin.USER));
         
         return new CascadedStyle(props.iterator());
     }
@@ -114,7 +114,7 @@ public class CascadedStyle {
             CSSName cssName, IdentValue display) {
         CSSPrimitiveValue val = new PropertyValue(display);
         // Urk... kind of ugly, but we really want this value to be used
-        return new PropertyDeclaration(cssName, val, true, StylesheetInfo.USER);
+        return new PropertyDeclaration(cssName, val, true, StylesheetInfo.CSSOrigin.USER);
     }
 
     /**

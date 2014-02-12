@@ -77,12 +77,12 @@ public class PageInfo {
                     CSSName.VERTICAL_ALIGN, 
                     new PropertyValue(marginBox.getInitialVerticalAlign()), 
                     false,
-                    StylesheetInfo.USER_AGENT));
+                    StylesheetInfo.CSSOrigin.USER_AGENT));
         all.add(new PropertyDeclaration(
                 CSSName.TEXT_ALIGN, 
                 new PropertyValue(marginBox.getInitialTextAlign()), 
                 false,
-                StylesheetInfo.USER_AGENT));        
+                StylesheetInfo.CSSOrigin.USER_AGENT));        
                         
         
         return new CascadedStyle(all.iterator());

@@ -30,12 +30,13 @@ import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 public class BorderPropertyBuilders {
     private static abstract class BorderSidePropertyBuilder extends AbstractPropertyBuilder {
         protected abstract CSSName[][] getProperties();
         
-        private void addAll(List<PropertyDeclaration> result, CSSName[] properties, CSSPrimitiveValue value, int origin, boolean important) {
+        private void addAll(List<PropertyDeclaration> result, CSSName[] properties, CSSPrimitiveValue value, CSSOrigin origin, boolean important) {
             for (int i = 0; i < properties.length; i++) {
                 result.add(new PropertyDeclaration(
                         properties[i], value, important, origin));
@@ -43,7 +44,7 @@ public class BorderPropertyBuilders {
         }
         
         public List<PropertyDeclaration> buildDeclarations(
-                CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
+                CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             CSSName[][] props = getProperties();
             
             List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(3);

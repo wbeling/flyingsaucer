@@ -211,7 +211,7 @@ public class StyleReference {
         String uri = _uac.getBaseURL();
         StylesheetInfo info = new StylesheetInfo();
         info.setUri(uri);
-        info.setOrigin(StylesheetInfo.AUTHOR);
+        info.setOrigin(StylesheetInfo.CSSOrigin.AUTHOR);
         if (_stylesheetFactory.containsStylesheet(uri)) {
             _stylesheetFactory.removeCachedStylesheet(uri);
             XRLog.cssParse("Removing stylesheet '" + uri + "' from cache by request.");

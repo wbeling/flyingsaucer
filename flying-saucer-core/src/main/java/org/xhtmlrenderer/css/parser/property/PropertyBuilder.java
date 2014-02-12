@@ -25,6 +25,7 @@ import java.util.List;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 public interface PropertyBuilder {
     /**
@@ -33,7 +34,7 @@ public interface PropertyBuilder {
      * <code>CSSPrimitiveValue</code> objects.
      */
     public List<PropertyDeclaration> buildDeclarations(
-            CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed);
+            CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed);
     
-    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, int origin, boolean important);    
+    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important);    
 }

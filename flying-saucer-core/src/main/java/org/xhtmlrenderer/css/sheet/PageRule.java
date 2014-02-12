@@ -24,12 +24,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.xhtmlrenderer.css.constants.MarginBoxName;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 public class PageRule implements RulesetContainer {
     private String _name;
     private String _pseudoPage;
     private Ruleset _ruleset;
-    private int _origin;
+    private CSSOrigin _origin;
     
     private Map<MarginBoxName, List<PropertyDeclaration>> _marginBoxes = new HashMap<MarginBoxName, List<PropertyDeclaration>>();
     
@@ -39,7 +40,7 @@ public class PageRule implements RulesetContainer {
     private int _specificityG;
     private int _specificityH;
     
-    public PageRule(int origin) {
+    public PageRule(CSSOrigin origin) {
         _origin = origin;
     }
     
@@ -71,11 +72,11 @@ public class PageRule implements RulesetContainer {
         _ruleset = ruleset;
     }
 
-    public int getOrigin() {
+    public CSSOrigin getOrigin() {
         return _origin;
     }
 
-    public void setOrigin(int origin) {
+    public void setOrigin(CSSOrigin origin) {
         _origin = origin;
     }
 

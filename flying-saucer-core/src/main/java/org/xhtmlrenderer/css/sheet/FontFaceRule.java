@@ -22,16 +22,17 @@ package org.xhtmlrenderer.css.sheet;
 import java.util.Iterator;
 
 import org.xhtmlrenderer.css.newmatch.CascadedStyle;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.EmptyStyle;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
 public class FontFaceRule implements RulesetContainer {
-    private int _origin;
+    private CSSOrigin _origin;
     private Ruleset _ruleset;
     private CalculatedStyle _calculatedStyle;
 
-    public FontFaceRule(int origin) {
+    public FontFaceRule(CSSOrigin origin) {
         _origin = origin;
     }
 
@@ -42,11 +43,11 @@ public class FontFaceRule implements RulesetContainer {
         _ruleset = ruleset;
     }
 
-    public int getOrigin() {
+    public CSSOrigin getOrigin() {
         return _origin;
     }
 
-    public void setOrigin(int origin) {
+    public void setOrigin(CSSOrigin origin) {
         _origin = origin;
     }
 

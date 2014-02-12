@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.xhtmlrenderer.css.newmatch.Selector;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 
 /**
@@ -32,12 +33,12 @@ import org.xhtmlrenderer.css.newmatch.Selector;
  * @author Patrick Wright
  */
 public class Ruleset {
-    private int _origin;
+    private CSSOrigin _origin;
     private java.util.List<PropertyDeclaration> _props;
 
     private List<Selector> _fsSelectors = new ArrayList<Selector>();
 
-    public Ruleset(int orig) {
+    public Ruleset(CSSOrigin orig) {
         _origin = orig;
         _props = new LinkedList<PropertyDeclaration>();
         _fsSelectors = new LinkedList<Selector>();
@@ -69,7 +70,7 @@ public class Ruleset {
         return _fsSelectors;
     }
     
-    public int getOrigin() {
+    public CSSOrigin getOrigin() {
         return _origin;
     }
 

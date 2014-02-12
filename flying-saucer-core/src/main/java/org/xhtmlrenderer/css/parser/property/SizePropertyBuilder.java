@@ -29,12 +29,13 @@ import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 public class SizePropertyBuilder extends AbstractPropertyBuilder {
     private static final CSSName[] ALL = { CSSName.FS_PAGE_ORIENTATION, CSSName.FS_PAGE_HEIGHT, CSSName.FS_PAGE_WIDTH };
     
     public List<PropertyDeclaration> buildDeclarations(
-            CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
+            CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
         List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(3);
         checkValueCount(cssName, 1, 2, values.size());
         

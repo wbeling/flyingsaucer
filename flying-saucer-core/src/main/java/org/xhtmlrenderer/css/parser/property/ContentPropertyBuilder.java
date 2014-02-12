@@ -32,11 +32,12 @@ import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.FSFunction;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 public class ContentPropertyBuilder extends AbstractPropertyBuilder {
 
     public List<PropertyDeclaration> buildDeclarations(
-            CSSName cssName, List<PropertyValue> values, int origin, boolean important, boolean inheritAllowed) {
+            CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             PropertyValue value = (PropertyValue)values.get(0);
             if (value.getCssValueType() == CSSValue.CSS_INHERIT) {

@@ -22,12 +22,14 @@ package org.xhtmlrenderer.css.sheet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+
 public class MediaRule implements RulesetContainer {
     private List<String> _mediaTypes = new ArrayList<String>();
     private List<Ruleset> _contents = new ArrayList<Ruleset>();
-    private int _origin;
+    private CSSOrigin _origin;
     
-    public MediaRule(int origin) {
+    public MediaRule(CSSOrigin origin) {
         _origin = origin;
     }
     
@@ -51,7 +53,7 @@ public class MediaRule implements RulesetContainer {
         return _contents;
     }
     
-    public int getOrigin() {
+    public CSSOrigin getOrigin() {
         return _origin;
     }
 }

@@ -134,7 +134,7 @@ public class HtmlNamespaceHandler implements NamespaceHandler
     	StylesheetInfo info = new StylesheetInfo();
 
         info.setType("text/css");
-        info.setOrigin(StylesheetInfo.AUTHOR);
+        info.setOrigin(StylesheetInfo.CSSOrigin.AUTHOR);
         info.setUri(link.attr("href"));
         info.setTitle(link.attr("title"));
         
@@ -187,7 +187,7 @@ public class HtmlNamespaceHandler implements NamespaceHandler
 
             StylesheetInfo info = new StylesheetInfo();
             
-            info.setOrigin(StylesheetInfo.AUTHOR);
+            info.setOrigin(StylesheetInfo.CSSOrigin.AUTHOR);
             info.setType("text/css");
             info.setUri(piNode.attr("href"));
            	info.setTitle(piNode.attr("title"));
@@ -704,7 +704,7 @@ public class HtmlNamespaceHandler implements NamespaceHandler
     public StylesheetInfo getDefaultStylesheet(StylesheetFactory factory) 
     {
 		StylesheetInfo info = new StylesheetInfo();
-		info.setOrigin(StylesheetInfo.USER_AGENT);
+		info.setOrigin(StylesheetInfo.CSSOrigin.USER_AGENT);
 		info.setMedia("all");
 		info.setType("text/css");
 

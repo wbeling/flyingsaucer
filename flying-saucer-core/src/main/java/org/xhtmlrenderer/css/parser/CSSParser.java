@@ -47,6 +47,7 @@ import org.xhtmlrenderer.css.sheet.Ruleset;
 import org.xhtmlrenderer.css.sheet.RulesetContainer;
 import org.xhtmlrenderer.css.sheet.Stylesheet;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
+import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 
 public class CSSParser {
     private static final Set<String> SUPPORTED_PSEUDO_ELEMENTS;
@@ -80,7 +81,7 @@ public class CSSParser {
         _errorHandler = errorHandler;
     }
 
-    public Stylesheet parseStylesheet(String uri, int origin, Reader reader)
+    public Stylesheet parseStylesheet(String uri, CSSOrigin origin, Reader reader)
             throws IOException {
         _URI = uri;
         reset(reader);
@@ -91,7 +92,7 @@ public class CSSParser {
         return result;
     }
 
-    public Ruleset parseDeclaration(int origin, String text) {
+    public Ruleset parseDeclaration(CSSOrigin origin, String text) {
         try {
             // XXX Set this to something more reasonable
             _URI = "style attribute";
@@ -114,7 +115,7 @@ public class CSSParser {
         }
     }
 
-    public PropertyValue parsePropertyValue(CSSName cssName, int origin, String expr) {
+    public PropertyValue parsePropertyValue(CSSName cssName, CSSOrigin origin, String expr) {
         _URI = cssName + " property value";
         try {
             reset(new StringReader(expr));

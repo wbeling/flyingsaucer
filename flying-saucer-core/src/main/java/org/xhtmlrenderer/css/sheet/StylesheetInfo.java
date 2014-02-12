@@ -44,7 +44,7 @@ public class StylesheetInfo {
     /** Description of the Field */
     private String uri;
     /** Description of the Field */
-    private int origin = USER_AGENT;
+    private CSSOrigin origin = CSSOrigin.USER_AGENT;
     /** Description of the Field */
     private String type;
     
@@ -52,15 +52,17 @@ public class StylesheetInfo {
     
     private String content;
 
-    /** Origin of stylesheet - user agent  */
-    public final static int USER_AGENT = 0;
+    public static enum CSSOrigin
+    {
+    	/** Origin of stylesheet - user agent  */
+    	USER_AGENT,
 
-    /** Origin of stylesheet - user  */
-    public final static int USER = 1;
+    	/** Origin of stylesheet - user  */
+    	USER,
 
-    /** Origin of stylesheet - author  */
-    public final static int AUTHOR = 2;
-    
+    	/** Origin of stylesheet - author  */
+    	AUTHOR,
+    }
 
     /**
      * @param m  a single media identifier
@@ -107,7 +109,7 @@ public class StylesheetInfo {
      *
      * @param origin  The new origin value
      */
-    public void setOrigin( int origin ) {
+    public void setOrigin( CSSOrigin origin ) {
         this.origin = origin;
     }
 
@@ -161,7 +163,7 @@ public class StylesheetInfo {
      *
      * @return   The origin value
      */
-    public int getOrigin() {
+    public CSSOrigin getOrigin() {
         return origin;
     }
 

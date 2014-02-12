@@ -150,12 +150,12 @@ public class BoxBuilder {
                                 CSSName.DISPLAY,
                                 new PropertyValue(IdentValue.TABLE),
                                 true,
-                                StylesheetInfo.USER),
+                                StylesheetInfo.CSSOrigin.USER),
                         new PropertyDeclaration(
                                 CSSName.WIDTH,
                                 new PropertyValue(CSSPrimitiveValue.CSS_PERCENTAGE, 100.0f, "100%"),
                                 true,
-                                StylesheetInfo.USER),
+                                StylesheetInfo.CSSOrigin.USER),
                 }));
         TableBox result = (TableBox)createBlockBox(tableStyle, info, false);
         result.setMarginAreaRoot(true);

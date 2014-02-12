@@ -298,7 +298,7 @@ public class Matcher {
                 return null;
             }
             
-            return _styleFactory.parseStyleDeclaration(org.xhtmlrenderer.css.sheet.StylesheetInfo.AUTHOR, style);
+            return _styleFactory.parseStyleDeclaration(org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin.AUTHOR, style);
         }
     }
 
@@ -311,7 +311,7 @@ public class Matcher {
             if (Util.isNullOrEmpty(style)) {
                 return null;
             }
-            return _styleFactory.parseStyleDeclaration(org.xhtmlrenderer.css.sheet.StylesheetInfo.AUTHOR, style);
+            return _styleFactory.parseStyleDeclaration(org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin.AUTHOR, style);
         }
     }
 
