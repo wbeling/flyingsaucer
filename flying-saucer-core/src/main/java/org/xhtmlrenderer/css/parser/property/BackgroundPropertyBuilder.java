@@ -21,6 +21,7 @@ package org.xhtmlrenderer.css.parser.property;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
@@ -133,7 +134,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                 
                 backgroundColor = new PropertyDeclaration(
                         CSSName.BACKGROUND_COLOR, value, important, origin);
-            } else if (type == CSSPrimitiveValue.CSS_URI) {
+            } else if (type == CSSPrimitiveValue.CSS_URI || value.toString().toLowerCase(Locale.US).startsWith(IdentValue.LINEAR_GRADIENT.asString())) {
                 if (backgroundImage != null) {
                     throw new CSSParseException("A background-image value cannot be set twice", -1);
                 }

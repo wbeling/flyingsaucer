@@ -474,8 +474,26 @@ public class PrimitivePropertyBuilders {
     public static class BackgroundColor extends GenericColor {
     }
 
-    public static class BackgroundImage extends GenericURIWithNone {
-    }
+	public static class BackgroundImage extends GenericURIWithNone {
+		@Override
+		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
+				List<PropertyValue> values, CSSOrigin origin,
+				boolean important, boolean inheritAllowed) {
+
+			checkValueCount(cssName, 1, values.size());
+			CSSPrimitiveValue value = values.get(0);
+
+			if (!value.toString().startsWith(
+					IdentValue.LINEAR_GRADIENT.asString())) {
+
+				return super.buildDeclarations(cssName, values, origin,
+						important, inheritAllowed);
+			}
+
+			return Collections.singletonList(new PropertyDeclaration(cssName,
+					value, important, origin));
+		}
+	}
 
     public static class BackgroundSize extends AbstractPropertyBuilder {
         private static final EnumSet<IdentValue> ALL_ALLOWED = setFor(new IdentValue[] {
@@ -1538,4 +1556,172 @@ public class PrimitivePropertyBuilders {
                     new PropertyDeclaration(cssName, value, important, origin));
         }
     }
+    
+	public static class Opacity extends AbstractPropertyBuilder {
+		@Override
+		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
+				List<PropertyValue> values, CSSOrigin origin,
+				boolean important, boolean inheritAllowed) {
+			checkValueCount(cssName, 1, values.size());
+			PropertyValue value = values.get(0);
+			checkInheritAllowed(value, inheritAllowed);
+			checkNumberType(cssName, value);
+
+			if (value.getFloatValue() > 1 || value.getFloatValue() < 0) {
+				throw new CSSParseException("Opacity must be between 0 and 1.",
+						-1);
+			}
+
+			return Collections.singletonList(new PropertyDeclaration(cssName,
+					value, important, origin));
+		}
+	}
+
+	private static class GenericBorderCornerRadius extends
+			AbstractPropertyBuilder {
+		@Override
+		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
+				List<PropertyValue> values, CSSOrigin origin,
+				boolean important, boolean inheritAllowed) {
+			checkValueCount(cssName, 1, 2, values.size());
+
+			CSSPrimitiveValue first = values.get(0);
+			CSSPrimitiveValue second = values.size() == 2 ? values.get(1)
+					: null;
+
+			checkInheritAllowed(first, inheritAllowed);
+
+			if (second != null) {
+				checkInheritAllowed(second, false);
+			}
+
+			checkLengthOrPercentType(cssName, first);
+
+			if (second == null) {
+				return createTwoValueResponse(cssName, first, first, origin,
+						important);
+			} else {
+				checkLengthOrPercentType(cssName, second);
+				return createTwoValueResponse(cssName, first, second, origin,
+						important);
+			}
+		}
+	}
+
+	public static class BorderTopLeftRadius extends GenericBorderCornerRadius {
+	}
+
+	public static class BorderTopRightRadius extends GenericBorderCornerRadius {
+	}
+
+	public static class BorderBottomRightRadius extends GenericBorderCornerRadius {
+	}
+
+	public static class BorderBottomLeftRadius extends GenericBorderCornerRadius {
+	}
+
+	private static List<PropertyDeclaration> createTwoValueResponse(
+			CSSName cssName, CSSPrimitiveValue value1,
+			CSSPrimitiveValue value2,
+			CSSOrigin origin, boolean important) {
+
+		List<CSSPrimitiveValue> values = Arrays.asList(value1, value2);
+
+		PropertyDeclaration result = new PropertyDeclaration(cssName,
+				new PropertyValue(values), important, origin);
+
+		return Collections.singletonList(result);
+	}
+
+	public static class BorderRadius extends AbstractPropertyBuilder
+	{
+		@Override
+		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
+				List<PropertyValue> values, CSSOrigin origin,
+
+				boolean important, boolean inheritAllowed)
+
+		{
+
+			List<PropertyDeclaration> declarations = new ArrayList<>();
+			List<PropertyValue> leftValues = new ArrayList<>(2);
+			List<PropertyValue> rightValues = new ArrayList<>(2);
+
+			boolean addToLeft = true;
+
+			for (PropertyValue value : values) {
+				if (value.getOperator() == Token.TK_VIRGULE) {
+					addToLeft = false;
+				}
+
+				if (addToLeft) {
+					leftValues.add(value);
+				} else {
+					rightValues.add(value);
+				}
+			}
+
+			declarations.addAll(CSSName.getPropertyBuilder(
+					CSSName.BORDER_TOP_LEFT_RADIUS).buildDeclarations(
+					CSSName.BORDER_TOP_LEFT_RADIUS,
+					getValues(leftValues, rightValues, 0), origin, important));
+
+			declarations.addAll(CSSName.getPropertyBuilder(
+					CSSName.BORDER_TOP_RIGHT_RADIUS).buildDeclarations(
+					CSSName.BORDER_TOP_RIGHT_RADIUS,
+					getValues(leftValues, rightValues, 1), origin, important));
+
+			declarations.addAll(CSSName.getPropertyBuilder(
+					CSSName.BORDER_BOTTOM_RIGHT_RADIUS).buildDeclarations(
+					CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
+					getValues(leftValues, rightValues, 2), origin, important));
+
+			declarations.addAll(CSSName.getPropertyBuilder(
+					CSSName.BORDER_BOTTOM_LEFT_RADIUS).buildDeclarations(
+					CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+					getValues(leftValues, rightValues, 3), origin, important));
+
+			return declarations;
+
+		}
+
+		private List<PropertyValue> getValues(List<PropertyValue> leftValues,
+				List<PropertyValue> rightValues, int index)
+		{
+			List<PropertyValue> values = new ArrayList<>();
+			values.add(getValue(leftValues, index));
+
+			if (!rightValues.isEmpty())
+			{
+				values.add(getValue(rightValues, index));
+			}
+
+			return values;
+		}
+
+		private PropertyValue getValue(List<PropertyValue> list, int index)
+
+		{
+			if (index < list.size())
+			{
+				return list.get(index);
+			}
+			else
+			{
+				if (index == 3)
+				{
+					return getValue(list, 1);
+				}
+
+				if (index == 2 || index == 1)
+				{
+					return getValue(list, 0);
+				}
+			}
+
+			// shouldn't happen
+			return null;
+		}
+	}
+
 }

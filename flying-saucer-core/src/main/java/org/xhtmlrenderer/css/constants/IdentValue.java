@@ -117,6 +117,7 @@ public enum IdentValue implements FSDerivedValue
     LEFT("left"),
     LIGHTER("lighter"),
     LINE("line"),
+    LINEAR_GRADIENT("linear-gradient"),
     LINE_THROUGH("line-through"),
     LIST_ITEM("list-item"),
     LOWER_ALPHA("lower-alpha"),

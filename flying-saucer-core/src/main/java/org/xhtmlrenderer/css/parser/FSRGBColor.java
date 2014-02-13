@@ -28,8 +28,13 @@ public class FSRGBColor implements FSColor {
     private int _red;
     private int _green;
     private int _blue;
-    
+    private float _alpha;
+
     public FSRGBColor(int red, int green, int blue) {
+    	this(red, green, blue, 1);
+    }
+    
+    public FSRGBColor(int red, int green, int blue, float alpha) {
         if (red < 0 || red > 255) {
             throw new IllegalArgumentException();
         }
@@ -39,9 +44,14 @@ public class FSRGBColor implements FSColor {
         if (blue < 0 || blue > 255) {
             throw new IllegalArgumentException();
         }
+        if (alpha < 0 || alpha > 1) {
+        	throw new IllegalArgumentException();
+        }
+        
         _red = red;
         _green = green;
         _blue = blue;
+        _alpha = alpha;
     }
 
     public FSRGBColor(int color) {
@@ -60,8 +70,13 @@ public class FSRGBColor implements FSColor {
         return _red;
     }
     
+    @Override
     public String toString() {
-        return '#' + toString(_red) + toString(_green) + toString(_blue);
+		if (_alpha != 1) {
+			return "rgba(" + _red + "," + _green + "," + _blue + "," + _alpha + ")";
+		} else {
+			return '#' + toString(_red) + toString(_green) + toString(_blue);
+		}
     }
     
     private String toString(int color) {
@@ -73,6 +88,7 @@ public class FSRGBColor implements FSColor {
         }
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof FSRGBColor)) return false;
@@ -82,14 +98,17 @@ public class FSRGBColor implements FSColor {
         if (_blue != that._blue) return false;
         if (_green != that._green) return false;
         if (_red != that._red) return false;
+        if (_alpha != that._alpha) return false;
 
         return true;
     }
-
+    
+    @Override
     public int hashCode() {
         int result = _red;
         result = 31 * result + _green;
         result = 31 * result + _blue;
+        result = 31 * result + (int) (_alpha * 100);
         return result;
     }
 

@@ -1469,7 +1469,62 @@ public enum CSSName {
                     "auto",
                     Marker.NOT_INHERITED,
                     new SizePropertyBuilder()
-            );
+            ),
+            
+    OPACITY(
+            "opacity",
+            Marker.PRIMITIVE,
+            "0",
+            Marker.INHERITS,
+            true,
+            new PrimitivePropertyBuilders.Opacity()
+           ),
+    
+    BORDER_TOP_LEFT_RADIUS(
+                               "border-top-left-radius",
+                               Marker.PRIMITIVE,
+                               "0px",
+                               Marker.NOT_INHERITED,
+                               new PrimitivePropertyBuilders.BorderTopLeftRadius()
+                       ),
+
+               
+
+    BORDER_TOP_RIGHT_RADIUS(
+                               "border-top-right-radius",
+                               Marker.PRIMITIVE,
+                               "0px",
+                               Marker.NOT_INHERITED,
+                               new PrimitivePropertyBuilders.BorderTopRightRadius()
+                       ),
+
+           
+
+    BORDER_BOTTOM_RIGHT_RADIUS(
+                               "border-bottom-right-radius",
+                               Marker.PRIMITIVE,
+                               "0px",
+                               Marker.NOT_INHERITED,
+                               new PrimitivePropertyBuilders.BorderBottomRightRadius()
+                       ),
+
+               
+
+    BORDER_BOTTOM_LEFT_RADIUS(
+                               "border-bottom-left-radius",
+                               Marker.PRIMITIVE,
+                               "0px",
+                               Marker.NOT_INHERITED,
+                               new PrimitivePropertyBuilders.BorderBottomLeftRadius()
+                       ),
+           
+    BORDER_RADIUS_SHORTHAND(
+                       "border-radius",
+                       Marker.SHORTHAND,
+                       "0px",
+                       Marker.NOT_INHERITED,
+                       new PrimitivePropertyBuilders.BorderRadius()
+                       );
     
     private static enum Marker
     {
