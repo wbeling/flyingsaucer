@@ -164,12 +164,16 @@ public class ImageResourceLoader {
                 } else {
                     // loaded at base size, need to scale
                     XRLog.load(Level.FINE, this + ", scaling " + uri + " to " + width + ", " + height);
-                    FSImage awtfsImage = ir.getImage();
-                    BufferedImage newImg = ((AWTFSImage) awtfsImage).getImage();
 
-                    newImg = ImageUtil.getScaledInstance(newImg, width, height);
-                    ir = new ImageResource(ir.getImageUri(), AWTFSImage.createImage(newImg));
-                    loaded(ir, width, height);
+                    if (width > -1 && height > -1) 
+                    {
+                    	FSImage awtfsImage = ir.getImage();
+                    	BufferedImage newImg = ((AWTFSImage) awtfsImage).getImage();
+
+                    	newImg = ImageUtil.getScaledInstance(newImg, width, height);
+                    	ir = new ImageResource(ir.getImageUri(), AWTFSImage.createImage(newImg));
+                    	loaded(ir, width, height);
+                    }
                 }
             }
             return ir;
