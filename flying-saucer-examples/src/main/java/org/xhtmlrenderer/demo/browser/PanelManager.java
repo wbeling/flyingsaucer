@@ -125,7 +125,7 @@ public class PanelManager extends DelegatingUserAgent {
             uc.connect();
             String contentType = uc.getContentType();
             //Maybe should popup a choice when content/unknown!
-            if (contentType.equals("text/plain") || contentType.equals("content/unknown")) {
+            if (contentType == null || contentType.equals("text/plain") || contentType.equals("content/unknown")) {
                 inputStream = uc.getInputStream();
                 xr = HTMLResource.load(inputStream);
             } else if (contentType.startsWith("image")) {

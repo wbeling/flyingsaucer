@@ -117,7 +117,7 @@ public class CalculatedStyle {
      * this for class instantiation externally.
      */
     protected CalculatedStyle() {
-        _derivedValuesById = new FSDerivedValue[CSSName.countCSSPrimitiveNames()];
+        _derivedValuesById = new FSDerivedValue[CSSName.countCSSNames()];
     }
 
 
