@@ -8,12 +8,8 @@ import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
 import org.xhtmlrenderer.newtable.CollapsedBorderValue;
 
-/**
- * User: patrick
- * Date: Oct 21, 2005
- * Time: 3:24:04 PM
- */
-public class BorderPropertySet extends RectPropertySet {
+public class BorderPropertySet extends RectPropertySet 
+{
     public static final BorderPropertySet EMPTY_BORDER = new BorderPropertySet(0.0f, 0.0f, 0.0f, 0.0f);
     
     private final IdentValue _topStyle;
@@ -21,10 +17,10 @@ public class BorderPropertySet extends RectPropertySet {
     private final IdentValue _bottomStyle;
     private final IdentValue _leftStyle;
 
-    private FSColor _topColor;
-    private FSColor _rightColor;
-    private FSColor _bottomColor;
-    private FSColor _leftColor;
+    private final FSColor _topColor;
+    private final FSColor _rightColor;
+    private final FSColor _bottomColor;
+    private final FSColor _leftColor;
     
     private final float _topLeft1;
     private final float _topRight1;
@@ -36,34 +32,6 @@ public class BorderPropertySet extends RectPropertySet {
     private final float _bottomRight2;
     private final float _bottomLeft2;
     
-    
-    public BorderPropertySet(BorderPropertySet border) {
-        this._top = border._top;
-        this._right = border._right;
-        this._bottom = border._bottom;
-        this._top = border._top;
-        
-        this._bottomLeft1 = border._bottomLeft1;
-        this._bottomRight1 = border._bottomRight1;
-        this._topLeft1 = border._topLeft1;
-        this._topRight1 = border._topRight1;
-    	
-        this._bottomLeft2 = border._bottomLeft2;
-        this._bottomRight2 = border._bottomRight2;
-        this._topLeft2 = border._topLeft2;
-        this._topRight2 = border._topRight2;
-        
-        this._topStyle = border._topStyle;
-        this._rightStyle = border._rightStyle;
-        this._bottomStyle = border._bottomStyle;
-        this._leftStyle = border._leftStyle;
-
-        this._topColor = border._topColor;
-        this._rightColor = border._rightColor;
-        this._bottomColor = border._bottomColor;
-        this._leftColor = border._leftColor;
-    }
-
     public BorderPropertySet(
             float top,
             float right,
@@ -89,6 +57,11 @@ public class BorderPropertySet extends RectPropertySet {
         this._rightStyle = null;
         this._bottomStyle = null;
         this._leftStyle = null;
+        
+        this._bottomColor = null;
+        this._topColor = null;
+        this._leftColor = null;
+        this._rightColor = null;
     }
     
     public BorderPropertySet(
@@ -256,12 +229,94 @@ public class BorderPropertySet extends RectPropertySet {
         }
     }
 
-    public boolean hasBorderRadius()
+    private BorderPropertySet(BorderPropertySet r,
+			FSColor top, FSColor bottom, FSColor left,
+			FSColor right)
+    {
+        this._top = r._top;
+        this._right = r._right;
+        this._bottom = r._bottom;
+        this._left = r._left;
+        
+        this._bottomLeft1 = 0;
+        this._bottomRight1 = 0;
+        this._topLeft1 = 0;
+        this._topRight1 = 0;
+
+        this._bottomLeft2 = 0;
+        this._bottomRight2 = 0;
+        this._topLeft2 = 0;
+        this._topRight2 = 0;
+        
+        this._topStyle = r._topStyle;
+        this._rightStyle = r._rightStyle;
+        this._bottomStyle = r._bottomStyle;
+        this._leftStyle = r._leftStyle;
+        
+        this._topColor = top;
+        this._bottomColor = bottom;
+        this._leftColor = left;
+        this._rightColor = right;
+    }
+
+	public boolean hasBorderRadius()
     {
     	return _bottomLeft1 != 0 || _bottomLeft2 != 0 ||
     		   _bottomRight1 != 0 || _bottomRight2 != 0 ||
     		   _topLeft1 != 0 || _topLeft2 != 0 ||
     		   _topRight1 != 0 || _topRight2 != 0;
+    }
+
+    /**
+     * Determines if all sides are the same.
+     */
+    public boolean isSquareRectStandard()
+    {
+    	return !hasBorderRadius() && isRoundedRectStandard();
+    }
+    
+    public boolean isRoundedRectStandard()
+    {
+    	FSColor startc = _leftColor;
+    	
+    	if (startc == null &&
+    		(_rightColor != null ||
+    		 _bottomColor != null ||
+    		 _topColor != null))
+    		return false;
+    	
+    	if (startc != null &&
+    		((!startc.equals(_rightColor)) ||
+    		(!startc.equals(_bottomColor)) ||
+    		(!startc.equals(_topColor))))
+    		return false;
+    	
+    	float start = _bottomLeft1;
+    	
+    	if ((_bottomLeft2 != start) ||
+    		(_bottomRight1 != start) ||
+    		(_bottomRight2 != start) ||
+    		(_topLeft1 != start) ||
+    		(_topLeft2 != start) ||
+    		(_topRight1 != start) ||
+    		(_topRight2 != start))
+    		return false;
+    	
+    	float startw = _left;
+    	
+    	if ((_right != startw) ||
+    		(_bottom != startw) ||
+    		(_top != startw))
+    		return false;
+    	
+    	IdentValue starts = _leftStyle;
+    	
+    	if ((_rightStyle != starts) ||
+    		(_bottomStyle != starts) ||
+    		(_topStyle != starts))
+    		return false;
+    	
+    	return true;
     }
     
     public float radiusBottomLeftOne()
@@ -310,12 +365,15 @@ public class BorderPropertySet extends RectPropertySet {
      * @param style
      * @return Returns
      */
-    public BorderPropertySet lighten(IdentValue style) {
-        BorderPropertySet bc = new BorderPropertySet(this);
-        bc._topColor = _topColor == null ? null : _topColor.lightenColor();
-        bc._bottomColor = _bottomColor == null ? null : _bottomColor.lightenColor();
-        bc._leftColor = _leftColor == null ? null : _leftColor.lightenColor();
-        bc._rightColor = _rightColor == null ? null : _rightColor.lightenColor();
+    public BorderPropertySet lighten(IdentValue style) 
+    {
+        BorderPropertySet bc = new BorderPropertySet(this,
+        		_topColor.lightenColor(),
+        		_bottomColor.lightenColor(),
+        		_leftColor.lightenColor(),
+        		 _rightColor.lightenColor()
+        		);
+
         return bc;
     }
 
@@ -326,11 +384,13 @@ public class BorderPropertySet extends RectPropertySet {
      * @return Returns
      */
     public BorderPropertySet darken(IdentValue style) {
-        BorderPropertySet bc = new BorderPropertySet(this);
-        bc._topColor = _topColor == null ? null : _topColor.darkenColor();
-        bc._bottomColor = _bottomColor == null ? null : _bottomColor.darkenColor();
-        bc._leftColor = _leftColor == null ? null : _leftColor.darkenColor();
-        bc._rightColor = _rightColor == null ? null : _rightColor.darkenColor();
+        BorderPropertySet bc = new BorderPropertySet(this,
+        		_topColor.darkenColor(),
+        		_bottomColor.darkenColor(),
+        		_leftColor.darkenColor(),
+        		_rightColor.darkenColor()
+        		);
+
         return bc;
     }
 

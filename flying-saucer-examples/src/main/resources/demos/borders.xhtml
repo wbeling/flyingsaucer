@@ -56,9 +56,14 @@
       #two_color { border-style: solid; border-color: red black; border-width: 4px; }
       #three_color { border-style: solid; border-color: red blue black; border-width: 4px; }
       #four_color { border-style: solid; border-color: red blue black green; border-width: 4px; }
+      #rounded_border { border-radius: 15px; border: 1px solid blue; }
 
-	#rounded_border { border-radius: 15px; border: 1px solid blue; }
+      #rounded_border2 { border-radius: 15px 10em 34%; border: 1px solid red; }
+      #rounded_border3 { border-radius: 25px 25px 25px 25px; border: 1px solid green; }
+
+
     </style>
+
   </head>
   <body>
     <p class="link left-link"><a href="demoNav:back">Previous Page</a></p>
@@ -137,6 +142,18 @@
    <tr>
        <td colspan="2">
           <div id="rounded_border">Rounded Border</div>
+     </td>
+   </tr>
+
+   <tr>
+       <td colspan="2">
+          <div id="rounded_border2">Rounded Border</div>
+     </td>
+   </tr>
+
+   <tr>
+       <td colspan="2">
+          <div id="rounded_border3" class="sample">Rounded Border</div>
      </td>
    </tr>
 

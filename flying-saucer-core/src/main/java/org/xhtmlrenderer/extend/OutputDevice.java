@@ -66,6 +66,7 @@ public interface OutputDevice {
     
     public void drawRect(int x, int y, int width, int height);
     public void drawOval(int x, int y, int width, int height);
+    public void draw(Shape s);
     
     public void drawBorderLine(Rectangle bounds, int side, int width, boolean solid);
     public void drawBorderLine(Shape bounds, int side, int width, boolean solid);

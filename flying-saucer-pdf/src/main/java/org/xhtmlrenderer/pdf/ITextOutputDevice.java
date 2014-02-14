@@ -418,10 +418,6 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
         }
     }
 
-    private void draw(Shape s) {
-        followPath(s, STROKE);
-    }
-
     protected void drawLine(int x1, int y1, int x2, int y2) {
         Line2D line = new Line2D.Double(x1, y1, x2, y2);
         draw(line);
@@ -1323,4 +1319,16 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
 
         return result;
     }
+
+	@Override
+	public void draw(Shape s) {
+		followPath(s, STROKE);
+		
+	}
+
+	@Override
+	public void drawBorderLine(Shape bounds, int side, int width, boolean solid) {
+		draw(bounds);
+		
+	}
 }
