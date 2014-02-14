@@ -23,7 +23,9 @@ import java.awt.BasicStroke;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.geom.Path2D;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.style.derived.BorderPropertySet;
@@ -35,6 +37,64 @@ public class BorderPainter {
     public static final int BOTTOM = 4;
     public static final int RIGHT = 8;
     public static final int ALL = TOP + LEFT + BOTTOM + RIGHT;
+    public static final double ARC_TO_BEZIER = 0.55228475;
+    
+    private static class Position
+    {
+    	float x;
+    	float y;
+    }
+    
+    private static void relLineTo(Path2D p, float x, float y, Position pos)
+    {
+    	p.lineTo(x + pos.x, y + pos.y);
+    	pos.x = x + pos.x;
+    	pos.y = y + pos.y;
+    }
+    
+    private static void relCurveTo(Path2D p, float p1, float p2, float p3, float p4, float p5, float p6, Position pos)
+    {
+    	p.curveTo(p1 + pos.x, p2 + pos.y, p3 + pos.x, p4 + pos.y, p5 + pos.x, p6 + pos.y);
+    	pos.x = p5 + pos.x;
+    	pos.y = p6 + pos.y;
+    }
+    
+    /**
+     * Simple rounded rect.
+     * From: http://cairographics.org/cookbook/roundedrectangles/
+     */
+    private static void roundedRect(Path2D cr, float x, float y, float w, float h, float radiusX, float radiusY)
+    {
+        if (radiusX > w - radiusX)
+            radiusX = w / 2;
+        if (radiusY > h - radiusY)
+            radiusY = h / 2;
+
+        // approximate (quite close) the arc using a bezier curve
+        float c1 = (float) (ARC_TO_BEZIER * radiusX);
+        float c2 = (float) (ARC_TO_BEZIER * radiusY);
+
+        Position pos = new Position();
+        
+        cr.moveTo(x + radiusX, y);
+
+        pos.x = x + radiusX;
+        pos.y = y;
+        
+        // Top
+        relLineTo (cr, w - 2 * radiusX, 0.0f, pos);
+        relCurveTo (cr, c1, 0.0f, radiusX, c2, radiusX, radiusY, pos);
+        // Right
+        relLineTo ( cr, 0, h - 2 * radiusY, pos);
+        relCurveTo (cr, 0.0f, c2, c1 - radiusX, radiusY, -radiusX, radiusY, pos);
+        // Bottom
+        relLineTo ( cr, -w + 2 * radiusX, 0, pos);
+        relCurveTo (cr, -c1, 0f, -radiusX, -c2, -radiusX, -radiusY, pos);
+        // Left
+        relLineTo (cr, 0, -h + 2 * radiusY, pos);
+        relCurveTo (cr, 0.0f, -c2, radiusX - c1, -radiusY, radiusX, -radiusY, pos);
+        cr.closePath();
+    }
     
 	/**
      * @param xOffset for determining starting point for patterns
@@ -96,6 +156,14 @@ public class BorderPainter {
 						bevel);
 			}
 		}
+    	else if (border.isRoundedRectStandard())
+    	{
+    		Path2D path = new Path2D.Float();
+    		roundedRect(path, bounds.x, bounds.y, bounds.width, bounds.height, border.radiusTopLeftOne(), border.radiusTopLeftTwo());
+    		dev.setStroke(new BasicStroke(1.0f));
+    		dev.setColor(border.leftColor());
+    		dev.draw(path);
+    	}
     	else
     	{
     		// We have a radius!
@@ -405,4 +473,24 @@ public class BorderPainter {
             _outer = outer;
         }
     }
+
+	public static Shape generateBorderBounds(Rectangle bounds,
+			BorderPropertySet border, boolean b) {
+
+		if (border.isSquareRectStandard())
+		{
+			return bounds;
+		}
+		else if (border.isRoundedRectStandard())
+		{
+			Path2D path = new Path2D.Float();
+			roundedRect(path, bounds.x , bounds.y, bounds.width, bounds.height, border.radiusTopLeftOne(), border.radiusTopLeftTwo());
+			return path;
+		}
+		else
+		{
+			// TODO
+			return bounds;
+		}
+	}
 }

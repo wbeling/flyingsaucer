@@ -220,9 +220,11 @@ public abstract class AbstractOutputDevice implements OutputDevice {
             return;
         }
 
+        Shape borderBounds = border == null ? backgroundBounds : BorderPainter.generateBorderBounds(backgroundBounds, border, false);
+        
         if (backgroundColor != null && backgroundColor != FSRGBColor.TRANSPARENT) {
             setColor(backgroundColor);
-            fillRect(backgroundBounds.x, backgroundBounds.y, backgroundBounds.width, backgroundBounds.height);
+            fill(borderBounds);
         }
 
         if (backgroundImage != null) {
@@ -241,7 +243,7 @@ public abstract class AbstractOutputDevice implements OutputDevice {
 
             Shape oldclip = getClip();
 
-            clip(backgroundBounds);
+            clip(borderBounds);
 
             scaleBackgroundImage(c, style, localBGImageContainer, backgroundImage);
 
