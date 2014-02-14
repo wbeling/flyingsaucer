@@ -68,6 +68,7 @@ public interface OutputDevice {
     public void drawOval(int x, int y, int width, int height);
     
     public void drawBorderLine(Rectangle bounds, int side, int width, boolean solid);
+    public void drawBorderLine(Shape bounds, int side, int width, boolean solid);
     
     public void drawImage(FSImage image, int x, int y);
     

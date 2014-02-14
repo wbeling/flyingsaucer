@@ -3,41 +3,65 @@ package org.xhtmlrenderer.css.style.derived;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSColor;
+import org.xhtmlrenderer.css.style.BorderRadiusCorner;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
 import org.xhtmlrenderer.newtable.CollapsedBorderValue;
 
 /**
- * Created by IntelliJ IDEA.
  * User: patrick
  * Date: Oct 21, 2005
  * Time: 3:24:04 PM
- * To change this template use File | Settings | File Templates.
  */
 public class BorderPropertySet extends RectPropertySet {
     public static final BorderPropertySet EMPTY_BORDER = new BorderPropertySet(0.0f, 0.0f, 0.0f, 0.0f);
     
-    private IdentValue _topStyle;
-    private IdentValue _rightStyle;
-    private IdentValue _bottomStyle;
-    private IdentValue _leftStyle;
+    private final IdentValue _topStyle;
+    private final IdentValue _rightStyle;
+    private final IdentValue _bottomStyle;
+    private final IdentValue _leftStyle;
 
     private FSColor _topColor;
     private FSColor _rightColor;
     private FSColor _bottomColor;
     private FSColor _leftColor;
+    
+    private final float _topLeft1;
+    private final float _topRight1;
+    private final float _bottomRight1;
+    private final float _bottomLeft1;
 
+    private final float _topLeft2;
+    private final float _topRight2;
+    private final float _bottomRight2;
+    private final float _bottomLeft2;
+    
+    
     public BorderPropertySet(BorderPropertySet border) {
-        this(border.top(), border.right(), border.bottom(), border.left());
-        this._topStyle = border.topStyle();
-        this._rightStyle = border.rightStyle();
-        this._bottomStyle = border.bottomStyle();
-        this._leftStyle = border.leftStyle();
+        this._top = border._top;
+        this._right = border._right;
+        this._bottom = border._bottom;
+        this._top = border._top;
+        
+        this._bottomLeft1 = border._bottomLeft1;
+        this._bottomRight1 = border._bottomRight1;
+        this._topLeft1 = border._topLeft1;
+        this._topRight1 = border._topRight1;
+    	
+        this._bottomLeft2 = border._bottomLeft2;
+        this._bottomRight2 = border._bottomRight2;
+        this._topLeft2 = border._topLeft2;
+        this._topRight2 = border._topRight2;
+        
+        this._topStyle = border._topStyle;
+        this._rightStyle = border._rightStyle;
+        this._bottomStyle = border._bottomStyle;
+        this._leftStyle = border._leftStyle;
 
-        this._topColor = border.topColor();
-        this._rightColor = border.rightColor();
-        this._bottomColor = border.bottomColor();
-        this._leftColor = border.leftColor();
+        this._topColor = border._topColor;
+        this._rightColor = border._rightColor;
+        this._bottomColor = border._bottomColor;
+        this._leftColor = border._leftColor;
     }
 
     public BorderPropertySet(
@@ -50,6 +74,21 @@ public class BorderPropertySet extends RectPropertySet {
         this._right = right;
         this._bottom = bottom;
         this._left = left;
+        
+        this._bottomLeft1 = 0;
+        this._bottomRight1 = 0;
+        this._topLeft1 = 0;
+        this._topRight1 = 0;
+
+        this._bottomLeft2 = 0;
+        this._bottomRight2 = 0;
+        this._topLeft2 = 0;
+        this._topRight2 = 0;
+        
+        this._topStyle = null;
+        this._rightStyle = null;
+        this._bottomStyle = null;
+        this._leftStyle = null;
     }
     
     public BorderPropertySet(
@@ -58,10 +97,10 @@ public class BorderPropertySet extends RectPropertySet {
            CollapsedBorderValue bottom,
            CollapsedBorderValue left
     ) {
-        this(   top.width(),
-                right.width(),
-                bottom.width(),
-                left.width());
+        this._top =  top.width();
+        this._right = right.width();
+        this._bottom = bottom.width();
+        this._left = left.width();
         
         this._topStyle = top.style();
         this._rightStyle = right.style();
@@ -71,7 +110,17 @@ public class BorderPropertySet extends RectPropertySet {
         this._topColor = top.color();
         this._rightColor = right.color();
         this._bottomColor = bottom.color();
-        this._leftColor = left.color();        
+        this._leftColor = left.color();
+
+        this._bottomLeft1 = 0;
+        this._bottomRight1 = 0;
+        this._topLeft1 = 0;
+        this._topRight1 = 0;
+
+        this._bottomLeft2 = 0;
+        this._bottomRight2 = 0;
+        this._topLeft2 = 0;
+        this._topRight2 = 0;
     }
 
     private BorderPropertySet(
@@ -104,8 +153,157 @@ public class BorderPropertySet extends RectPropertySet {
         _rightStyle = style.getIdent(CSSName.BORDER_RIGHT_STYLE);
         _bottomStyle = style.getIdent(CSSName.BORDER_BOTTOM_STYLE);
         _leftStyle = style.getIdent(CSSName.BORDER_LEFT_STYLE);
+        
+        BorderRadiusCorner blCorner = style.getBorderRadiusCorner(CSSName.BORDER_BOTTOM_LEFT_RADIUS);
+        BorderRadiusCorner brCorner = style.getBorderRadiusCorner(CSSName.BORDER_BOTTOM_RIGHT_RADIUS);
+        BorderRadiusCorner tlCorner = style.getBorderRadiusCorner(CSSName.BORDER_TOP_LEFT_RADIUS);
+        BorderRadiusCorner trCorner = style.getBorderRadiusCorner(CSSName.BORDER_TOP_RIGHT_RADIUS);
+
+        if (blCorner == BorderRadiusCorner.ZERO)
+        {
+        	_bottomLeft1 = 0;
+        	_bottomLeft2 = 0;
+        }
+        else
+        {
+        	_bottomLeft1 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusOne().getStringValue(),
+        			blCorner.getRadiusOne().getFloatValue(),
+        			blCorner.getRadiusOne().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+
+        	_bottomLeft2 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusTwo().getStringValue(),
+        			blCorner.getRadiusTwo().getFloatValue(),
+        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+        }
+
+        if (brCorner == BorderRadiusCorner.ZERO)
+        {
+        	_bottomRight1 = 0;
+        	_bottomRight2 = 0;
+        }
+        else
+        {
+        	_bottomRight1 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusOne().getStringValue(),
+        			blCorner.getRadiusOne().getFloatValue(),
+        			blCorner.getRadiusOne().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+
+        	_bottomRight2 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusTwo().getStringValue(),
+        			blCorner.getRadiusTwo().getFloatValue(),
+        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+        }
+        
+        if (tlCorner == BorderRadiusCorner.ZERO)
+        {
+        	_topLeft1 = 0;
+        	_topLeft2 = 0;
+        }
+        else
+        {
+        	_topLeft1 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusOne().getStringValue(),
+        			blCorner.getRadiusOne().getFloatValue(),
+        			blCorner.getRadiusOne().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+
+        	_topLeft2 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusTwo().getStringValue(),
+        			blCorner.getRadiusTwo().getFloatValue(),
+        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+        }
+        
+        if (trCorner == BorderRadiusCorner.ZERO)
+        {
+        	_topRight1 = 0;
+        	_topRight2 = 0;
+        }
+        else
+        {
+        	_topRight1 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusOne().getStringValue(),
+        			blCorner.getRadiusOne().getFloatValue(),
+        			blCorner.getRadiusOne().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+
+        	_topRight2 = LengthValue.calcFloatProportionalValue(style,
+        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+        			blCorner.getRadiusTwo().getStringValue(),
+        			blCorner.getRadiusTwo().getFloatValue(),
+        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			style.getFont(ctx).size,
+        			ctx);
+        }
     }
 
+    public boolean hasBorderRadius()
+    {
+    	return _bottomLeft1 != 0 || _bottomLeft2 != 0 ||
+    		   _bottomRight1 != 0 || _bottomRight2 != 0 ||
+    		   _topLeft1 != 0 || _topLeft2 != 0 ||
+    		   _topRight1 != 0 || _topRight2 != 0;
+    }
+    
+    public float radiusBottomLeftOne()
+    {
+    	return _bottomLeft1;
+    }
+
+    public float radiusBottomLeftTwo()
+    {
+    	return _bottomLeft2;
+    }
+
+    public float radiusBottomRightOne()
+    {
+    	return _bottomLeft1;
+    }
+
+    public float radiusBottomRightTwo()
+    {
+    	return _bottomLeft2;
+    }
+    
+    public float radiusTopLeftOne()
+    {
+    	return _bottomLeft1;
+    }
+
+    public float radiusTopLeftTwo()
+    {
+    	return _bottomLeft2;
+    }
+    
+    public float radiusTopRightOne()
+    {
+    	return _bottomLeft1;
+    }
+
+    public float radiusTopRightTwo()
+    {
+    	return _bottomLeft2;
+    }
+    
     /**
      * Returns the colors for brighter parts of each side for a particular decoration style
      *
@@ -197,7 +395,7 @@ public class BorderPropertySet extends RectPropertySet {
     
     public boolean hasHidden() {
         return _topStyle == IdentValue.HIDDEN || _rightStyle == IdentValue.HIDDEN ||
-                    _bottomStyle == IdentValue.HIDDEN || _leftStyle == IdentValue.HIDDEN;
+               _bottomStyle == IdentValue.HIDDEN || _leftStyle == IdentValue.HIDDEN;
     }    
 }
 

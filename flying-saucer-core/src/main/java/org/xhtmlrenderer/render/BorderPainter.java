@@ -23,7 +23,11 @@ import java.awt.BasicStroke;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
@@ -37,6 +41,376 @@ public class BorderPainter {
     public static final int RIGHT = 8;
     public static final int ALL = TOP + LEFT + BOTTOM + RIGHT;
     
+    /**
+    * Generates a full round rectangle that is made of bounds and border
+    * @param bounds Dimmensions of the rect
+    * @param border The border specs
+    * @param Set true if you want the inner bounds of borders
+    * @return A Path that is all sides of the round rectangle
+    */
+	public static Path2D generateBorderBounds(Rectangle bounds,
+			BorderPropertySet border, boolean inside) {
+		Path2D path = generateBorderShape(bounds, TOP, border, false,
+				inside ? 1 : 0, 1);
+		path.append(
+				generateBorderShape(bounds, RIGHT, border, false, inside ? 1
+						: 0, 1), true);
+		path.append(
+				generateBorderShape(bounds, BOTTOM, border, false, inside ? 1
+						: 0, 1), true);
+		path.append(
+				generateBorderShape(bounds, LEFT, border, false,
+						inside ? 1 : 0, 1), true);
+		return path;
+	}
+
+	// helper function for bezier curves
+	private static Point2D subT(double t, Point2D a, Point2D b) {
+		return new Point2D.Double(a.getX() + t * (b.getX() - a.getX()),
+				a.getY() + t * (b.getY() - a.getY()));
+	}
+
+	/**
+	 * Cubic bezier curve function, takes in points and spits out the location
+	 * of b(t) and 2 new bezier curves that both start and end at b(t)
+	 * 
+	 * @param t
+	 *            as defined for bezier curves
+	 * @param P0
+	 *            start point
+	 * @param P1
+	 *            ctrl pt 1
+	 * @param P2
+	 *            ctrl pt 2
+	 * @param P3
+	 *            end point
+	 * @return [[curve 1 starting at P0 and ending at B(t)], [curve 2 starting
+	 *         at P(3) and ending at B(t)]]
+	 */
+	private static Point2D[][] getSubCurve(double t, Point2D P0, Point2D P1,
+			Point2D P2, Point2D P3) {
+		Point2D P4 = subT(t, P0, P1);
+		Point2D P5 = subT(t, P1, P2);
+		Point2D P6 = subT(t, P2, P3);
+		Point2D P7 = subT(t, P4, P5);
+		Point2D P8 = subT(t, P5, P6);
+		Point2D P9 = subT(t, P7, P8);
+		return new Point2D[][] { new Point2D[] { P0, P4, P7, P9 },
+				new Point2D[] { P3, P6, P8, P9 } };
+	}
+
+	// 2 helper functions to reduce the number of params you have to see as the
+	// last 2 are very option and rarely used
+	public static Path2D generateBorderShape(Rectangle bounds, int side,
+			BorderPropertySet border, boolean drawInterior) {
+		return generateBorderShape(bounds, side, border, drawInterior, 0, 1);
+	}
+
+	public static Path2D generateBorderShape(Rectangle bounds, int side,
+			BorderPropertySet border, boolean drawInterior, float scaledOffset) {
+		return generateBorderShape(bounds, side, border, drawInterior,
+				scaledOffset, 1);
+	}
+
+	/**
+	 * Generates one side of a border
+	 * 
+	 * @param bounds
+	 *            bounds of the container
+	 * @param side
+	 *            what side you want
+	 * @param border
+	 *            border props
+	 * @param drawInterior
+	 *            if you want it to be 2d or not, if false it will be just a
+	 *            line
+	 * @param scaledOffset
+	 *            insets the border by multipling border widths by this
+	 *            variable, best use would be 1 or .5, cant see it for much
+	 *            other than that
+	 * @param widthScale
+	 *            scales the border widths by this factor, useful for drawing
+	 *            half borders for border types like groove or double
+	 * @return a path for the side chosen!
+	 */
+	public static Path2D generateBorderShape(Rectangle bounds, int side,
+			BorderPropertySet border, boolean drawInterior, float scaledOffset,
+			float widthScale) {
+
+		float sideWidth = -1, topWidth = widthScale, leftWidth = widthScale, rightWidth = widthScale;
+		double rotation = 0;
+		float interiorWidth = 0, interiorHeight = 0, exteriorWidth = 0, exteriorHeight = 0;
+
+		float leftRadius1 = 0;
+		float leftRadius2 = 0;
+		float rightRadius1 = 0;
+		float rightRadius2 = 0;
+		
+		int xOffset = 0, yOffset = 0;
+
+		if ((side & BorderPainter.TOP) == BorderPainter.TOP) {
+			sideWidth = bounds.width;
+
+			topWidth = widthScale * border.top();
+			leftWidth = widthScale * border.left();
+			rightWidth = widthScale * border.right();
+
+			leftRadius1 = border.radiusTopRightOne();
+			leftRadius2 = border.radiusTopRightTwo();
+			
+			rightRadius1 = border.radiusTopLeftOne();
+			rightRadius2 = border.radiusTopLeftTwo();
+			
+			interiorWidth = bounds.width - (1 + scaledOffset) * widthScale
+					* border.left() - (1 + scaledOffset) * widthScale
+					* border.right();
+			interiorHeight = bounds.height - (1 + scaledOffset) * widthScale
+					* border.top() - (1 + scaledOffset) * widthScale
+					* border.bottom();
+			exteriorWidth = bounds.width - scaledOffset * widthScale
+					* border.left() - scaledOffset * widthScale
+					* border.right();
+			exteriorHeight = bounds.height - scaledOffset * widthScale
+					* border.top() - scaledOffset * widthScale
+					* border.bottom();
+
+			rotation = 0;
+		} else if ((side & BorderPainter.RIGHT) == BorderPainter.RIGHT) {
+			sideWidth = bounds.height;
+
+			topWidth = widthScale * border.right();
+			leftWidth = widthScale * border.top();
+			rightWidth = widthScale * border.bottom();
+
+			leftRadius1 = border.radiusBottomRightOne();
+			leftRadius2 = border.radiusBottomRightTwo();
+			
+			rightRadius1 = border.radiusTopRightOne();
+			rightRadius2 = border.radiusTopRightTwo();
+
+
+			interiorHeight = bounds.width - (1 + scaledOffset) * widthScale
+					* border.left() - (1 + scaledOffset) * widthScale
+					* border.right();
+			interiorWidth = bounds.height - (1 + scaledOffset) * widthScale
+					* border.top() - (1 + scaledOffset) * widthScale
+					* border.bottom();
+			exteriorHeight = bounds.width - scaledOffset * widthScale
+					* border.left() - scaledOffset * widthScale
+					* border.right();
+			exteriorWidth = bounds.height - scaledOffset * widthScale
+					* border.top() - scaledOffset * widthScale
+					* border.bottom();
+
+			xOffset = bounds.width;
+			yOffset = 0;
+			rotation = Math.PI / 2;
+		} else if ((side & BorderPainter.BOTTOM) == BorderPainter.BOTTOM) {
+			sideWidth = bounds.width;
+
+			topWidth = widthScale * border.bottom();
+			leftWidth = widthScale * border.right();
+			rightWidth = widthScale * border.left();
+
+			leftRadius1 = border.radiusBottomRightOne();
+			leftRadius2 = border.radiusBottomRightTwo();
+			
+			rightRadius1 = border.radiusBottomLeftOne();
+			rightRadius2 = border.radiusBottomLeftTwo();
+			
+			interiorWidth = bounds.width - (1 + scaledOffset) * widthScale
+					* border.left() - (1 + scaledOffset) * widthScale
+					* border.right();
+			interiorHeight = bounds.height - (1 + scaledOffset) * widthScale
+					* border.top() - (1 + scaledOffset) * widthScale
+					* border.bottom();
+			exteriorWidth = bounds.width - scaledOffset * widthScale
+					* border.left() - scaledOffset * widthScale
+					* border.right();
+			exteriorHeight = bounds.height - scaledOffset * widthScale
+					* border.top() - scaledOffset * widthScale
+					* border.bottom();
+
+			xOffset = bounds.width;
+			yOffset = bounds.height;
+			rotation = Math.PI;
+		} else if ((side & BorderPainter.LEFT) == BorderPainter.LEFT) {
+			sideWidth = bounds.height;
+
+			topWidth = widthScale * border.left();
+			leftWidth = widthScale * border.bottom();
+			rightWidth = widthScale * border.top();
+
+			leftRadius1 = border.radiusBottomLeftOne();
+			leftRadius2 = border.radiusBottomLeftTwo();
+
+			rightRadius1 = border.radiusTopLeftOne();
+			rightRadius2 = border.radiusTopLeftTwo();			
+
+			interiorHeight = bounds.width - (1 + scaledOffset) * widthScale
+					* border.left() - (1 + scaledOffset) * widthScale
+					* border.right();
+			interiorWidth = bounds.height - (1 + scaledOffset) * widthScale
+					* border.top() - (1 + scaledOffset) * widthScale
+					* border.bottom();
+			exteriorHeight = (bounds.width - scaledOffset * widthScale
+					* border.left() - scaledOffset * widthScale
+					* border.right());
+			exteriorWidth = bounds.height - scaledOffset * widthScale
+					* border.top() - scaledOffset * widthScale
+					* border.bottom();
+
+			xOffset = 0;
+			yOffset = bounds.height;
+			rotation = 3 * Math.PI / 2;
+		}
+
+		float tco = scaledOffset * topWidth;
+		float lco = scaledOffset * leftWidth;
+		float rco = scaledOffset * rightWidth;
+
+		float curveConstant = .45f;
+
+		// top left corner % of side space
+		float lp = 1;
+		if (leftWidth != 0)
+			lp = leftWidth / (topWidth + leftWidth);
+		else
+			lp = 0;
+
+		// top right corner % of side space
+		float rp = 1;
+		if (rightWidth != 0)
+			rp = rightWidth / (topWidth + rightWidth);
+		else
+			rp = 0;
+
+		Path2D path = new Path2D.Float();
+
+		if (leftRadius1 > 0) {
+
+			Point2D[][] leftCurvePoints = getSubCurve(
+					1 - lp,
+					new Point2D.Double(leftRadius2
+							+ lco, tco),
+					new Point2D.Double(curveConstant
+							* (leftRadius2) + lco,
+							tco),
+					new Point2D.Double(lco, tco + curveConstant
+							* (leftRadius1)),
+					new Point2D.Double(lco, tco
+							+ leftRadius2));
+
+			path.moveTo(leftCurvePoints[0][3].getX(),
+					leftCurvePoints[0][3].getY());
+			path.curveTo(leftCurvePoints[0][2].getX(),
+					leftCurvePoints[0][2].getY(), leftCurvePoints[0][1].getX(),
+					leftCurvePoints[0][1].getY(), leftCurvePoints[0][0].getX(),
+					leftCurvePoints[0][0].getY());
+		} else {
+			path.moveTo(lco, tco);
+		}
+
+		if (rightRadius1 > 0) {
+
+			Point2D[][] rightCurvePoints = getSubCurve(
+					1 - rp,
+					new Point2D.Double(sideWidth
+							- rightRadius1 - rco, tco),
+					new Point2D.Double(sideWidth - curveConstant
+							* (rightRadius1) - rco,
+							tco),
+					new Point2D.Double(sideWidth - rco, tco + curveConstant
+							* (rightRadius2)),
+					new Point2D.Double(sideWidth - rco, tco
+							+ rightRadius2));
+
+			path.lineTo(rightCurvePoints[0][0].getX(),
+					rightCurvePoints[0][0].getY());
+			path.curveTo(rightCurvePoints[0][1].getX(),
+					rightCurvePoints[0][1].getY(),
+					rightCurvePoints[0][2].getX(),
+					rightCurvePoints[0][2].getY(),
+					rightCurvePoints[0][3].getX(),
+					rightCurvePoints[0][3].getY());
+		} else {
+			path.lineTo(sideWidth - rightRadius1
+					- rco, tco);
+		}
+
+		if (drawInterior) {
+			// start drawing interior
+			tco = (1 + scaledOffset) * topWidth;
+			lco = (1 + scaledOffset) * leftWidth;
+			rco = (1 + scaledOffset) * rightWidth;
+
+			if (rightRadius1 > 0) {
+
+				Point2D[][] rightCurvePoints = getSubCurve(
+						1 - rp,
+						new Point2D.Double(sideWidth
+								- rightRadius1 - rco,
+								tco),
+						new Point2D.Double(
+								sideWidth
+										- curveConstant
+										* (rightRadius1)
+										- rco, tco),
+						new Point2D.Double(sideWidth - rco, tco + curveConstant
+								* (rightRadius2)),
+						new Point2D.Double(sideWidth - rco, tco
+								+ rightRadius2));
+
+				path.lineTo(rightCurvePoints[0][3].getX(),
+						rightCurvePoints[0][3].getY());
+				path.curveTo(rightCurvePoints[0][2].getX(),
+						rightCurvePoints[0][2].getY(),
+						rightCurvePoints[0][1].getX(),
+						rightCurvePoints[0][1].getY(),
+						rightCurvePoints[0][0].getX(),
+						rightCurvePoints[0][0].getY());
+			} else {
+				path.lineTo(sideWidth - rco, tco);
+			}
+
+			if (leftRadius2 > 0) {
+
+				Point2D[][] leftCurvePoints = getSubCurve(
+						1 - lp,
+						new Point2D.Double(leftRadius2 + lco, tco),
+						new Point2D.Double(
+								curveConstant
+										* (leftRadius2)
+										+ lco, tco),
+						new Point2D.Double(lco, tco + curveConstant
+								* (leftRadius1)),
+						new Point2D.Double(lco, tco
+								+ leftRadius1));
+
+				path.lineTo(leftCurvePoints[0][0].getX(),
+						leftCurvePoints[0][0].getY());
+				path.curveTo(leftCurvePoints[0][1].getX(),
+						leftCurvePoints[0][1].getY(),
+						leftCurvePoints[0][2].getX(),
+						leftCurvePoints[0][2].getY(),
+						leftCurvePoints[0][3].getX(),
+						leftCurvePoints[0][3].getY());
+			} else {
+				path.lineTo(leftRadius2 + lco, tco);
+			}
+
+			path.closePath();
+		}
+
+		path.transform(AffineTransform.getRotateInstance(rotation, 0, 0));
+		path.transform(AffineTransform.getTranslateInstance(bounds.x + xOffset,
+				bounds.y + yOffset));
+
+		return path;
+	}
+	
+	
+	
     /**
      * @param xOffset for determining starting point for patterns
      */
@@ -92,31 +466,64 @@ public class BorderPainter {
                     (int) (border.right() / 2),
                     (int) (border.bottom() / 2),
                     (int) (border.left() / 2));
-            if (borderSideStyle == IdentValue.RIDGE) {
-                paintBorderSidePolygon(
-                        outputDevice, bounds, border, border.darken(borderSideStyle), 
-                        border.lighten(borderSideStyle), sides, currentSide, bevel);
-                paintBorderSidePolygon(
-                        outputDevice, bounds, bd2, border.lighten(borderSideStyle), 
-                        border.darken(borderSideStyle), sides, currentSide, bevel);
-            } else {
-                paintBorderSidePolygon(
-                        outputDevice, bounds, border, border.lighten(borderSideStyle),
-                        border.darken(borderSideStyle), sides, currentSide, bevel);
-                paintBorderSidePolygon(
-                        outputDevice, bounds, bd2, border.darken(borderSideStyle),
-                        border.lighten(borderSideStyle), sides, currentSide, bevel);
-            }
+//            if (borderSideStyle == IdentValue.RIDGE) {
+//                paintBorderSideShape(
+//                        outputDevice, bounds, border, border.darken(borderSideStyle), 
+//                        border.lighten(borderSideStyle), sides, currentSide, bevel);
+//                paintBorderSidePolygon(
+//                        outputDevice, bounds, bd2, border.lighten(borderSideStyle), 
+//                        border.darken(borderSideStyle), sides, currentSide, bevel);
+//            } else {
+//                paintBorderSidePolygon(
+//                        outputDevice, bounds, border, border.lighten(borderSideStyle),
+//                        border.darken(borderSideStyle), sides, currentSide, bevel);
+//                paintBorderSidePolygon(
+//                        outputDevice, bounds, bd2, border.darken(borderSideStyle),
+//                        border.lighten(borderSideStyle), sides, currentSide, bevel);
+//            }
         } else if (borderSideStyle == IdentValue.OUTSET) {
-            paintBorderSidePolygon(outputDevice, bounds, border,
-                    border.lighten(borderSideStyle),
-                    border.darken(borderSideStyle), sides, currentSide, bevel);
+//            paintBorderSidePolygon(outputDevice, bounds, border,
+//                    border.lighten(borderSideStyle),
+//                    border.darken(borderSideStyle), sides, currentSide, bevel);
         } else if (borderSideStyle == IdentValue.INSET) {
-            paintBorderSidePolygon(outputDevice, bounds, border,
-                    border.darken(borderSideStyle),
-                    border.lighten(borderSideStyle), sides, currentSide, bevel);
+//            paintBorderSidePolygon(outputDevice, bounds, border,
+//                    border.darken(borderSideStyle),
+//                    border.lighten(borderSideStyle), sides, currentSide, bevel);
         } else if (borderSideStyle == IdentValue.SOLID) {
-            paintSolid(outputDevice, bounds, border, border, sides, currentSide, bevel);
+
+        	        	outputDevice.setStroke(new BasicStroke(1f));
+
+        	        	if(currentSide == TOP) {
+
+        	            	outputDevice.setColor(border.topColor());
+        	            	outputDevice.fill(generateBorderShape(bounds, TOP, border, true, 0, 1));
+
+        	        	}
+
+        	        	if(currentSide == RIGHT) {
+
+            	outputDevice.setColor(border.rightColor());
+        	            	outputDevice.fill(generateBorderShape(bounds, RIGHT, border, true, 0, 1));
+
+        	        	}
+
+        	        	if(currentSide == BOTTOM) {
+
+        	            	outputDevice.setColor(border.bottomColor());
+
+        	            	outputDevice.fill(generateBorderShape(bounds, BOTTOM, border, true, 0, 1));
+
+        	        	}
+
+        	        	if(currentSide == LEFT) {
+
+        	            	outputDevice.setColor(border.leftColor());
+
+        	            	outputDevice.fill(generateBorderShape(bounds, LEFT, border, true, 0, 1));
+
+        	        	}
+        	
+        	//paintSolid(outputDevice, bounds, border, border, sides, currentSide, bevel);
         } else if (borderSideStyle == IdentValue.DOUBLE) {
             paintDoubleBorder(outputDevice, border, bounds, sides, currentSide, bevel);
         } else {
@@ -192,9 +599,9 @@ public class BorderPainter {
         Rectangle b2 = shrinkRect(bounds, outer, bevel ? sides : currentSide);
         b2 = shrinkRect(b2, center, bevel ? sides : currentSide);
         // draw outer border
-        paintSolid(outputDevice, bounds, outer, border, sides, currentSide, bevel);
+        //paintSolid(outputDevice, bounds, outer, border, sides, currentSide, bevel);
         // draw inner border
-        paintSolid(outputDevice, b2, inner, border, sides, currentSide, bevel);
+        //paintSolid(outputDevice, b2, inner, border, sides, currentSide, bevel);
     }
 
     /**
@@ -289,29 +696,30 @@ public class BorderPainter {
         outputDevice.setStroke(old_stroke);
     }
 
-    private static void paintBorderSidePolygon(OutputDevice outputDevice, 
+    private static void paintBorderSideShape(OutputDevice outputDevice, 
             final Rectangle bounds, final BorderPropertySet border, 
             final BorderPropertySet high, final BorderPropertySet low, 
+            final float offset, final float scale,
             final int sides, int currentSide, boolean bevel) {
         if (currentSide == BorderPainter.TOP) {
-            paintSolid(outputDevice, bounds, border, high, sides, currentSide, bevel);
+            paintSolid(outputDevice, bounds, high, offset, scale, sides, currentSide, bevel);
         } else if (currentSide == BorderPainter.BOTTOM) {
-            paintSolid(outputDevice, bounds, border, low, sides, currentSide, bevel);
+            paintSolid(outputDevice, bounds, low, offset, scale, sides, currentSide, bevel);
         } else if (currentSide == BorderPainter.RIGHT) {
-            paintSolid(outputDevice, bounds, border, low, sides, currentSide, bevel);
+            paintSolid(outputDevice, bounds, low, offset, scale, sides, currentSide, bevel);
         } else if (currentSide == BorderPainter.LEFT) {
-            paintSolid(outputDevice, bounds, border, high, sides, currentSide, bevel);
+            paintSolid(outputDevice, bounds, high, offset, scale, sides, currentSide, bevel);
         }
     }
 
     private static void paintSolid(OutputDevice outputDevice, 
-            final Rectangle bounds, final BorderPropertySet border, 
-            final BorderPropertySet bcolor, final int sides, int currentSide,
+            final Rectangle rect, final BorderPropertySet border, 
+            final float offset, final float scale, final int sides, int currentSide,
             boolean bevel) {
-        Polygon poly = getBorderSidePolygon(bounds, border, sides, currentSide, bevel);
+        Shape bounds = generateBorderBounds(rect, border, bevel);
 
         if (currentSide == BorderPainter.TOP) {
-            outputDevice.setColor(bcolor.topColor());
+            outputDevice.setColor(border.topColor());
 
             // draw a 1px border with a line instead of a polygon
             if ((int) border.top() == 1) {
@@ -319,31 +727,31 @@ public class BorderPainter {
                         (int)border.top(), true);
             } else {
                 // use polygons for borders over 1px wide
-                outputDevice.fill(poly);
+               // outputDevice.fill(poly);
             }
         } else if (currentSide == BorderPainter.BOTTOM) {
-            outputDevice.setColor(bcolor.bottomColor());
+            outputDevice.setColor(border.bottomColor());
             if ((int) border.bottom() == 1) {
                 outputDevice.drawBorderLine(bounds, BorderPainter.BOTTOM, 
                         (int)border.bottom(), true);
             } else {
-                outputDevice.fill(poly);
+                //outputDevice.fill(poly);
             }
         } else if (currentSide == BorderPainter.RIGHT) {
-            outputDevice.setColor(bcolor.rightColor());
+            outputDevice.setColor(border.rightColor());
             if ((int) border.right() == 1) {
                 outputDevice.drawBorderLine(bounds, BorderPainter.RIGHT, 
                         (int)border.right(), true);
             } else {
-                outputDevice.fill(poly);
+                //outputDevice.fill(poly);
             }
         } else if (currentSide == BorderPainter.LEFT) {
-            outputDevice.setColor(bcolor.leftColor());
+            outputDevice.setColor(border.leftColor());
             if ((int) border.left() == 1) {
                 outputDevice.drawBorderLine(bounds, BorderPainter.LEFT, 
                         (int)border.left(), true);
             } else {
-                outputDevice.fill(poly);
+               // outputDevice.fill(poly);
             }
         }
     }
@@ -378,190 +786,3 @@ public class BorderPainter {
         }
     }
 }
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.48  2008/07/27 00:21:47  peterbrant
- * Implement CMYK color support for PDF output, starting with patch from Mykola Gurov / Banish java.awt.Color from FS core layout classes
- *
- * Revision 1.47  2007/04/24 17:04:31  peterbrant
- * Method name improvements
- *
- * Revision 1.46  2007/03/01 18:00:10  peterbrant
- * Fix rounding problems with double borders / Light BorderPainter cleanup (more needed) / Don't bevel collapsed table borders
- *
- * Revision 1.45  2007/02/07 16:33:25  peterbrant
- * Initial commit of rewritten table support and associated refactorings
- *
- * Revision 1.44  2007/01/17 17:50:54  peterbrant
- * Clean out unused code
- *
- * Revision 1.43  2006/02/21 18:09:17  peterbrant
- * Fix call to BorderPropertySet constructor
- *
- * Revision 1.42  2006/02/01 01:30:14  peterbrant
- * Initial commit of PDF work
- *
- * Revision 1.41  2006/01/27 01:15:36  peterbrant
- * Start on better support for different output devices
- *
- * Revision 1.40  2005/12/15 20:04:13  peterbrant
- * Don't paint transparent borders
- *
- * Revision 1.39  2005/11/08 20:02:14  peterbrant
- * Fix off by one errors for borders with an odd width
- *
- * Revision 1.38  2005/10/27 00:09:02  tobega
- * Sorted out Context into RenderingContext and LayoutContext
- *
- * Revision 1.37  2005/10/21 18:49:44  pdoubleya
- * Fixed border painting bug.
- *
- * Revision 1.36  2005/10/21 18:10:52  pdoubleya
- * Support for cachable borders. Still buggy on some pages, but getting there.
- *
- * Revision 1.35  2005/06/22 23:48:45  tobega
- * Refactored the css package to allow a clean separation from the core.
- *
- * Revision 1.34  2005/06/04 16:04:12  tobega
- * just playing with border colors a bit more
- *
- * Revision 1.33  2005/06/04 14:47:43  tobega
- * Just for fun: took more control over darkening/brightening colors. Looks nice, though.
- *
- * Revision 1.32  2005/06/03 01:08:58  tobega
- * Fixed bug in painting double borders
- *
- * Revision 1.31  2005/05/29 23:49:15  tobega
- * Did it right, this time, so that inline borders also look nice
- *
- * Revision 1.30  2005/05/29 23:43:28  tobega
- * Removed tendency for white diagonal line in corners
- *
- * Revision 1.29  2005/05/29 20:13:20  tobega
- * Cleaned up duplicate code
- *
- * Revision 1.28  2005/05/29 19:37:58  tobega
- * Fixed up using different style borders.
- * Fixed patterned borders to work right.
- *
- * Revision 1.27  2005/05/16 08:07:09  tobega
- * Border painting for inlines works beautifully (tested only solid borders)
- *
- * Revision 1.26  2005/05/13 11:49:59  tobega
- * Started to fix up borders on inlines. Got caught up in refactoring.
- * Boxes shouldn't cache borders and stuff unless necessary. Started to remove unnecessary references.
- * Hover is not working completely well now, might get better when I'm done.
- *
- * Revision 1.25  2005/05/13 08:46:17  tobega
- * A line is drawn to the right and below the coordinate. Needed to adjust when drawing lines for 1-pixel borders
- *
- * Revision 1.24  2005/05/12 06:24:16  joshy
- * more very minor border and background tweaks
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.23  2005/05/12 04:55:57  joshy
- * fix for issues 76
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.22  2005/05/08 14:36:58  tobega
- * Refactored away the need for having a context in a CalculatedStyle
- *
- * Revision 1.21  2005/01/29 20:24:23  pdoubleya
- * Clean/reformat code. Removed commented blocks, checked copyright.
- *
- * Revision 1.20  2005/01/25 10:56:56  pdoubleya
- * Added warning on possible duplicate code.
- *
- * Revision 1.19  2005/01/25 10:55:15  pdoubleya
- * Added warning on possible duplicate code.
- *
- * Revision 1.18  2005/01/24 22:46:42  pdoubleya
- * Added support for ident-checks using IdentValue instead of string comparisons.
- *
- * Revision 1.17  2005/01/24 14:36:34  pdoubleya
- * Mass commit, includes: updated for changes to property declaration instantiation, and new use of DerivedValue. Removed any references to older XR... classes (e.g. XRProperty). Cleaned imports.
- *
- * Revision 1.16  2005/01/09 15:22:49  tobega
- * Prepared improved handling of margins, borders and padding.
- *
- * Revision 1.15  2004/12/29 10:39:34  tobega
- * Separated current state Context into LayoutContext and the rest into SharedContext.
- *
- * Revision 1.14  2004/12/27 09:40:48  tobega
- * Moved more styling to render stage. Now inlines have backgrounds and borders again.
- *
- * Revision 1.13  2004/12/27 07:43:32  tobega
- * Cleaned out border from box, it can be gotten from current style. Is it maybe needed for dynamic stuff?
- *
- * Revision 1.12  2004/12/13 02:12:53  tobega
- * Borders are working again
- *
- * Revision 1.11  2004/12/12 04:18:57  tobega
- * Now the core compiles at least. Now we must make it work right. Table layout is one point that really needs to be looked over
- *
- * Revision 1.10  2004/12/12 03:33:00  tobega
- * Renamed x and u to avoid confusing IDE. But that got cvs in a twist. See if this does it
- *
- * Revision 1.9  2004/12/11 23:36:49  tobega
- * Progressing on cleaning up layout and boxes. Still broken, won't even compile at the moment. Working hard to fix it, though.
- *
- * Revision 1.8  2004/12/05 00:48:58  tobega
- * Cleaned up so that now all property-lookups use the CalculatedStyle. Also added support for relative values of top, left, width, etc.
- *
- * Revision 1.7  2004/11/09 15:53:49  joshy
- * initial support for hover (currently disabled)
- * moved justification code into it's own class in a new subpackage for inline
- * layout (because it's so blooming complicated)
- *
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.6  2004/11/07 16:23:18  joshy
- * added support for lighten and darken to bordercolor
- * added support for different colored sides
- *
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.5  2004/11/06 22:49:52  joshy
- * cleaned up alice
- * initial support for inline borders and backgrounds
- * moved all of inlinepainter back into inlinerenderer, where it belongs.
- *
- *
- *
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.4  2004/11/02 17:14:00  joshy
- * implemented double borders
- *
- *
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.3  2004/10/23 13:50:26  pdoubleya
- * Re-formatted using JavaStyle tool.
- * Cleaned imports to resolve wildcards except for common packages (java.io, java.util, etc).
- * Added CVS log comments at bottom.
- *
- *
- */
-

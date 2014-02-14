@@ -150,7 +150,8 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 
     public void drawBorderLine(
             Rectangle bounds, int side, int lineWidth, boolean solid) {
-        int x = bounds.x;
+    	
+    	int x = bounds.x;
         int y = bounds.y;
         int w = bounds.width;
         int h = bounds.height;
@@ -277,4 +278,13 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
     public boolean isSupportsCMYKColors() {
         return true;
     }
+
+	@Override
+	public void drawBorderLine(Shape bounds, int side, int width, boolean solid) {
+		draw(bounds);
+	}
+	
+	public void draw(Shape s) {
+		_graphics.draw(s);
+	}
 }

@@ -1483,7 +1483,7 @@ public enum CSSName {
     BORDER_TOP_LEFT_RADIUS(
                                "border-top-left-radius",
                                Marker.PRIMITIVE,
-                               "0px",
+                               "0",
                                Marker.NOT_INHERITED,
                                new PrimitivePropertyBuilders.BorderTopLeftRadius()
                        ),
@@ -1493,7 +1493,7 @@ public enum CSSName {
     BORDER_TOP_RIGHT_RADIUS(
                                "border-top-right-radius",
                                Marker.PRIMITIVE,
-                               "0px",
+                               "0",
                                Marker.NOT_INHERITED,
                                new PrimitivePropertyBuilders.BorderTopRightRadius()
                        ),
@@ -1503,7 +1503,7 @@ public enum CSSName {
     BORDER_BOTTOM_RIGHT_RADIUS(
                                "border-bottom-right-radius",
                                Marker.PRIMITIVE,
-                               "0px",
+                               "0",
                                Marker.NOT_INHERITED,
                                new PrimitivePropertyBuilders.BorderBottomRightRadius()
                        ),
@@ -1513,7 +1513,7 @@ public enum CSSName {
     BORDER_BOTTOM_LEFT_RADIUS(
                                "border-bottom-left-radius",
                                Marker.PRIMITIVE,
-                               "0px",
+                               "0",
                                Marker.NOT_INHERITED,
                                new PrimitivePropertyBuilders.BorderBottomLeftRadius()
                        ),
@@ -1521,7 +1521,7 @@ public enum CSSName {
     BORDER_RADIUS_SHORTHAND(
                        "border-radius",
                        Marker.SHORTHAND,
-                       "0px",
+                       "0",
                        Marker.NOT_INHERITED,
                        new PrimitivePropertyBuilders.BorderRadius()
                        );

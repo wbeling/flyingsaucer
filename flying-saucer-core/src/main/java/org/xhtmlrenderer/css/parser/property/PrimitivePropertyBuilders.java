@@ -1638,57 +1638,96 @@ public class PrimitivePropertyBuilders {
 		@Override
 		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
 				List<PropertyValue> values, CSSOrigin origin,
-
 				boolean important, boolean inheritAllowed)
-
 		{
+			// border-radius: 2em 1em 4em 1em / 0.5em 3em 5em 6em;
+			// Note: The four values for each radii are given in the order top-left, top-right,
+			// bottom-right, bottom-left. If bottom-left is omitted it is the same as top-right. 
+			// If bottom-right is omitted it is the same as top-left. If top-right is omitted 
+			// it is the same as top-left.
+			
+			checkValueCount(cssName, 1, 9, values.size());
+			
+			if (values.size() == 1)
+			{
+				// Deal with the common case first.
+				List<PropertyDeclaration> declarations = new ArrayList<>(4);
+				
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_TOP_LEFT_RADIUS).buildDeclarations(
+						CSSName.BORDER_TOP_LEFT_RADIUS,
+						values, origin, important));
 
-			List<PropertyDeclaration> declarations = new ArrayList<>();
-			List<PropertyValue> leftValues = new ArrayList<>(2);
-			List<PropertyValue> rightValues = new ArrayList<>(2);
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_TOP_RIGHT_RADIUS).buildDeclarations(
+						CSSName.BORDER_TOP_RIGHT_RADIUS,
+						values, origin, important));
 
-			boolean addToLeft = true;
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_BOTTOM_RIGHT_RADIUS).buildDeclarations(
+						CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
+						values, origin, important));
 
-			for (PropertyValue value : values) {
-				if (value.getOperator() == Token.TK_VIRGULE) {
-					addToLeft = false;
-				}
-
-				if (addToLeft) {
-					leftValues.add(value);
-				} else {
-					rightValues.add(value);
-				}
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_BOTTOM_LEFT_RADIUS).buildDeclarations(
+						CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+						values, origin, important));
+				
+				return declarations;
 			}
+			else
+			{
+				List<PropertyDeclaration> declarations = new ArrayList<>(4);
+				List<PropertyValue> leftValues = new ArrayList<>(4);
+				List<PropertyValue> rightValues = new ArrayList<>(4);
 
-			declarations.addAll(CSSName.getPropertyBuilder(
-					CSSName.BORDER_TOP_LEFT_RADIUS).buildDeclarations(
-					CSSName.BORDER_TOP_LEFT_RADIUS,
-					getValues(leftValues, rightValues, 0), origin, important));
+				boolean addToLeft = true;
 
-			declarations.addAll(CSSName.getPropertyBuilder(
-					CSSName.BORDER_TOP_RIGHT_RADIUS).buildDeclarations(
-					CSSName.BORDER_TOP_RIGHT_RADIUS,
-					getValues(leftValues, rightValues, 1), origin, important));
+				for (PropertyValue value : values) {
+					if (value.getOperator() == Token.TK_VIRGULE) {
+						addToLeft = false;
+					}
+					
+					if (addToLeft) {
+						leftValues.add(value);
+					} else {
+						rightValues.add(value);
+					}
+				}
+			
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_TOP_LEFT_RADIUS).buildDeclarations(
+						CSSName.BORDER_TOP_LEFT_RADIUS,
+						getValues(leftValues, rightValues, 0), origin,
+						important));
 
-			declarations.addAll(CSSName.getPropertyBuilder(
-					CSSName.BORDER_BOTTOM_RIGHT_RADIUS).buildDeclarations(
-					CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
-					getValues(leftValues, rightValues, 2), origin, important));
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_TOP_RIGHT_RADIUS).buildDeclarations(
+						CSSName.BORDER_TOP_RIGHT_RADIUS,
+						getValues(leftValues, rightValues, 1), origin,
+						important));
 
-			declarations.addAll(CSSName.getPropertyBuilder(
-					CSSName.BORDER_BOTTOM_LEFT_RADIUS).buildDeclarations(
-					CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-					getValues(leftValues, rightValues, 3), origin, important));
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_BOTTOM_RIGHT_RADIUS).buildDeclarations(
+						CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
+						getValues(leftValues, rightValues, 2), origin,
+						important));
 
-			return declarations;
+				declarations.addAll(CSSName.getPropertyBuilder(
+						CSSName.BORDER_BOTTOM_LEFT_RADIUS).buildDeclarations(
+						CSSName.BORDER_BOTTOM_LEFT_RADIUS,
+						getValues(leftValues, rightValues, 3), origin,
+						important));
+
+				return declarations;
+			}
 
 		}
 
 		private List<PropertyValue> getValues(List<PropertyValue> leftValues,
 				List<PropertyValue> rightValues, int index)
 		{
-			List<PropertyValue> values = new ArrayList<>();
+			List<PropertyValue> values = new ArrayList<>(2);
 			values.add(getValue(leftValues, index));
 
 			if (!rightValues.isEmpty())
@@ -1700,7 +1739,6 @@ public class PrimitivePropertyBuilders {
 		}
 
 		private PropertyValue getValue(List<PropertyValue> list, int index)
-
 		{
 			if (index < list.size())
 			{
@@ -1708,19 +1746,15 @@ public class PrimitivePropertyBuilders {
 			}
 			else
 			{
-				if (index == 3)
+				if (index == 3 && list.size() >= 2)
 				{
-					return getValue(list, 1);
+					// If bottom-left(3) is omitted it is the same as top-right(1).
+					return list.get(1);
 				}
 
-				if (index == 2 || index == 1)
-				{
-					return getValue(list, 0);
-				}
+				// Everything else matches to zero if missing.
+				return list.get(0);
 			}
-
-			// shouldn't happen
-			return null;
 		}
 	}
 
