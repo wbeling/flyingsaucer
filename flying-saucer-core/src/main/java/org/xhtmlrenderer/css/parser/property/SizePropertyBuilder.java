@@ -30,8 +30,9 @@ import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
-public class SizePropertyBuilder extends AbstractPropertyBuilder {
+public class SizePropertyBuilder implements PropertyBuilder {
     private static final CSSName[] ALL = { CSSName.FS_PAGE_ORIENTATION, CSSName.FS_PAGE_HEIGHT, CSSName.FS_PAGE_WIDTH };
     
     public List<PropertyDeclaration> buildDeclarations(

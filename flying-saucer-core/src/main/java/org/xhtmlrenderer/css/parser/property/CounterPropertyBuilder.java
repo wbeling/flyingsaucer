@@ -31,8 +31,9 @@ import org.xhtmlrenderer.css.parser.CounterData;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
-public abstract class CounterPropertyBuilder extends AbstractPropertyBuilder {
+public abstract class CounterPropertyBuilder implements PropertyBuilder {
     // [ <identifier> <integer>? ]+ | none | inherit 
     
     protected abstract int getDefaultValue();

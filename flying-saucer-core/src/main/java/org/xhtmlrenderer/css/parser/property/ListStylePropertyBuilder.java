@@ -30,8 +30,9 @@ import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
-public class ListStylePropertyBuilder extends AbstractPropertyBuilder {
+public class ListStylePropertyBuilder implements PropertyBuilder {
     private static final CSSName[] ALL = new CSSName[] {
         CSSName.LIST_STYLE_TYPE, CSSName.LIST_STYLE_POSITION, CSSName.LIST_STYLE_IMAGE }; 
     

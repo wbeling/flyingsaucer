@@ -32,8 +32,9 @@ import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.Token;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
-public class FontPropertyBuilder extends AbstractPropertyBuilder {
+public class FontPropertyBuilder implements PropertyBuilder {
     // [ [ <'font-style'> || <'font-variant'> || <'font-weight'> ]? <'font-size'> [ / <'line-height'> ]? <'font-family'> ] 
     private static final CSSName[] ALL = new CSSName[] {
         CSSName.FONT_STYLE, CSSName.FONT_VARIANT, CSSName.FONT_WEIGHT, 
@@ -121,7 +122,7 @@ public class FontPropertyBuilder extends AbstractPropertyBuilder {
             
             PropertyBuilder fontSizeBuilder = CSSName.getPropertyBuilder(CSSName.FONT_SIZE);
             List<PropertyDeclaration> l = fontSizeBuilder.buildDeclarations(
-                    CSSName.FONT_SIZE, Collections.singletonList(value), origin, important);
+                    CSSName.FONT_SIZE, Collections.singletonList(value), origin, important, true);
             
             fontSize = (PropertyDeclaration)l.get(0);
             
@@ -130,7 +131,7 @@ public class FontPropertyBuilder extends AbstractPropertyBuilder {
                 if (value.getOperator() == Token.TK_VIRGULE) {
                     PropertyBuilder lineHeightBuilder = CSSName.getPropertyBuilder(CSSName.LINE_HEIGHT);
                     l = lineHeightBuilder.buildDeclarations(
-                            CSSName.LINE_HEIGHT, Collections.singletonList(value), origin, important);
+                            CSSName.LINE_HEIGHT, Collections.singletonList(value), origin, important, true);
                     lineHeight = (PropertyDeclaration)l.get(0);
                 } else {
                     i.previous();
@@ -144,7 +145,7 @@ public class FontPropertyBuilder extends AbstractPropertyBuilder {
                 }
                 PropertyBuilder fontFamilyBuilder = CSSName.getPropertyBuilder(CSSName.FONT_FAMILY);
                 l = fontFamilyBuilder.buildDeclarations(
-                        CSSName.FONT_FAMILY, families, origin, important);
+                        CSSName.FONT_FAMILY, families, origin, important, true);
                 fontFamily = (PropertyDeclaration)l.get(0);
             }
         }

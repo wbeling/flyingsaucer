@@ -36,6 +36,7 @@ import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.Token;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
 public class PrimitivePropertyBuilders {
     // none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset
@@ -117,7 +118,7 @@ public class PrimitivePropertyBuilders {
         return result;
     }
 
-    private static abstract class SingleIdent extends AbstractPropertyBuilder {
+    private static abstract class SingleIdent implements PropertyBuilder {
         protected abstract EnumSet<IdentValue> getAllowed();
 
         public List<PropertyDeclaration> buildDeclarations(
@@ -138,7 +139,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static class GenericColor extends AbstractPropertyBuilder {
+    private static class GenericColor implements PropertyBuilder {
         private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.TRANSPARENT });
 
@@ -177,7 +178,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static class GenericBorderWidth extends AbstractPropertyBuilder {
+    private static class GenericBorderWidth implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, values.size());
@@ -205,7 +206,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static abstract class LengthWithIdent extends AbstractPropertyBuilder {
+    private static abstract class LengthWithIdent implements PropertyBuilder {
         protected abstract EnumSet<IdentValue> getAllowed();
 
         public List<PropertyDeclaration> buildDeclarations(
@@ -234,7 +235,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static abstract class LengthLikeWithIdent extends AbstractPropertyBuilder {
+    private static abstract class LengthLikeWithIdent implements PropertyBuilder {
         protected abstract EnumSet<IdentValue> getAllowed();
 
         public List<PropertyDeclaration> buildDeclarations(
@@ -263,7 +264,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static class LengthLike extends AbstractPropertyBuilder {
+    private static class LengthLike implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, values.size());
@@ -293,7 +294,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static class ColOrRowSpan extends AbstractPropertyBuilder {
+    private static class ColOrRowSpan implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
@@ -311,7 +312,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static class PlainInteger extends AbstractPropertyBuilder {
+    private static class PlainInteger implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, values.size());
@@ -335,7 +336,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static class Length extends AbstractPropertyBuilder {
+    private static class Length implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, values.size());
@@ -443,7 +444,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    private static class GenericURIWithNone extends AbstractPropertyBuilder {
+    private static class GenericURIWithNone implements PropertyBuilder {
         // <uri> | none | inherit
         private static final EnumSet<IdentValue> ALLOWED = setFor(new IdentValue[] { IdentValue.NONE });
 
@@ -495,7 +496,7 @@ public class PrimitivePropertyBuilders {
 		}
 	}
 
-    public static class BackgroundSize extends AbstractPropertyBuilder {
+    public static class BackgroundSize implements PropertyBuilder {
         private static final EnumSet<IdentValue> ALL_ALLOWED = setFor(new IdentValue[] {
                 IdentValue.AUTO, IdentValue.CONTAIN, IdentValue.COVER
         });
@@ -574,7 +575,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class BackgroundPosition extends AbstractPropertyBuilder {
+    public static class BackgroundPosition implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, 2, values.size());
@@ -851,7 +852,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class FontFamily extends AbstractPropertyBuilder {
+    public static class FontFamily implements PropertyBuilder {
         // [[ <family-name> | <generic-family> ] [, <family-name>| <generic-family>]* ] | inherit
 
         public List<PropertyDeclaration> buildDeclarations(
@@ -926,7 +927,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class FontSize extends AbstractPropertyBuilder {
+    public static class FontSize implements PropertyBuilder {
         // <absolute-size> | <relative-size> | <length> | <percentage> | inherit
         private static final EnumSet<IdentValue> ALLOWED;
 
@@ -969,7 +970,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class FontWeight extends AbstractPropertyBuilder {
+    public static class FontWeight implements PropertyBuilder {
         // normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | inherit
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
@@ -1056,7 +1057,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class FSPDFFontEncoding extends AbstractPropertyBuilder {
+    public static class FSPDFFontEncoding implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, values.size());
@@ -1155,7 +1156,7 @@ public class PrimitivePropertyBuilders {
     public static class LetterSpacing extends LengthWithNormal {
     }
 
-    public static class LineHeight extends AbstractPropertyBuilder {
+    public static class LineHeight implements PropertyBuilder {
         // normal | <number> | <length> | <percentage> | inherit
         private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.NORMAL });
@@ -1270,7 +1271,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class Page extends AbstractPropertyBuilder {
+    public static class Page implements PropertyBuilder {
         public List<PropertyDeclaration> buildDeclarations(
                 CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
             checkValueCount(cssName, 1, values.size());
@@ -1317,7 +1318,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class Position extends AbstractPropertyBuilder {
+    public static class Position implements PropertyBuilder {
         // static | relative | absolute | fixed | inherit
         private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
@@ -1403,7 +1404,7 @@ public class PrimitivePropertyBuilders {
         }
     }
 
-    public static class TextDecoration extends AbstractPropertyBuilder {
+    public static class TextDecoration implements PropertyBuilder {
         // none | [ underline || overline || line-through || blink ] | inherit
         private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] {
@@ -1533,7 +1534,7 @@ public class PrimitivePropertyBuilders {
     public static class WordSpacing extends LengthWithNormal {
     }
 
-    public static class ZIndex extends AbstractPropertyBuilder {
+    public static class ZIndex implements PropertyBuilder {
         // auto | <integer> | inherit
         private static final EnumSet<IdentValue> ALLOWED = setFor(
                 new IdentValue[] { IdentValue.AUTO });
@@ -1557,7 +1558,7 @@ public class PrimitivePropertyBuilders {
         }
     }
     
-	public static class Opacity extends AbstractPropertyBuilder {
+	public static class Opacity implements PropertyBuilder {
 		@Override
 		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
 				List<PropertyValue> values, CSSOrigin origin,
@@ -1577,8 +1578,7 @@ public class PrimitivePropertyBuilders {
 		}
 	}
 
-	private static class GenericBorderCornerRadius extends
-			AbstractPropertyBuilder {
+	private static class GenericBorderCornerRadius implements PropertyBuilder {
 		@Override
 		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
 				List<PropertyValue> values, CSSOrigin origin,
@@ -1633,7 +1633,7 @@ public class PrimitivePropertyBuilders {
 		return Collections.singletonList(result);
 	}
 
-	public static class BorderRadius extends AbstractPropertyBuilder
+	public static class BorderRadius implements PropertyBuilder
 	{
 		@Override
 		public List<PropertyDeclaration> buildDeclarations(CSSName cssName,
@@ -1656,22 +1656,22 @@ public class PrimitivePropertyBuilders {
 				declarations.addAll(CSSName.getPropertyBuilder(
 						CSSName.BORDER_TOP_LEFT_RADIUS).buildDeclarations(
 						CSSName.BORDER_TOP_LEFT_RADIUS,
-						values, origin, important));
+						values, origin, important, true));
 
 				declarations.addAll(CSSName.getPropertyBuilder(
 						CSSName.BORDER_TOP_RIGHT_RADIUS).buildDeclarations(
 						CSSName.BORDER_TOP_RIGHT_RADIUS,
-						values, origin, important));
+						values, origin, important, true));
 
 				declarations.addAll(CSSName.getPropertyBuilder(
 						CSSName.BORDER_BOTTOM_RIGHT_RADIUS).buildDeclarations(
 						CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
-						values, origin, important));
+						values, origin, important, true));
 
 				declarations.addAll(CSSName.getPropertyBuilder(
 						CSSName.BORDER_BOTTOM_LEFT_RADIUS).buildDeclarations(
 						CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-						values, origin, important));
+						values, origin, important, true));
 				
 				return declarations;
 			}
@@ -1699,25 +1699,25 @@ public class PrimitivePropertyBuilders {
 						CSSName.BORDER_TOP_LEFT_RADIUS).buildDeclarations(
 						CSSName.BORDER_TOP_LEFT_RADIUS,
 						getValues(leftValues, rightValues, 0), origin,
-						important));
+						important, true));
 
 				declarations.addAll(CSSName.getPropertyBuilder(
 						CSSName.BORDER_TOP_RIGHT_RADIUS).buildDeclarations(
 						CSSName.BORDER_TOP_RIGHT_RADIUS,
 						getValues(leftValues, rightValues, 1), origin,
-						important));
+						important, true));
 
 				declarations.addAll(CSSName.getPropertyBuilder(
 						CSSName.BORDER_BOTTOM_RIGHT_RADIUS).buildDeclarations(
 						CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
 						getValues(leftValues, rightValues, 2), origin,
-						important));
+						important, true));
 
 				declarations.addAll(CSSName.getPropertyBuilder(
 						CSSName.BORDER_BOTTOM_LEFT_RADIUS).buildDeclarations(
 						CSSName.BORDER_BOTTOM_LEFT_RADIUS,
 						getValues(leftValues, rightValues, 3), origin,
-						important));
+						important, true));
 
 				return declarations;
 			}

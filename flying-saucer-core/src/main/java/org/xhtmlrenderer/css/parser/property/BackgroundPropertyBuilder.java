@@ -31,8 +31,9 @@ import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
-public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
+public class BackgroundPropertyBuilder implements PropertyBuilder {
     // [<'background-color'> || <'background-image'> || <'background-repeat'> || 
     // <'background-attachment'> || <'background-position'>] | inherit 
     private static final CSSName[] ALL = {
@@ -160,7 +161,7 @@ public class BackgroundPropertyBuilder extends AbstractPropertyBuilder {
                 
                 PropertyBuilder builder = CSSName.getPropertyBuilder(CSSName.BACKGROUND_POSITION);
                 backgroundPosition = (PropertyDeclaration)builder.buildDeclarations(
-                        CSSName.BACKGROUND_POSITION, v, origin, important).get(0);
+                        CSSName.BACKGROUND_POSITION, v, origin, important, true).get(0);
             }
         }
         

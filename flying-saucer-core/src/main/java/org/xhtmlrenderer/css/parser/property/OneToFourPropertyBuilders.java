@@ -26,14 +26,16 @@ import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
 public abstract class OneToFourPropertyBuilders {
-    private abstract static class OneToFourPropertyBuilder extends AbstractPropertyBuilder {
+    private abstract static class OneToFourPropertyBuilder implements PropertyBuilder {
         protected abstract CSSName[] getProperties();
         protected abstract PropertyBuilder getPropertyBuilder();
         
         public List<PropertyDeclaration> buildDeclarations(
-                CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
+                CSSName cssName, List<PropertyValue> values,
+                CSSOrigin origin, boolean important, boolean inheritAllowed) {
             List<PropertyDeclaration> result = new ArrayList<>(4);
             checkValueCount(cssName, 1, 4, values.size());
             
@@ -48,7 +50,7 @@ public abstract class OneToFourPropertyBuilders {
             switch (values.size()) {
                 case 1:
                     decl1 = (PropertyDeclaration)builder.buildDeclarations(
-                            cssName, values, origin, important).get(0);
+                            cssName, values, origin, important, true).get(0);
                     
                     result.add(copyOf(decl1, props[0]));
                     result.add(copyOf(decl1, props[1]));

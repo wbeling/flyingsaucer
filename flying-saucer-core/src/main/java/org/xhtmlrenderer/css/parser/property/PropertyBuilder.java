@@ -34,7 +34,6 @@ public interface PropertyBuilder {
      * <code>CSSPrimitiveValue</code> objects.
      */
     public List<PropertyDeclaration> buildDeclarations(
-            CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed);
-    
-    public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important);    
+            CSSName cssName, List<PropertyValue> values,
+            CSSOrigin origin, boolean important, boolean inheritAllowed);
 }

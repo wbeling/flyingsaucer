@@ -31,9 +31,10 @@ import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
 
 public class BorderPropertyBuilders {
-    private static abstract class BorderSidePropertyBuilder extends AbstractPropertyBuilder {
+    private static abstract class BorderSidePropertyBuilder implements PropertyBuilder {
         protected abstract CSSName[][] getProperties();
         
         private void addAll(List<PropertyDeclaration> result, CSSName[] properties, CSSPrimitiveValue value, CSSOrigin origin, boolean important) {

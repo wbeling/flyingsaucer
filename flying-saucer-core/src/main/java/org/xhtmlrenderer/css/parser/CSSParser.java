@@ -127,7 +127,7 @@ public class CSSParser {
             PropertyBuilder builder = CSSName.getPropertyBuilder(cssName);
             List<PropertyDeclaration> props;
             try {
-                props = builder.buildDeclarations(cssName, values, origin, false);
+                props = builder.buildDeclarations(cssName, values, origin, false, true);
             } catch (CSSParseException e) {
                 e.setLine(getCurrentLine());
                 throw e;
