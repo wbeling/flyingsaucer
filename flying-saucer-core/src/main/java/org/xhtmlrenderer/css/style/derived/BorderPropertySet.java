@@ -192,18 +192,18 @@ public class BorderPropertySet extends RectPropertySet
         else
         {
         	_bottomRight1 = LengthValue.calcFloatProportionalValue(style,
-        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-        			blCorner.getRadiusOne().getStringValue(),
-        			blCorner.getRadiusOne().getFloatValue(),
-        			blCorner.getRadiusOne().getPrimitiveType(),
+        			CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
+        			brCorner.getRadiusOne().getStringValue(),
+        			brCorner.getRadiusOne().getFloatValue(),
+        			brCorner.getRadiusOne().getPrimitiveType(),
         			style.getFont(ctx).size,
         			ctx);
 
         	_bottomRight2 = LengthValue.calcFloatProportionalValue(style,
-        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-        			blCorner.getRadiusTwo().getStringValue(),
-        			blCorner.getRadiusTwo().getFloatValue(),
-        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
+        			brCorner.getRadiusTwo().getStringValue(),
+        			brCorner.getRadiusTwo().getFloatValue(),
+        			brCorner.getRadiusTwo().getPrimitiveType(),
         			style.getFont(ctx).size,
         			ctx);
         }
@@ -216,18 +216,18 @@ public class BorderPropertySet extends RectPropertySet
         else
         {
         	_topLeft1 = LengthValue.calcFloatProportionalValue(style,
-        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-        			blCorner.getRadiusOne().getStringValue(),
-        			blCorner.getRadiusOne().getFloatValue(),
-        			blCorner.getRadiusOne().getPrimitiveType(),
+        			CSSName.BORDER_TOP_LEFT_RADIUS,
+        			tlCorner.getRadiusOne().getStringValue(),
+        			tlCorner.getRadiusOne().getFloatValue(),
+        			tlCorner.getRadiusOne().getPrimitiveType(),
         			style.getFont(ctx).size,
         			ctx);
 
         	_topLeft2 = LengthValue.calcFloatProportionalValue(style,
-        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-        			blCorner.getRadiusTwo().getStringValue(),
-        			blCorner.getRadiusTwo().getFloatValue(),
-        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			CSSName.BORDER_TOP_LEFT_RADIUS,
+        			tlCorner.getRadiusTwo().getStringValue(),
+        			tlCorner.getRadiusTwo().getFloatValue(),
+        			tlCorner.getRadiusTwo().getPrimitiveType(),
         			style.getFont(ctx).size,
         			ctx);
         }
@@ -240,18 +240,18 @@ public class BorderPropertySet extends RectPropertySet
         else
         {
         	_topRight1 = LengthValue.calcFloatProportionalValue(style,
-        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-        			blCorner.getRadiusOne().getStringValue(),
-        			blCorner.getRadiusOne().getFloatValue(),
-        			blCorner.getRadiusOne().getPrimitiveType(),
+        			CSSName.BORDER_TOP_RIGHT_RADIUS,
+        			trCorner.getRadiusOne().getStringValue(),
+        			trCorner.getRadiusOne().getFloatValue(),
+        			trCorner.getRadiusOne().getPrimitiveType(),
         			style.getFont(ctx).size,
         			ctx);
 
         	_topRight2 = LengthValue.calcFloatProportionalValue(style,
-        			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
-        			blCorner.getRadiusTwo().getStringValue(),
-        			blCorner.getRadiusTwo().getFloatValue(),
-        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			CSSName.BORDER_TOP_RIGHT_RADIUS,
+        			trCorner.getRadiusTwo().getStringValue(),
+        			trCorner.getRadiusTwo().getFloatValue(),
+        			trCorner.getRadiusTwo().getPrimitiveType(),
         			style.getFont(ctx).size,
         			ctx);
         }
@@ -359,32 +359,32 @@ public class BorderPropertySet extends RectPropertySet
 
     public float radiusBottomRightOne()
     {
-    	return _bottomLeft1;
+    	return _bottomRight1;
     }
 
     public float radiusBottomRightTwo()
     {
-    	return _bottomLeft2;
+    	return _bottomRight2;
     }
     
     public float radiusTopLeftOne()
     {
-    	return _bottomLeft1;
+    	return _topLeft1;
     }
 
     public float radiusTopLeftTwo()
     {
-    	return _bottomLeft2;
+    	return _topLeft2;
     }
     
     public float radiusTopRightOne()
     {
-    	return _bottomLeft1;
+    	return _topRight1;
     }
 
     public float radiusTopRightTwo()
     {
-    	return _bottomLeft2;
+    	return _topRight2;
     }
     
     /**

@@ -65,7 +65,7 @@
       #four_color { border-style: solid; border-color: red blue black green; border-width: 4px; }
       #rounded_border { border-radius: 15px; border: 1px solid blue; }
 
-      #rounded_border2 { border-radius: 15px 10em 34%; border: 1px solid red; }
+      #rounded_border2 { border-radius: 15px; border: 1px solid red; }
       #rounded_border3 { border-radius: 150%; border: 1px solid green; background-color: orange; }
 
       #rounded_border4 {
@@ -73,6 +73,10 @@
 	border-top-right-radius:20px;
 	border-bottom-right-radius:0px;
 	border-bottom-left-radius:15px;
+      }
+
+      #rounded_border5 {
+	border-radius: 1em 2em 4em 8em / 16em 12em 14em 10em;
       }
 
       #dashedr { border-style: dashed; border-width: 1px; }
@@ -198,7 +202,13 @@
    </tr>
    <tr>
        <td colspan="2">
-          <div id="rounded_border4" class="sample">Four different border-radius values.</div>
+          <div id="rounded_border4" class="sample">Four different border-radius values</div>
+     </td>
+   </tr>
+
+   <tr>
+       <td colspan="2">
+          <div id="rounded_border5" class="sample">X/Y border radii</div>
      </td>
    </tr>
 
