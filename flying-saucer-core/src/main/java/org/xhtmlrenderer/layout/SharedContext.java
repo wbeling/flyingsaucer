@@ -26,6 +26,7 @@ import java.awt.Toolkit;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -69,7 +70,11 @@ public class SharedContext {
 
     private StylesheetInfo defaultStylesheet;
     private boolean lookedUpDefaultStylesheet;
-    private Locale locale = Locale.US;
+    private Locale localeTextBreaker = Locale.US;
+    private Locale localeErrorMessages = Locale.US;
+
+    public static final ThreadLocal<ResourceBundle> ERRS = new ThreadLocal<>();    
+
     /*
      * used to adjust fonts, ems, points, into screen resolution
      */
@@ -100,14 +105,19 @@ public class SharedContext {
     private ReplacedElementFactory replacedElementFactory;
     private Rectangle temp_canvas;
 
-    public SharedContext() {
+    public SharedContext()
+    {
+    	ERRS.remove();
+    	ERRS.set(ResourceBundle.getBundle("languages.ErrorMessages", localeErrorMessages));
     }
 
     /**
      * Constructor for the Context object
      */
     public SharedContext(UserAgentCallback uac) {
-        font_resolver = new AWTFontResolver();
+    	this();
+    	
+    	font_resolver = new AWTFontResolver();
         replacedElementFactory = new SwingReplacedElementFactory();
         setMedia("screen");
         this.uac = uac;
@@ -126,7 +136,9 @@ public class SharedContext {
      * Constructor for the Context object
      */
     public SharedContext(UserAgentCallback uac, FontResolver fr, ReplacedElementFactory ref, TextRenderer tr, float dpi) {
-        font_resolver = fr;
+    	this();
+    	
+    	font_resolver = fr;
         replacedElementFactory = ref;
         setMedia("screen");
         this.uac = uac;
@@ -652,10 +664,10 @@ public class SharedContext {
 	}
 
 	public Locale getLocale() {
-		return locale;
+		return localeTextBreaker;
 	}
 
 	public void setLocale(Locale locale) {
-		this.locale = locale;
+		this.localeTextBreaker = locale;
 	}
 }

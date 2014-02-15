@@ -1645,7 +1645,8 @@ public class PrimitivePropertyBuilders {
 			// bottom-right, bottom-left. If bottom-left is omitted it is the same as top-right. 
 			// If bottom-right is omitted it is the same as top-left. If top-right is omitted 
 			// it is the same as top-left.
-			
+
+			// TODO: Not pickup up forward slash.
 			checkValueCount(cssName, 1, 9, values.size());
 			
 			if (values.size() == 1)
