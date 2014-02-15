@@ -40,6 +40,13 @@
           border-color: maroon;
       }
 
+      div.rounded {
+	color: white;	
+	border-radius: 15px;
+        background-color: blue;
+        border-color: red;
+      }
+
       #dashed { border-style: dashed; border-width: 1px; }
       #dotted { border-style: dotted; border-width: 1px; }
       #inset  { border-style: inset; border-width: 2px; }
@@ -61,7 +68,20 @@
       #rounded_border2 { border-radius: 15px 10em 34%; border: 1px solid red; }
       #rounded_border3 { border-radius: 150%; border: 1px solid green; background-color: orange; }
 
+      #rounded_border4 {
+	border-top-left-radius:10px;
+	border-top-right-radius:20px;
+	border-bottom-right-radius:0px;
+	border-bottom-left-radius:15px;
+      }
 
+      #dashedr { border-style: dashed; border-width: 1px; }
+      #dottedr { border-style: dotted; border-width: 1px; }
+      #insetr  { border-style: inset; border-width: 2px; }
+      #outsetr { border-style: outset; border-width: 2px; }
+      #ridger  { border-style: ridge; border-width: 2px; }
+      #groover { border-style: groove; border-width: 2px; }
+      #doubler { border-style: double; border-width: 6px; }
     </style>
 
   </head>
@@ -75,7 +95,7 @@
       <span id="dashed">Support</span> 
     </span><br />
       <p><b>Border support includes</b>: CSS border styles, colors, width, on any or all four sides of a box. You can apply both border shorthand "border: 1px solid black") or individual border properties ("border-style: dashed") to all sides or to individual sides. Shorthand expansion allows you to specify properties for one, two, three or four sides, in any order. To make the border samples easier to see, we've colored the background. Note that some border effects only show properly with a larger border width.</p>
-      <br />
+      <p><b>Update 2014-02-15: Now supports border-radius property.</b></p>
 
     <table style="width: 100%" cellspacing="2" cellpadding="2">
     <tr>
@@ -140,24 +160,49 @@
       </td>
     </tr>
    <tr>
-       <td colspan="2">
+       <td>
           <div id="rounded_border">Rounded Border1</div>
      </td>
-   </tr>
-
-   <tr>
-       <td colspan="2">
+       <td>
           <div id="rounded_border2">Rounded Border2</div>
      </td>
    </tr>
-
+   <tr>
+	<td>
+		<div id="dashedr" class="sample rounded">dashed</div>
+	</td>
+	<td>
+		<div id="dottedr" class="sample rounded">dotted</div>
+	</td>
+   </tr>
+   <tr>
+	<td>
+		<div id="insetr" class="sample rounded">inset</div>
+	</td>
+	<td>
+		<div id="ridger" class="sample rounded">ridge</div>
+	</td>
+   </tr>
+   <tr>
+	<td>
+		<div id="groover" class="sample rounded">groove</div>
+	</td>
+	<td>
+		<div id="doubler" class="sample rounded">double</div>
+	</td>
+   </tr>
    <tr>
        <td colspan="2">
           <div id="rounded_border3" class="sample">Rounded Border3</div>
      </td>
    </tr>
+   <tr>
+       <td colspan="2">
+          <div id="rounded_border4" class="sample">Four different border-radius values.</div>
+     </td>
+   </tr>
 
-    </table>
+  </table>
   </body>
 </html>
 

@@ -156,7 +156,10 @@ public class BorderPainter {
 						bevel);
 			}
 		}
-    	else if (border.isRoundedRectStandard())
+    	else if (border.isRoundedRectStandard() &&
+        		sides == BorderPainter.ALL &&
+        		border.leftStyle() == IdentValue.SOLID &&
+        		border.left() == 1)
     	{
     		Path2D path = new Path2D.Float();
     		roundedRect(path, bounds.x, bounds.y, bounds.width, bounds.height, border.radiusTopLeftOne(), border.radiusTopLeftTwo());
@@ -166,7 +169,7 @@ public class BorderPainter {
     	}
     	else
     	{
-    		// We have a radius!
+    		// We have a non-standard rect with radius!
     		RoundedBorderPainter.paint(bounds, sides, border, ctx, xOffset, bevel);
     	}
     }
@@ -184,10 +187,10 @@ public class BorderPainter {
             final BorderPropertySet border, final Rectangle bounds, final int sides, 
             int currentSide, final IdentValue borderSideStyle, int xOffset, boolean bevel) {
         if (borderSideStyle == IdentValue.RIDGE || borderSideStyle == IdentValue.GROOVE) {
-            BorderPropertySet bd2 = new BorderPropertySet((int) (border.top() / 2),
-                    (int) (border.right() / 2),
-                    (int) (border.bottom() / 2),
-                    (int) (border.left() / 2));
+            BorderPropertySet bd2 = new BorderPropertySet(border, (border.top() / 2),
+                    (border.right() / 2),
+                    (border.bottom() / 2),
+                    (border.left() / 2));
             if (borderSideStyle == IdentValue.RIDGE) {
                 paintBorderSidePolygon(
                         outputDevice, bounds, border, border.darken(borderSideStyle), 
@@ -273,15 +276,15 @@ public class BorderPainter {
         DoubleBorderInfo bottomBorderInfo = calcDoubleBorderInfo((int)border.bottom());
         DoubleBorderInfo leftBorderInfo = calcDoubleBorderInfo((int)border.left());
         
-        BorderPropertySet outer = new BorderPropertySet(
+        BorderPropertySet outer = new BorderPropertySet(border,
                 topBorderInfo.getOuter(), rightBorderInfo.getOuter(), 
                 bottomBorderInfo.getOuter(), leftBorderInfo.getOuter());
         
-        BorderPropertySet center = new BorderPropertySet(
+        BorderPropertySet center = new BorderPropertySet(border,
                 topBorderInfo.getCenter(), rightBorderInfo.getCenter(), 
                 bottomBorderInfo.getCenter(), leftBorderInfo.getCenter());
         
-        BorderPropertySet inner = new BorderPropertySet(
+        BorderPropertySet inner = new BorderPropertySet(border,
                 topBorderInfo.getInner(), rightBorderInfo.getInner(), 
                 bottomBorderInfo.getInner(), leftBorderInfo.getInner());
 
@@ -475,13 +478,15 @@ public class BorderPainter {
     }
 
 	public static Shape generateBorderBounds(Rectangle bounds,
-			BorderPropertySet border, boolean b) {
+			BorderPropertySet border, boolean inside) {
 
-		if (border.isSquareRectStandard())
+		if (!border.hasBorderRadius())
 		{
 			return bounds;
 		}
-		else if (border.isRoundedRectStandard())
+		else if (border.isRoundedRectStandard() &&
+	    		border.leftStyle() == IdentValue.SOLID &&
+	    		border.left() == 1)
 		{
 			Path2D path = new Path2D.Float();
 			roundedRect(path, bounds.x , bounds.y, bounds.width, bounds.height, border.radiusTopLeftOne(), border.radiusTopLeftTwo());
@@ -489,8 +494,7 @@ public class BorderPainter {
 		}
 		else
 		{
-			// TODO
-			return bounds;
+			return RoundedBorderPainter.generateBorderBounds(bounds, border, inside);
 		}
 	}
 }

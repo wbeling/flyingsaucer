@@ -311,10 +311,10 @@ public class RoundedBorderPainter {
             final BorderPropertySet border, final Rectangle bounds, final int sides, 
             int currentSide, final IdentValue borderSideStyle, int xOffset, boolean bevel) {
         if (borderSideStyle == IdentValue.RIDGE || borderSideStyle == IdentValue.GROOVE) {
-            BorderPropertySet bd2 = new BorderPropertySet((int) (border.top() / 2),
-                    (int) (border.right() / 2),
-                    (int) (border.bottom() / 2),
-                    (int) (border.left() / 2));
+            BorderPropertySet bd2 = new BorderPropertySet(border, (border.top() / 2),
+                    (border.right() / 2),
+                    (border.bottom() / 2),
+                    (border.left() / 2));
            if (borderSideStyle == IdentValue.RIDGE) {
         	   paintBorderSideShape(
                        outputDevice, bounds, bd2, border.lighten(borderSideStyle), 

@@ -14,10 +14,18 @@ public class BorderRadiusPair {
 	}
 
 	public float getMaxLeft(float max) {
+
+		if (_left > max - _left)
+			return max / 2;
+		
 		return _left;
 	}
 
 	public float getMaxRight(float max) {
+
+		if (_right > max - _right)
+            return max / 2;
+		
 		return _right;
 	}
 

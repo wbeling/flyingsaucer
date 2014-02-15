@@ -10,7 +10,7 @@ import org.xhtmlrenderer.newtable.CollapsedBorderValue;
 
 public class BorderPropertySet extends RectPropertySet 
 {
-    public static final BorderPropertySet EMPTY_BORDER = new BorderPropertySet(0.0f, 0.0f, 0.0f, 0.0f);
+    public static final BorderPropertySet EMPTY_BORDER = new BorderPropertySet();
     
     private final IdentValue _topStyle;
     private final IdentValue _rightStyle;
@@ -32,16 +32,12 @@ public class BorderPropertySet extends RectPropertySet
     private final float _bottomRight2;
     private final float _bottomLeft2;
     
-    public BorderPropertySet(
-            float top,
-            float right,
-            float bottom,
-            float left
-    ) {
-        this._top = top;
-        this._right = right;
-        this._bottom = bottom;
-        this._left = left;
+    private BorderPropertySet()
+    {
+        this._top = 0;
+        this._right = 0;
+        this._bottom = 0;
+        this._left = 0;
         
         this._bottomLeft1 = 0;
         this._bottomRight1 = 0;
@@ -62,6 +58,38 @@ public class BorderPropertySet extends RectPropertySet
         this._topColor = null;
         this._leftColor = null;
         this._rightColor = null;
+    }
+    
+    public BorderPropertySet(BorderPropertySet r,
+            float top,
+            float right,
+            float bottom,
+            float left
+    ) {
+        this._top = top;
+        this._right = right;
+        this._bottom = bottom;
+        this._left = left;
+        
+        this._bottomLeft1 = r._bottomLeft1;
+        this._bottomRight1 = r._bottomRight1;
+        this._topLeft1 = r._topLeft1;
+        this._topRight1 = r._topRight1;
+
+        this._bottomLeft2 = r._bottomLeft2;
+        this._bottomRight2 = r._bottomRight2;
+        this._topLeft2 = r._topLeft2;
+        this._topRight2 = r._topRight2;
+        
+        this._topStyle = r._topStyle;
+        this._rightStyle = r._rightStyle;
+        this._bottomStyle = r._bottomStyle;
+        this._leftStyle = r._leftStyle;
+        
+        this._bottomColor = r._bottomColor;
+        this._topColor = r._topColor;
+        this._leftColor = r._leftColor;
+        this._rightColor = r._rightColor;
     }
     
     public BorderPropertySet(
@@ -238,15 +266,15 @@ public class BorderPropertySet extends RectPropertySet
         this._bottom = r._bottom;
         this._left = r._left;
         
-        this._bottomLeft1 = 0;
-        this._bottomRight1 = 0;
-        this._topLeft1 = 0;
-        this._topRight1 = 0;
+        this._bottomLeft1 = r._bottomLeft1;
+        this._bottomRight1 = r._bottomRight1;
+        this._topLeft1 = r._topLeft1;
+        this._topRight1 = r._topRight1;
 
-        this._bottomLeft2 = 0;
-        this._bottomRight2 = 0;
-        this._topLeft2 = 0;
-        this._topRight2 = 0;
+        this._bottomLeft2 = r._bottomLeft2;
+        this._bottomRight2 = r._bottomRight2;
+        this._topLeft2 = r._topLeft2;
+        this._topRight2 = r._topRight2;
         
         this._topStyle = r._topStyle;
         this._rightStyle = r._rightStyle;
