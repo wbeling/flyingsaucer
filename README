@@ -3,19 +3,21 @@ TODO
 + Make cancelable/interrupted support.
 + Make case insensitive and locale insensitive.
 + Gradients.
-+ Border radius.
-+ Repace StringBuffer with StringBuilder.
++ Replace StringBuffer with StringBuilder.
 + Remove redundant casts.
 + Update LICENSE.
-+ Move to latest dependencies.
-
++ Support media rules.
++ Support Bootstrap styles.
++ Lots more tests.
 
 DONE
 + Replace XML parser with Jsoup HTML5 parser.
 + Use a better text-breaker (Java's BreakIterator) to handle more languages.
-+ Move to Java 1.7.
-+ Genericize types.
++ Support border-radius property.
++ Use external libraries for non-core functionality such as commons codec for base64 and Scalr for image scaling.
++ Move to Java 1.7 including use of generic types, enums, etc.
 + Remove SWT, itext5 and docbook support.
++ Move to latest dependencies.
 + Delete extra files, jars, etc.
 
 
