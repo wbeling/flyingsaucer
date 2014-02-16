@@ -27,6 +27,7 @@ import java.awt.RenderingHints.Key;
 import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.derived.BorderPropertySet;
+import org.xhtmlrenderer.css.style.derived.FSLinearGradient;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.FSFont;
@@ -72,6 +73,7 @@ public interface OutputDevice {
     public void drawBorderLine(Shape bounds, int side, int width, boolean solid);
     
     public void drawImage(FSImage image, int x, int y);
+    public void drawLinearGradient(FSLinearGradient gradient, int x, int y, int width, int height);
     
     public void fill(Shape s);
     public void fillRect(int x, int y, int width, int height);

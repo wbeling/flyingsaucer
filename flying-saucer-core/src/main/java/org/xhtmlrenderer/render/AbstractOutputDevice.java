@@ -216,7 +216,7 @@ public abstract class AbstractOutputDevice implements OutputDevice {
         {
         	// TODO: Is this the correct width to use?
         	backgroundLinearGradient = style.getLinearGradient(c, bgImageContainer.width);
-        	System.err.println(backgroundLinearGradient.toString());
+
         }
         else
         {
@@ -230,7 +230,7 @@ public abstract class AbstractOutputDevice implements OutputDevice {
         }
 
         if ( (backgroundColor == null || backgroundColor == FSRGBColor.TRANSPARENT) &&
-                backgroundImage == null) {
+                backgroundImage == null && backgroundLinearGradient == null) {
             return;
         }
 
@@ -241,7 +241,7 @@ public abstract class AbstractOutputDevice implements OutputDevice {
             fill(borderBounds);
         }
 
-        if (backgroundImage != null) {
+        if (backgroundImage != null || backgroundLinearGradient != null) {
             Rectangle localBGImageContainer = bgImageContainer;
             if (style.isFixedBackground()) {
                 localBGImageContainer = c.getViewportRectangle();
@@ -258,9 +258,20 @@ public abstract class AbstractOutputDevice implements OutputDevice {
             Shape oldclip = getClip();
 
             clip(borderBounds);
+            
+        	if (backgroundLinearGradient != null)
+        	{
+        		drawLinearGradient(backgroundLinearGradient,
+        		backgroundBounds.x, backgroundBounds.y, backgroundBounds.width, backgroundBounds.height);
+        		setClip(oldclip);
+        		return;
+        	}
 
-            scaleBackgroundImage(c, style, localBGImageContainer, backgroundImage);
-
+            if (backgroundImage != null)
+            {
+            	scaleBackgroundImage(c, style, localBGImageContainer, backgroundImage);
+            }
+            
             float imageWidth = backgroundImage.getWidth();
             float imageHeight = backgroundImage.getHeight();
 
@@ -275,8 +286,9 @@ public abstract class AbstractOutputDevice implements OutputDevice {
 
             if (! hrepeat && ! vrepeat) {
                 Rectangle imageBounds = new Rectangle(xoff, yoff, (int)imageWidth, (int)imageHeight);
-                if (imageBounds.intersects(backgroundBounds)) {
-                    drawImage(backgroundImage, xoff, yoff);
+                if (imageBounds.intersects(backgroundBounds)) 
+                {
+               		drawImage(backgroundImage, xoff, yoff);
                 }
             } else if (hrepeat && vrepeat) {
                 paintTiles(
