@@ -1,4 +1,5 @@
 TODO
+----
 + Support MS Word output.
 + Make cancelable/interrupted support.
 + Make case insensitive and locale insensitive.
@@ -14,6 +15,7 @@ TODO
 + Implement builder API. See [proposed interface](/flying-saucer-core/src/main/java/org/xhtmlrenderer/service/HtmlRenderServiceConfigBuilder.java).
 
 DONE
+----
 + Replace XML parser with Jsoup HTML5 parser.
 + Use a better text-breaker (Java's BreakIterator) to handle more languages.
 + Support border-radius property.
@@ -26,6 +28,7 @@ DONE
 
 
 Flying Saucer
+-------------
 
 http://code.google.com/p/flying-saucer/
 Please see project website for links to git, mailing lists, issue tracker, etc.
@@ -62,10 +65,10 @@ GETTING FLYING SAUCER
 ---------------------
 New releases of Flying Saucer are distributed through Maven.  The available artifacts are:
 
-org.xhtmlrenderer:flying-saucer-core - Core library and Java2D rendering
-org.xhtmlrenderer:flying-saucer-pdf - PDF output using iText
-org.xhtmlrenderer:flying-saucer-swt - SWT output
-org.xhtmlrenderer:flying-saucer-log4j - Logging plugin for log4j
++ org.xhtmlrenderer:flying-saucer-core - Core library and Java2D rendering
++ org.xhtmlrenderer:flying-saucer-pdf - PDF output using iText
++ org.xhtmlrenderer:flying-saucer-swt - SWT output
++ org.xhtmlrenderer:flying-saucer-log4j - Logging plugin for log4j
 
 GETTING STARTED
 ---------------
@@ -85,8 +88,7 @@ JAR.  You will need to update if using another OS.
 org.xhtmlrenderer.demo.browser.BrowserStartup will start the browser demo.
 
 Some good entry points (classes) are:
-org.xhtmlrenderer.simple.XHTMLPanel
-org.xhtmlrenderer.simple.PDFRenderer
-org.xhtmlrenderer.simple.ImageRenderer
-
++ org.xhtmlrenderer.simple.XHTMLPanel
++ org.xhtmlrenderer.simple.PDFRenderer
++ org.xhtmlrenderer.simple.ImageRenderer
 
