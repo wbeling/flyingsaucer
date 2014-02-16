@@ -3,12 +3,15 @@ TODO
 + Make cancelable/interrupted support.
 + Make case insensitive and locale insensitive.
 + Gradients.
++ Media queries.
 + Replace StringBuffer with StringBuilder.
 + Remove redundant casts.
 + Update LICENSE.
++ Update Samples.
 + Support media rules.
 + Support Bootstrap styles.
 + Lots more tests.
++ Implement builder API. See [proposed interface](/flying-saucer-core/src/main/java/org/xhtmlrenderer/service/HtmlRenderServiceConfigBuilder.java).
 
 DONE
 + Replace XML parser with Jsoup HTML5 parser.
