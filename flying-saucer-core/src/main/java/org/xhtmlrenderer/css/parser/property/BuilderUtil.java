@@ -146,7 +146,7 @@ public class BuilderUtil {
 		}
 	}
 
-	static boolean isLength(CSSPrimitiveValue value) {
+	public static boolean isLength(CSSPrimitiveValue value) {
 		int unit = value.getPrimitiveType();
 		return unit == CSSPrimitiveValue.CSS_EMS
 				|| unit == CSSPrimitiveValue.CSS_EXS
