@@ -62,6 +62,9 @@ public class FSLinearGradient
 		}
 	}
 	
+	/**
+	 *  Returns the direction of this linear-gradient in radians.
+	 */
 	public float getAngle()
 	{
 		return angle;
@@ -103,27 +106,27 @@ public class FSLinearGradient
 			}
 			
 			if (positions.contains("top") && positions.contains("left"))
-				angle = 315f;
+				angle = (315f / 180f) * (float) Math.PI;
 			else if (positions.contains("top") && positions.contains("right"))
-				angle = 45f;
+				angle = (45f / 180f) * (float) Math.PI;
 			else if (positions.contains("bottom") && positions.contains("left"))
-				angle = 225f;
+				angle = (225f / 180f) * (float) Math.PI;
 			else if (positions.contains("bottom") && positions.contains("right"))
-				angle = 135f;
+				angle = (135f / 180f) * (float) Math.PI;
 			else if (positions.contains("bottom"))
-				angle = 180f;
+				angle = (180f / 180f) * (float) Math.PI;
 			else
 				angle = 0f;
 		}
 		else if (params.get(0).getPrimitiveType() == CSSPrimitiveValue.CSS_DEG)
 		{
 			// linear-gradient(45deg, ...)
-			angle = params.get(0).getFloatValue();
+			angle = (params.get(0).getFloatValue() / 180) * (float) Math.PI;
 		}
 		else if (params.get(0).getPrimitiveType() == CSSPrimitiveValue.CSS_RAD)
 		{
 			// linear-gradient(2rad)
-			angle = params.get(0).getFloatValue() * (float) (180 / Math.PI);
+			angle = params.get(0).getFloatValue();
 		}
 		else
 		{

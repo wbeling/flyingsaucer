@@ -33,6 +33,7 @@ import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -366,7 +367,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	public void exportToPdf( String path )
 	{
 		try {
-			PDFRenderer.renderToPDF(manager.getBaseURL(), path);
+			PDFRenderer.renderToPDF(manager.getBaseURL(), path, PdfWriter.VERSION_1_7);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

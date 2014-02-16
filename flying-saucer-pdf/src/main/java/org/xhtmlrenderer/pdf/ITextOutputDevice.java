@@ -60,6 +60,7 @@ import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
+import org.xhtmlrenderer.css.style.derived.FSLinearGradient;
 import org.xhtmlrenderer.css.value.FontSpecification;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.NamespaceHandler;
@@ -97,9 +98,12 @@ import com.lowagie.text.pdf.PdfIndirectReference;
 import com.lowagie.text.pdf.PdfName;
 import com.lowagie.text.pdf.PdfOutline;
 import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfShading;
+import com.lowagie.text.pdf.PdfShadingPattern;
 import com.lowagie.text.pdf.PdfString;
 import com.lowagie.text.pdf.PdfTextArray;
 import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.ShadingColor;
 
 /**
  * This class is largely based on {@link com.lowagie.text.pdf.PdfGraphics2D}.
@@ -1330,5 +1334,18 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
 	public void drawBorderLine(Shape bounds, int side, int width, boolean solid) {
 		draw(bounds);
 		
+	}
+
+	@Override
+	public void drawLinearGradient(FSLinearGradient gradient, int x, int y,
+			int width, int height) 
+	{
+		FSRGBColor start = (FSRGBColor) gradient.getStopPoints().get(0).getColor();
+		FSRGBColor end = (FSRGBColor) gradient.getStopPoints().get(gradient.getStopPoints().size() - 1).getColor();
+		Color s = new Color(start.getRed(), start.getGreen(), start.getBlue());
+		Color e = new Color(end.getRed(), end.getGreen(), end.getBlue());
+		PdfShading shader = PdfShading.simpleAxial(_writer, x, y, x + width, y + height, s, e);
+		_currentPage.setShadingFill(new PdfShadingPattern(shader));
+		_currentPage.paintShading(shader);
 	}
 }

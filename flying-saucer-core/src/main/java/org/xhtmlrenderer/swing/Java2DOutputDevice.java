@@ -300,6 +300,7 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 		float[] fractions = new float[gradient.getStopPoints().size()];
 		Color[] colors = new Color[gradient.getStopPoints().size()];
 
+		float angle = gradient.getAngle();
 		float range = gradient.getStopPoints().get(gradient.getStopPoints().size() - 1).getLength() -
 				gradient.getStopPoints().get(0).getLength();
 		
@@ -322,5 +323,6 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 		LinearGradientPaint paint = new LinearGradientPaint(x, y, x + width, y, fractions, colors);
 		_graphics.setPaint(paint);
 		_graphics.fillRect(x, y, width, height);
+		_graphics.setPaint(null);
 	}
 }
