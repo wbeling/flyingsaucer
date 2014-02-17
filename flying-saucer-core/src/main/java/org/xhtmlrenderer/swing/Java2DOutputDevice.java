@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.swing;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -53,6 +54,8 @@ import org.xhtmlrenderer.render.InlineText;
 import org.xhtmlrenderer.render.JustificationInfo;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.util.XRLog;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDevice {
     private Graphics2D _graphics;
@@ -300,7 +303,6 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 		float[] fractions = new float[gradient.getStopPoints().size()];
 		Color[] colors = new Color[gradient.getStopPoints().size()];
 
-		float angle = gradient.getAngle();
 		float range = gradient.getStopPoints().get(gradient.getStopPoints().size() - 1).getLength() -
 				gradient.getStopPoints().get(0).getLength();
 		
@@ -319,10 +321,12 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 	        
 	        i++;
 		}
-
-		LinearGradientPaint paint = new LinearGradientPaint(x, y, x + width, y, fractions, colors);
+		
+		LinearGradientPaint paint = new LinearGradientPaint(
+				gradient.getStartX() + x, gradient.getStartY() + y,
+				gradient.getEndX() + x, gradient.getEndY() + y, fractions, colors);
 		_graphics.setPaint(paint);
-		_graphics.fillRect(x, y, width, height);
+		_graphics.fillRect(x, y, x + width, y + width);
 		_graphics.setPaint(null);
 	}
 }

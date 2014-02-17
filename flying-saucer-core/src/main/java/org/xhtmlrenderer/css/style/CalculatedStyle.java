@@ -1014,12 +1014,12 @@ public class CalculatedStyle {
         		GeneralUtil.ciEquals(((FunctionValue) value).getFunction().getName(), "linear-gradient");
     }
     
-    public FSLinearGradient getLinearGradient(CssContext cssContext, float baseWidth)
+    public FSLinearGradient getLinearGradient(CssContext cssContext, int w, int h)
     {
     	assert(isLinearGradient());
 
     	FunctionValue value = (FunctionValue) valueByName(CSSName.BACKGROUND_IMAGE);
-    	return new FSLinearGradient(value.getFunction(), this, baseWidth, cssContext);
+    	return new FSLinearGradient(value.getFunction(), this, w, h, cssContext);
     }
     
     public String getRunningName() {

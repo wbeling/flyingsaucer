@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -1481,6 +1482,27 @@ public class CSSParser {
         PropertyValue result = null;
         switch (t.getType()) {
             case Token.ANGLE:
+            {
+            	String normal = getTokenValue(t).toLowerCase(Locale.US);
+            	short type;
+            	
+            	if (normal.contains("deg"))
+            	{
+            		type = CSSPrimitiveValue.CSS_DEG;
+            		normal = normal.replace("deg", "");
+            	}
+            	else
+            	{
+            		type = CSSPrimitiveValue.CSS_RAD;
+            		normal = normal.replace("rad", "");
+            	}
+            	result = new PropertyValue(type,
+                        sign * Float.parseFloat(normal),
+                        sign(sign) + getTokenValue(t));
+                next();
+                skip_whitespace();
+                break;
+            }
             case Token.TIME:
             case Token.FREQ:
             case Token.DIMENSION:

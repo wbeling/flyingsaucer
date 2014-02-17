@@ -21,10 +21,10 @@ import org.xhtmlrenderer.util.GeneralUtil;
 
 public class FSLinearGradient
 {
-	private final float angle;
+	private int x1, y1, x2, y2;
 	private final List<StopValue> stopPoints = new ArrayList<>(2);
 
-	public static class StopValue
+	public static class StopValue implements Comparable<StopValue>
 	{
 		private final FSColor color;
 		private final short lengthType;
@@ -60,14 +60,17 @@ public class FSLinearGradient
 		{
 			return "[" + this.color.toString() + "](" + this.dotsValue + ")";
 		}
-	}
-	
-	/**
-	 *  Returns the direction of this linear-gradient in radians.
-	 */
-	public float getAngle()
-	{
-		return angle;
+
+		@Override
+		public int compareTo(StopValue arg0) 
+		{
+			if (this.dotsValue == arg0.dotsValue)
+				return 0;
+			if (this.dotsValue < arg0.dotsValue)
+				return -1;
+
+			return 1;
+		}
 	}
 	
 	public List<StopValue> getStopPoints()
@@ -75,7 +78,114 @@ public class FSLinearGradient
 		return stopPoints;
 	}
 	
-	public FSLinearGradient(FSFunction func, CalculatedStyle style, float width, CssContext ctx)
+	private float deg2rad(float deg)
+	{
+		return (float) Math.toRadians(deg);
+	}
+	
+	private float rad2deg(float rad)
+	{
+		return (float) Math.toDegrees(rad);
+	}
+	
+	// Compute the endpoints so that a gradient of the given angle
+	// covers a box of the given size.
+	// From: https://github.com/WebKit/webkit/blob/master/Source/WebCore/css/CSSGradientValue.cpp
+	void endPointsFromAngle(float angleDeg, int w, int h)
+	{
+	    angleDeg = angleDeg % 360;
+	    if (angleDeg < 0)
+	        angleDeg += 360;
+
+	    if (angleDeg == 0) {
+	    	x1 = 0;
+	    	y1 = h;
+	    	
+	    	x2 = 0;
+	    	y2 = 0;
+	        return;
+	    }
+
+	    if (angleDeg == 90) {
+	    	x1 = 0;
+	    	y1 = 0;
+	    	
+	    	x2 = w;
+	    	y2 = 0;
+	        return;
+	    }
+
+	    if (angleDeg == 180) {
+	    	x1 = 0;
+	    	y1 = 0;
+	    	
+	    	x2 = 0;
+	    	y2 = h;
+	        return;
+	    }
+
+	    if (angleDeg == 270) {
+	    	x1 = w;
+	    	y1 = 0;
+	    	
+	    	x2 = 0;
+	    	y2 = 0;
+	        return;
+	    }
+
+	    // angleDeg is a "bearing angle" (0deg = N, 90deg = E),
+	    // but tan expects 0deg = E, 90deg = N.
+	    float slope = (float) Math.tan(deg2rad(90 - angleDeg));
+
+	    // We find the endpoint by computing the intersection of the line formed by the slope,
+	    // and a line perpendicular to it that intersects the corner.
+	    float perpendicularSlope = -1 / slope;
+
+	    // Compute start corner relative to center, in Cartesian space (+y = up).
+	    float halfHeight = h / 2;
+	    float halfWidth = w / 2;
+	    float xEnd, yEnd;
+	    
+	    if (angleDeg < 90)
+	    {
+	    	xEnd = halfWidth;
+	    	yEnd = halfHeight;
+	    }
+	    else if (angleDeg < 180)
+	    {
+	    	xEnd = halfWidth;
+	    	yEnd = -halfHeight;
+	    }
+	    else if (angleDeg < 270)
+	    {
+	    	xEnd = -halfWidth;
+	    	yEnd = -halfHeight;
+	    }
+	    else
+	    {
+	    	xEnd = -halfWidth;
+	    	yEnd = halfHeight;
+	    }
+
+	    // Compute c (of y = mx + c) using the corner point.
+	    float c = yEnd - perpendicularSlope * xEnd;
+	    float endX = c / (slope - perpendicularSlope);
+	    float endY = perpendicularSlope * endX + c;
+
+	    // We computed the end point, so set the second point,
+	    // taking into account the moved origin and the fact that we're in drawing space (+y = down).
+	    x2 = (int) (halfWidth + endX);
+	    y2 = (int) (halfHeight - endY);
+
+	    // Reflect around the center for the start point.
+	    x1 = (int) (halfWidth - endX);
+	    y1 = (int) (halfHeight + endY);
+	}
+	
+	/**
+	 * This ctor expects the func to be already validated.
+	 */
+	public FSLinearGradient(FSFunction func, CalculatedStyle style, int width, int height, CssContext ctx)
 	{
 		List<PropertyValue> params = func.getParameters();
 		int i = 1;
@@ -106,31 +216,79 @@ public class FSLinearGradient
 			}
 			
 			if (positions.contains("top") && positions.contains("left"))
-				angle = (315f / 180f) * (float) Math.PI;
+			{
+				x1 = width;
+				y1 = height;
+				
+				x2 = 0;
+				y2 = 0;
+			}
 			else if (positions.contains("top") && positions.contains("right"))
-				angle = (45f / 180f) * (float) Math.PI;
+			{
+				x1 = 0;
+				y1 = height;
+				
+				x2 = width;
+				y2 = 0;
+			}
 			else if (positions.contains("bottom") && positions.contains("left"))
-				angle = (225f / 180f) * (float) Math.PI;
+			{
+				x1 = width;
+				y1 = 0;
+				
+				x2 = 0;
+				y2 = height;
+			}
 			else if (positions.contains("bottom") && positions.contains("right"))
-				angle = (135f / 180f) * (float) Math.PI;
+			{
+				x1 = 0;
+				y1 = 0;
+				
+				x2 = width;
+				y2 = height;
+			}
 			else if (positions.contains("bottom"))
-				angle = (180f / 180f) * (float) Math.PI;
-			else
-				angle = 0f;
+			{
+				x1 = 0;
+				y1 = 0;
+				
+				x2 = 0;
+				y2 = height;
+			}
+			else if (positions.contains("top"))
+			{
+				x1 = 0;
+				y1 = height;
+				
+				x2 = 0;
+				y2 = 0;
+			}
+			else if (positions.contains("left"))
+			{
+				x1 = width;
+				y1 = 0;
+				
+				x2 = 0;
+				y2 = 0;
+			}
+			else // if (positions.contains("right"))
+			{
+				x1 = 0;
+				y1 = 0;
+				
+				x2 = width;
+				y2 = 0;
+			}
 		}
 		else if (params.get(0).getPrimitiveType() == CSSPrimitiveValue.CSS_DEG)
 		{
 			// linear-gradient(45deg, ...)
-			angle = (params.get(0).getFloatValue() / 180) * (float) Math.PI;
+			endPointsFromAngle(params.get(0).getFloatValue(), width, height);
 		}
 		else if (params.get(0).getPrimitiveType() == CSSPrimitiveValue.CSS_RAD)
 		{
-			// linear-gradient(2rad)
-			angle = params.get(0).getFloatValue();
-		}
-		else
-		{
-			angle = 0f;
+			// linear-gradient(2rad, ...)
+			endPointsFromAngle(rad2deg(params.get(0).getFloatValue()), width, height);
 		}
 		
 		for (; i < params.size(); i++)
@@ -217,11 +375,33 @@ public class FSLinearGradient
 				lastValue = stopPoints.get(j).dotsValue;
 			}
 		}
+		
+		Collections.sort(stopPoints);
+	}
+	
+	public int getStartX()
+	{
+		return x1;
+	}
+
+	public int getEndX()
+	{
+		return x2;
+	}
+	
+	public int getStartY()
+	{
+		return y1;
+	}
+	
+	public int getEndY()
+	{
+		return y2;
 	}
 	
 	@Override
 	public String toString() 
 	{
-		return "[" + angle + "](" + stopPoints.toString() + ")";
+		return "(" + stopPoints.toString() + ")";
 	}
 }
