@@ -18,6 +18,7 @@ import org.xhtmlrenderer.css.parser.property.Conversions;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
 import org.xhtmlrenderer.util.GeneralUtil;
+import org.xhtmlrenderer.util.LangId;
 
 public class FSLinearGradient
 {
@@ -91,7 +92,7 @@ public class FSLinearGradient
 	// Compute the endpoints so that a gradient of the given angle
 	// covers a box of the given size.
 	// From: https://github.com/WebKit/webkit/blob/master/Source/WebCore/css/CSSGradientValue.cpp
-	void endPointsFromAngle(float angleDeg, int w, int h)
+	private void endPointsFromAngle(float angleDeg, int w, int h)
 	{
 	    angleDeg = angleDeg % 360;
 	    if (angleDeg < 0)
@@ -182,13 +183,36 @@ public class FSLinearGradient
 	    y1 = (int) (halfHeight + endY);
 	}
 	
-	/**
-	 * This ctor expects the func to be already validated.
-	 */
+	private void constructZero()
+	{
+		BuilderUtil.cssNoThrowError(LangId.FUNCTION_GENERAL, "linear-gradient");
+		
+		// Just return a 1px wide (nearly) transparent gradient.
+		x1 = 0;
+		y1 = 0;
+		
+		x2 = 1;
+		y2 = 0;
+		
+		stopPoints.clear();
+		stopPoints.add(new StopValue(new FSRGBColor(0, 0, 0, 0)));
+		stopPoints.add(new StopValue(new FSRGBColor(0, 0, 0, 0.0001f)));
+	
+		stopPoints.get(0).dotsValue = 0f;
+		stopPoints.get(1).dotsValue = 1f;
+		return;
+	}
+	
 	public FSLinearGradient(FSFunction func, CalculatedStyle style, int width, int height, CssContext ctx)
 	{
 		List<PropertyValue> params = func.getParameters();
 		int i = 1;
+		
+		if (params.isEmpty())
+		{
+			constructZero();
+			return;
+		}
 		
 		if (GeneralUtil.ciEquals(params.get(0).getStringValue(), "to"))
 		{
@@ -271,13 +295,18 @@ public class FSLinearGradient
 				x2 = 0;
 				y2 = 0;
 			}
-			else // if (positions.contains("right"))
+			else if (positions.contains("right"))
 			{
 				x1 = 0;
 				y1 = 0;
 				
 				x2 = width;
 				y2 = 0;
+			}
+			else
+			{
+				constructZero();
+				return;
 			}
 		}
 		else if (params.get(0).getPrimitiveType() == CSSPrimitiveValue.CSS_DEG)
@@ -290,26 +319,55 @@ public class FSLinearGradient
 			// linear-gradient(2rad, ...)
 			endPointsFromAngle(rad2deg(params.get(0).getFloatValue()), width, height);
 		}
+		else
+		{
+			// linear-gradient function must begin with the word 'to' or an angle.
+			constructZero();
+			return;
+		}
+		
+		if (params.size() - i < 2)
+		{
+			// Less than two color stops provided.
+			constructZero();
+			return;
+		}
+		
 		
 		for (; i < params.size(); i++)
 		{
 			// Each stop point can have a color and optionally a length.
 			PropertyValue value = params.get(i);
+			FSRGBColor color = null;
 			
-			if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
-                FSRGBColor color = Conversions.getColor(value.getStringValue());
-                if (i + 1 < params.size() &&
-                	(BuilderUtil.isLength(params.get(i + 1)) || 
-                	params.get(i + 1).getPrimitiveType() == CSSPrimitiveValue.CSS_PERCENTAGE))
-                {
-                	PropertyValue val2 = params.get(i + 1);
-                	stopPoints.add(new StopValue(color, val2.getFloatValue(), val2.getPrimitiveType())); 
-                }
-                else
-                {
-                	stopPoints.add(new StopValue(color));
-                }
+			if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT)
+			{
+                color = Conversions.getColor(value.getStringValue());
 			}
+			else 
+			{
+				color = (FSRGBColor) value.getFSColor();
+			}
+
+            if (color == null)
+            {
+            	// Invalid color.
+            	constructZero();
+            	return;
+            }
+			
+            if (i + 1 < params.size() &&
+              	(BuilderUtil.isLength(params.get(i + 1)) || 
+               	params.get(i + 1).getPrimitiveType() == CSSPrimitiveValue.CSS_PERCENTAGE))
+            {
+              	PropertyValue val2 = params.get(i + 1);
+              	stopPoints.add(new StopValue(color, val2.getFloatValue(), val2.getPrimitiveType()));
+              	i++;
+            }
+            else
+            {
+              	stopPoints.add(new StopValue(color));
+            }
 		}
 
 		// Normalize lengths into dots values.
@@ -377,7 +435,21 @@ public class FSLinearGradient
 		}
 		
 		Collections.sort(stopPoints);
+
+		for (int b = 0; b < stopPoints.size() - 1; b++)
+		{
+			if (stopPoints.get(b).dotsValue.equals(
+				stopPoints.get(b + 1).dotsValue))
+			{
+				// Duplicate lengths.
+				constructZero();
+				return;
+			}
+		}
 	}
+	
+	// These function get the x, y of the starting and ending points of the gradient.
+	// They assume a start at zero, so should be offset when used.
 	
 	public int getStartX()
 	{
@@ -402,6 +474,6 @@ public class FSLinearGradient
 	@Override
 	public String toString() 
 	{
-		return "(" + stopPoints.toString() + ")";
+		return "[" + x1 + ", " + y1 + "] to [" + x2 + ", " + y2 + "](" + stopPoints.toString() + ")";
 	}
 }

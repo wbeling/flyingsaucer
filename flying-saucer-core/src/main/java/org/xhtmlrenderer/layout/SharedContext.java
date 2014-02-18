@@ -24,9 +24,11 @@ import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -74,7 +76,8 @@ public class SharedContext {
     private Locale localeErrorMessages = Locale.US;
 
     public static final ThreadLocal<ResourceBundle> ERRS = new ThreadLocal<>();    
-
+    public static final ThreadLocal<Set<String>> USER_ERRORS = new ThreadLocal<>();
+    
     /*
      * used to adjust fonts, ems, points, into screen resolution
      */
@@ -109,6 +112,9 @@ public class SharedContext {
     {
     	ERRS.remove();
     	ERRS.set(ResourceBundle.getBundle("languages.ErrorMessages", localeErrorMessages));
+    	
+    	USER_ERRORS.remove();
+    	USER_ERRORS.set(new LinkedHashSet<String>());
     }
 
     /**

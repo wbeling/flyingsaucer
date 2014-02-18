@@ -201,7 +201,7 @@ public class PrimitivePropertyBuilders {
                                     cssName, Conversions.getBorderWidth(ident.toString()), important, origin));
                 } else {
                     if (value.getFloatValue() < 0.0f) {
-                        cssError(LangId.NO_NEGATIVE, cssName);
+                        cssThrowError(LangId.NO_NEGATIVE, cssName);
                     }
                 }
             }
@@ -226,7 +226,7 @@ public class PrimitivePropertyBuilders {
                     IdentValue ident = checkIdent(cssName, value);
                     checkValidity(cssName, getAllowed(), ident);
                 } else if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
             }
 
@@ -255,7 +255,7 @@ public class PrimitivePropertyBuilders {
                     IdentValue ident = checkIdent(cssName, value);
                     checkValidity(cssName, getAllowed(), ident);
                 } else if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
             }
 
@@ -280,7 +280,7 @@ public class PrimitivePropertyBuilders {
                 checkLengthOrPercentType(cssName, value);
 
                 if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
             }
 
@@ -311,7 +311,7 @@ public class PrimitivePropertyBuilders {
                 checkNumberType(cssName, value);
 
                 if (value.getFloatValue() < 1) {
-                    cssError(LangId.SPAN_MUST_BE_GT_ZERO);
+                    cssThrowError(LangId.SPAN_MUST_BE_GT_ZERO);
                 }
             }
 
@@ -331,7 +331,7 @@ public class PrimitivePropertyBuilders {
                 checkInteger(cssName, value);
 
                 if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
             }
 
@@ -356,7 +356,7 @@ public class PrimitivePropertyBuilders {
                 checkLengthType(cssName, value);
 
                 if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
-                	cssError(LangId.NO_NEGATIVE, cssName);
+                	cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
             }
 
@@ -493,11 +493,10 @@ public class PrimitivePropertyBuilders {
 				boolean important, boolean inheritAllowed) {
 
 			checkValueCount(cssName, 1, values.size());
-			CSSPrimitiveValue value = values.get(0);
+			PropertyValue value = values.get(0);
 
-			if (!value.toString().startsWith(
-					IdentValue.LINEAR_GRADIENT.asString())) {
-
+			if (value.getFunction() == null) 
+			{
 				return super.buildDeclarations(cssName, values, origin,
 						important, inheritAllowed);
 			}
@@ -553,19 +552,19 @@ public class PrimitivePropertyBuilders {
                 if (first.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
                     IdentValue firstIdent = checkIdent(cssName, first);
                     if (firstIdent != IdentValue.AUTO) {
-                        cssError(LangId.ONLY_AUTO_ALLOWED, cssName);
+                        cssThrowError(LangId.ONLY_AUTO_ALLOWED, cssName);
                     }
                 } else if (((PropertyValue)first).getFloatValue() < 0.0f) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
 
                 if (second.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
                     IdentValue secondIdent = checkIdent(cssName, second);
                     if (secondIdent != IdentValue.AUTO) {
-                        cssError(LangId.ONLY_AUTO_ALLOWED, cssName);
+                        cssThrowError(LangId.ONLY_AUTO_ALLOWED, cssName);
                     }
                 } else if (((PropertyValue)second).getFloatValue() < 0.0f) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
 
                 return createTwoValueResponse(first, second, origin, important);
@@ -679,7 +678,7 @@ public class PrimitivePropertyBuilders {
         private void checkIdentPosition(CSSName cssName, IdentValue firstIdent, IdentValue secondIdent) {
             if (firstIdent == IdentValue.TOP || firstIdent == IdentValue.BOTTOM ||
                     secondIdent == IdentValue.LEFT || secondIdent == IdentValue.RIGHT) {
-            	cssError(LangId.INVALID_KEYWORD_COMBINATION, cssName);
+            	cssThrowError(LangId.INVALID_KEYWORD_COMBINATION, cssName);
             }
         }
 
@@ -890,7 +889,7 @@ public class PrimitivePropertyBuilders {
 
                 Token operator = value.getOperator();
                 if (operator != null && operator != Token.TK_COMMA) {
-                    cssError(LangId.INVALID_FONT_FAMILY);
+                    cssThrowError(LangId.INVALID_FONT_FAMILY);
                 }
 
                 if (operator != null) {
@@ -911,7 +910,7 @@ public class PrimitivePropertyBuilders {
                 } else if (type == CSSPrimitiveValue.CSS_IDENT) {
                     consecutiveIdents.add(value.getStringValue());
                 } else {
-                    cssError(LangId.INVALID_FONT_FAMILY);
+                    cssThrowError(LangId.INVALID_FONT_FAMILY);
                 }
             }
             if (consecutiveIdents.size() > 0) {
@@ -961,7 +960,7 @@ public class PrimitivePropertyBuilders {
                     IdentValue ident = checkIdent(cssName, value);
                     checkValidity(cssName, ALLOWED, ident);
                 } else if (value.getFloatValue() < 0.0f) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
             }
 
@@ -1005,7 +1004,7 @@ public class PrimitivePropertyBuilders {
                 } else if (type == CSSPrimitiveValue.CSS_NUMBER) {
                     IdentValue weight = Conversions.getNumericFontWeight(value.getFloatValue());
                     if (weight == null) {
-                       cssError(LangId.INVALID_FONT_WEIGHT, value);
+                       cssThrowError(LangId.INVALID_FONT_WEIGHT, value);
                     }
 
                     PropertyValue replacement = new PropertyValue(
@@ -1196,7 +1195,7 @@ public class PrimitivePropertyBuilders {
                     IdentValue ident = checkIdent(cssName, value);
                     checkValidity(cssName, ALLOWED, ident);
                 } else if (value.getFloatValue() < 0.0) {
-                    cssError(LangId.NO_NEGATIVE, cssName);
+                    cssThrowError(LangId.NO_NEGATIVE, cssName);
                 }
             }
             return Collections.singletonList(
@@ -1371,16 +1370,16 @@ public class PrimitivePropertyBuilders {
                         if (params.size() == 1) {
                             PropertyValue param = (PropertyValue)params.get(0);
                             if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT) {
-                            	cssError(LangId.RUNNING_NEED_IDENTIFIER, cssName);
+                            	cssThrowError(LangId.RUNNING_NEED_IDENTIFIER, cssName);
                             }
                         } else {
-                        	cssError(LangId.VALUE_COUNT_MISMATCH, params.size(), cssName, 1);
+                        	cssThrowError(LangId.VALUE_COUNT_MISMATCH, params.size(), cssName, 1);
                         }
                     } else {
-                        cssError(LangId.ONLY_RUNNING_ALLOWED, cssName);
+                        cssThrowError(LangId.ONLY_RUNNING_ALLOWED, cssName);
                     }
                 } else {
-                   cssError(LangId.MUST_BE_FUNC_OR_IDENTIFIER, cssName);
+                   cssThrowError(LangId.MUST_BE_FUNC_OR_IDENTIFIER, cssName);
                 }
             }
 
@@ -1472,7 +1471,7 @@ public class PrimitivePropertyBuilders {
                 checkIdentType(cssName, value);
                 IdentValue ident = checkIdent(cssName, value);
                 if (ident == IdentValue.NONE) {
-                	cssError(LangId.NO_NONE_VALUE, cssName);
+                	cssThrowError(LangId.NO_NONE_VALUE, cssName);
                 }
                 checkValidity(cssName, getAllowed(), ident);
             }
@@ -1600,7 +1599,7 @@ public class PrimitivePropertyBuilders {
 			checkNumberType(cssName, value);
 
 			if (value.getFloatValue() > 1 || value.getFloatValue() < 0) {
-				cssError(LangId.OPACITY_OUT_OF_RANGE);
+				cssThrowError(LangId.OPACITY_OUT_OF_RANGE);
 			}
 
 			return Collections.singletonList(new PropertyDeclaration(cssName,

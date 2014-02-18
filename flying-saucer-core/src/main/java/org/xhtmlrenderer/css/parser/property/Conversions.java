@@ -29,9 +29,9 @@ import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 
 public class Conversions {
-    private static final Map<String, FSRGBColor> COLORS = new HashMap<String, FSRGBColor>();
-    private static final Map<Float, IdentValue> NUMERIC_FONT_WEIGHTS = new HashMap<Float, IdentValue>();
-    private static final Map<String, PropertyValue> BORDER_WIDTHS = new HashMap<String, PropertyValue>();
+    private static final Map<String, FSRGBColor> COLORS = new HashMap<>();
+    private static final Map<Float, IdentValue> NUMERIC_FONT_WEIGHTS = new HashMap<>();
+    private static final Map<String, PropertyValue> BORDER_WIDTHS = new HashMap<>();
     
     static {
         COLORS.put("cyan", new FSRGBColor(0x00FFFF));
