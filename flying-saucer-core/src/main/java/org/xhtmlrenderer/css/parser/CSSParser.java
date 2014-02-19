@@ -49,6 +49,7 @@ import org.xhtmlrenderer.css.sheet.RulesetContainer;
 import org.xhtmlrenderer.css.sheet.Stylesheet;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
+import org.xhtmlrenderer.util.GeneralUtil;
 
 public class CSSParser {
     private static final Set<String> SUPPORTED_PSEUDO_ELEMENTS;
@@ -1647,7 +1648,8 @@ public class CSSParser {
                 throw new CSSParseException(t, Token.TK_RPAREN, getCurrentLine());
             }
 
-            if (f.equals("rgb(")) {
+            if (GeneralUtil.ciEquals(f, "rgb(") ||
+            	GeneralUtil.ciEquals(f, "rgba(")) {
                 result = new PropertyValue(createRGBColorFromFunction(params));
             } else if (f.equals("cmyk(")) {
                 if (! isSupportCMYKColors()) {
@@ -1729,7 +1731,8 @@ public class CSSParser {
                         "not a number or percentage", getCurrentLine());
             }
 
-			if (type != CSSPrimitiveValue.CSS_NUMBER && i == 3) 
+			if (type != CSSPrimitiveValue.CSS_PERCENTAGE &&
+				type != CSSPrimitiveValue.CSS_NUMBER && i == 3) 
 			{
 				throw new CSSParseException(
 						"Parameter alpha to the rgba() function is " + "not a number",
@@ -1742,7 +1745,11 @@ public class CSSParser {
             }
             if (f < 0) {
                 f = 0;
-            } else if (f > 255) {
+            } 
+            else if (i == 3 && f > 1) {
+            	f = 1f;
+            }
+            else if (f > 255) {
                 f = 255;
             }
 

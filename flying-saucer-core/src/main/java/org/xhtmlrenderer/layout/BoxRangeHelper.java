@@ -27,7 +27,7 @@ import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
 public class BoxRangeHelper {
-    private LinkedList<BoxRangeData> _clipRegionStack = new LinkedList<BoxRangeData>();
+    private LinkedList<BoxRangeData> _clipRegionStack = new LinkedList<>();
     
     private OutputDevice _outputDevice;
     private List<BoxRangeData> _rangeList;
@@ -40,13 +40,15 @@ public class BoxRangeHelper {
         _rangeList = rangeList;
         
         if (rangeList.size() > 0) {
-            _current = (BoxRangeData)rangeList.get(0);
+            _current = rangeList.get(0);
         }
     }
     
     public void checkFinished() {
-        if (_clipRegionStack.size() != 0) {
-            throw new XRRuntimeException("internal error");
+        if (_clipRegionStack.size() != 0)
+        {
+        	assert(false);
+        	throw new XRRuntimeException("internal error");
         }
     }
     
@@ -60,7 +62,7 @@ public class BoxRangeHelper {
             if (_rangeIndex == _rangeList.size() - 1) {
                 _current = null;
             } else {
-                _current = (BoxRangeData)_rangeList.get(++_rangeIndex);
+                _current = _rangeList.get(++_rangeIndex);
             }
         }
     }

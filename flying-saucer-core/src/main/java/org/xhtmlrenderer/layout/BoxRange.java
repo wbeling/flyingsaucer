@@ -36,6 +36,7 @@ public class BoxRange {
         return _end;
     }
     
+    @Override
     public String toString() {
         return "[start=" + _start + ", end=" + _end + "]";
     }

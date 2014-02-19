@@ -131,14 +131,14 @@ public class Layer {
 
     public synchronized void addChild(Layer layer) {
         if (_children == null) {
-            _children = new ArrayList<Layer>();
+            _children = new ArrayList<>();
         }
         _children.add(layer);
     }
 
     public void addFloat(BlockBox floater, BlockFormattingContext bfc) {
         if (_floats == null) {
-            _floats = new ArrayList<BlockBox>();
+            _floats = new ArrayList<>();
         }
 
         _floats.add(floater);
@@ -155,7 +155,7 @@ public class Layer {
     private void paintFloats(RenderingContext c) {
         if (_floats != null) {
             for (int i = _floats.size() - 1; i >= 0; i--) {
-                BlockBox floater = (BlockBox) _floats.get(i);
+                BlockBox floater = _floats.get(i);
                 paintAsLayer(c, floater);
             }
         }
@@ -163,7 +163,7 @@ public class Layer {
 
     private void paintLayers(RenderingContext c, List<Layer> layers) {
         for (int i = 0; i < layers.size(); i++) {
-            Layer layer = (Layer) layers.get(i);
+            Layer layer = layers.get(i);
             layer.paint(c);
         }
     }
@@ -174,7 +174,7 @@ public class Layer {
     private static final int AUTO = 4;
     
     private List<Layer> collectLayers(int which) {
-        List<Layer> result = new ArrayList<Layer>();
+        List<Layer> result = new ArrayList<>();
         
         if (which != AUTO) {
             result.addAll(getStackingContextLayers(which));
@@ -182,7 +182,7 @@ public class Layer {
         
         List<Layer> children = getChildren();
         for (int i = 0; i < children.size(); i++) {
-            Layer child = (Layer)children.get(i);
+            Layer child = children.get(i);
             
             if (! child.isStackingContext()) {
                 if (which == AUTO) {
@@ -200,7 +200,7 @@ public class Layer {
         
         List<Layer> children = getChildren();
         for (int i = 0; i < children.size(); i++) {
-            Layer target = (Layer)children.get(i);
+            Layer target = children.get(i);
 
             if (target.isStackingContext()) {
                 int zIndex = target.getZIndex();
@@ -227,8 +227,8 @@ public class Layer {
     
     private static class ZIndexComparator implements Comparator<Layer> {
         public int compare(Layer o1, Layer o2) {
-            Layer l1 = (Layer)o1;
-            Layer l2 = (Layer)o2;
+            Layer l1 = o1;
+            Layer l2 = o2;
             return l1.getZIndex() - l2.getZIndex();
         }
     }
@@ -395,7 +395,7 @@ public class Layer {
         // Work backwards since layers are painted forwards and we're looking
         // for the top-most box
         for (int i = layers.size()-1; i >= 0; i--) {
-            Layer l = (Layer)layers.get(i);
+            Layer l = layers.get(i);
             result = l.find(cssCtx, absX, absY, findAnonymous);
             if (result != null) {
                 return result;
@@ -416,7 +416,7 @@ public class Layer {
         
         Set<CollapsedBorderValue> all = new HashSet<>();
         for (Iterator<Box> i = blocks.iterator(); i.hasNext(); ) {
-            Box b = (Box)i.next();
+            Box b = i.next();
             if (b instanceof TableCellBox) {
                 TableCellBox cell = (TableCellBox)b;
                 if (cell.hasCollapsedPaintingBorder()) {
@@ -437,7 +437,7 @@ public class Layer {
             Map<TableCellBox, List<CollapsedBorderSide>> result = new HashMap<>();
             
             for (Iterator<TableCellBox> i = triggerCellsByTable.values().iterator(); i.hasNext(); ) {
-                TableCellBox cell = (TableCellBox)i.next();
+                TableCellBox cell = i.next();
                 List<CollapsedBorderSide> borders = cellBordersByTable.get(cell.getTable());
                 Collections.sort(borders);
                 result.put(cell, borders);
@@ -449,7 +449,7 @@ public class Layer {
     
     private void paintCollapsedTableBorders(RenderingContext c, List<CollapsedBorderSide> borders) {
         for (Iterator<CollapsedBorderSide> i = borders.iterator(); i.hasNext(); ) {
-            CollapsedBorderSide border = (CollapsedBorderSide)i.next();
+            CollapsedBorderSide border = i.next();
             border.getCell().paintCollapsedBorder(c, border.getSide());
         }
     }
@@ -558,11 +558,11 @@ public class Layer {
     
     private PaintingInfo calcPaintingDimension(LayoutContext c) {
         getMaster().calcPaintingInfo(c, true);
-        PaintingInfo result = (PaintingInfo)getMaster().getPaintingInfo().copyOf();
+        PaintingInfo result = getMaster().getPaintingInfo().copyOf();
         
         List<Layer> children = getChildren();
         for (int i = 0; i < children.size(); i++) {
-            Layer child = (Layer)children.get(i);
+            Layer child = children.get(i);
             
             if (child.getMaster().getStyle().isFixed()) {
                 continue;
@@ -577,7 +577,7 @@ public class Layer {
     
     public void positionChildren(LayoutContext c) {
         for (Iterator<Layer> i = getChildren().iterator(); i.hasNext();) {
-            Layer child = (Layer) i.next();
+            Layer child = i.next();
 
             child.position(c);
         }
@@ -600,7 +600,7 @@ public class Layer {
 
     private boolean containsFixedLayer() {
         for (Iterator<Layer> i = getChildren().iterator(); i.hasNext();) {
-            Layer child = (Layer) i.next();
+            Layer child = i.next();
 
             if (child.getMaster().getStyle().isFixed() || child.containsFixedLayer()) {
                 return true;
@@ -628,7 +628,7 @@ public class Layer {
         synchronized (this) {
             if (_children != null) {
                 for (Iterator<Layer> i = _children.iterator(); i.hasNext(); ) {
-                    Layer child = (Layer)i.next();
+                    Layer child = i.next();
                     if (child == layer) {
                         removed = true;
                         i.remove();
@@ -687,7 +687,7 @@ public class Layer {
         if (children.size() > 0) {
             LayoutState state = c.captureLayoutState();
             for (int i = 0; i < children.size(); i++) {
-                Layer child = (Layer)children.get(i);
+                Layer child = children.get(i);
                 if (child.isRequiresLayout()) {
                     layoutAbsoluteChild(c, child);
                     if (child.getMaster().getStyle().isAvoidPageBreakInside() &&
@@ -779,7 +779,7 @@ public class Layer {
     }
     
     public void removeLastPage() {
-        PageBox pageBox = (PageBox)_pages.remove(_pages.size()-1);
+        PageBox pageBox = _pages.remove(_pages.size()-1);
         if (pageBox == getLastRequestedPage()) {
             setLastRequestedPage(null);
         }
@@ -875,10 +875,10 @@ public class Layer {
     
     private void addPagesUntilPosition(CssContext c, int position) {
         List<PageBox> pages = getPages();
-        PageBox last = (PageBox)pages.get(pages.size()-1);
+        PageBox last = pages.get(pages.size()-1);
         while (position >= last.getBottom()) {
             addPage(c);
-            last = (PageBox)pages.get(pages.size()-1);
+            last = pages.get(pages.size()-1);
         }
     }
     
@@ -887,7 +887,7 @@ public class Layer {
         // cannot be satisfied and is dropped
         List<PageBox> pages = getPages();
         for (int i = pages.size() - 1; i > 0; i--) {
-            PageBox page = (PageBox)pages.get(i);
+            PageBox page = pages.get(i);
             if (page.getTop() >= maxYHeight) {
                 if (page == getLastRequestedPage()) {
                     setLastRequestedPage(null);
@@ -901,7 +901,7 @@ public class Layer {
     
     public void trimPageCount(int newPageCount) {
         while (_pages.size() > newPageCount) {
-            PageBox pageBox = (PageBox)_pages.remove(_pages.size()-1);
+            PageBox pageBox = _pages.remove(_pages.size()-1);
             if (pageBox == getLastRequestedPage()) {
                 setLastRequestedPage(null);
             }
@@ -917,7 +917,7 @@ public class Layer {
         List<PageBox> pages = getPages();
         int paintingTop = additionalClearance;
         for (Iterator<PageBox> i = pages.iterator(); i.hasNext(); ) {
-            PageBox page = (PageBox)i.next();
+            PageBox page = i.next();
             page.setPaintingTop(paintingTop);
             if (mode == PAGED_MODE_SCREEN) {
                 page.setPaintingBottom(paintingTop + page.getHeight(cssCtx));
@@ -934,7 +934,7 @@ public class Layer {
         List<PageBox> pages = getPages();
         int maxWidth = 0;
         for (Iterator<PageBox> i = pages.iterator(); i.hasNext(); ) {
-            PageBox page = (PageBox)i.next();
+            PageBox page = i.next();
             int pageWidth = page.getWidth(cssCtx) + additionalClearance*2;
             if (pageWidth > maxWidth) {
                 maxWidth = pageWidth;
@@ -946,7 +946,7 @@ public class Layer {
     
     public PageBox getLastPage() {
         List<PageBox> pages = getPages();
-        return pages.size() == 0 ? null : (PageBox)pages.get(pages.size()-1);
+        return pages.size() == 0 ? null : pages.get(pages.size()-1);
     }
     
     public boolean crossesPageBreak(LayoutContext c, int top, int bottom) {
@@ -982,8 +982,8 @@ public class Layer {
         
         Collections.sort(blocks, new Comparator<BlockBox>() {
             public int compare(BlockBox o1, BlockBox o2) {
-                BlockBox b1 = (BlockBox)o1;
-                BlockBox b2 = (BlockBox)o2;
+                BlockBox b1 = o1;
+                BlockBox b2 = o2;
                 
                 return b1.getAbsY() - b2.getAbsY();
             }
@@ -1018,7 +1018,7 @@ public class Layer {
         if (which == PageElementPosition.START) {
             BlockBox prev = null;
             for (Iterator<BlockBox> i = blocks.iterator(); i.hasNext(); ) {
-                BlockBox b = (BlockBox)i.next();
+                BlockBox b = i.next();
                 if (b.getStaticEquivalent().getAbsY() >= page.getTop()) {
                     break;
                 }
@@ -1027,7 +1027,7 @@ public class Layer {
             return prev;
         } else if (which == PageElementPosition.FIRST) {
             for (Iterator<BlockBox> i = blocks.iterator(); i.hasNext(); ) {
-                BlockBox b = (BlockBox)i.next();
+                BlockBox b = i.next();
                 int absY = b.getStaticEquivalent().getAbsY();
                 if (absY >= page.getTop() && absY < page.getBottom()) {
                     return b;
@@ -1037,7 +1037,7 @@ public class Layer {
         } else if (which == PageElementPosition.LAST) {
             BlockBox prev = null;
             for (Iterator<BlockBox> i = blocks.iterator(); i.hasNext(); ) {
-                BlockBox b = (BlockBox)i.next();
+                BlockBox b = i.next();
                 if (b.getStaticEquivalent().getAbsY() > page.getBottom()) {
                     break;
                 }
@@ -1047,7 +1047,7 @@ public class Layer {
         } else if (which == PageElementPosition.LAST_EXCEPT) {
             BlockBox prev = null;
             for (Iterator<BlockBox> i = blocks.iterator(); i.hasNext(); ) {
-                BlockBox b = (BlockBox)i.next();
+                BlockBox b = i.next();
                 int absY = b.getStaticEquivalent().getAbsY();
                 if (absY >= page.getTop() && absY < page.getBottom()) {
                     return null;
@@ -1066,14 +1066,14 @@ public class Layer {
     public void layoutPages(LayoutContext c) {
         c.setRootDocumentLayer(c.getRootLayer());
         for (Iterator<PageBox> i = _pages.iterator(); i.hasNext(); ) {
-            PageBox pageBox = (PageBox)i.next();
+            PageBox pageBox = i.next();
             pageBox.layout(c);
         }
     }
     
     public void addPageSequence(BlockBox start) {
         if (_pageSequences == null) {
-            _pageSequences = new HashSet<BlockBox>();
+            _pageSequences = new HashSet<>();
         }
         
         _pageSequences.add(start);
@@ -1089,8 +1089,8 @@ public class Layer {
             
             Collections.sort(result, new Comparator<BlockBox>() {
                 public int compare(BlockBox o1, BlockBox o2) {
-                    BlockBox b1 = (BlockBox)o1;
-                    BlockBox b2 = (BlockBox)o2;
+                    BlockBox b1 = o1;
+                    BlockBox b2 = o2;
                     
                     return b1.getAbsY() - b2.getAbsY();
                 }
@@ -1122,8 +1122,8 @@ public class Layer {
         BlockBox result = null;
         
         for (int i = 0; i < sequences.size(); i++) {
-            result = (BlockBox) sequences.get(i);
-            if ((i < sequences.size() - 1) && (((BlockBox) sequences.get(i + 1)).getAbsY() > absY)) {
+            result = sequences.get(i);
+            if ((i < sequences.size() - 1) && ((sequences.get(i + 1)).getAbsY() > absY)) {
                 break;
             }
         }
@@ -1167,12 +1167,12 @@ public class Layer {
             if (sequenceStartIndex == -1) {
                 firstPage = 0;
             } else {
-                BlockBox block = (BlockBox)sequences.get(sequenceStartIndex);
+                BlockBox block = sequences.get(sequenceStartIndex);
                 firstPage = getFirstPage(c, block).getPageNo();
             }
             
             if (sequenceStartIndex < sequences.size() - 1) {
-                BlockBox block = (BlockBox)sequences.get(sequenceStartIndex+1);
+                BlockBox block = sequences.get(sequenceStartIndex+1);
                 lastPage = getFirstPage(c, block).getPageNo();
             } else {
                 lastPage = c.getPageCount();
@@ -1189,7 +1189,7 @@ public class Layer {
     
     private int getPageSequenceStart(RenderingContext c, List<BlockBox> sequences, PageBox page) {
         for (int i = sequences.size() - 1; i >= 0; i--) {
-            BlockBox start = (BlockBox)sequences.get(i);
+            BlockBox start = sequences.get(i);
             if (start.getAbsY() < page.getBottom() - 1) {
                 return i;
             }

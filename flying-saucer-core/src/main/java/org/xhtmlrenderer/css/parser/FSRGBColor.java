@@ -20,15 +20,15 @@
 package org.xhtmlrenderer.css.parser;
 
 public class FSRGBColor implements FSColor {
-    public static final FSRGBColor TRANSPARENT = new FSRGBColor(0, 0, 0);
+    public static final FSRGBColor TRANSPARENT = new FSRGBColor(0, 0, 0, 0);
     public static final FSRGBColor RED = new FSRGBColor(255, 0, 0);
     public static final FSRGBColor GREEN = new FSRGBColor(0, 255, 0);
     public static final FSRGBColor BLUE = new FSRGBColor(0, 0, 255);
     
-    private int _red;
-    private int _green;
-    private int _blue;
-    private float _alpha;
+    private final int _red;
+    private final int _green;
+    private final int _blue;
+    private final float _alpha;
 
     public FSRGBColor(int red, int green, int blue) {
     	this(red, green, blue, 1);
@@ -68,6 +68,11 @@ public class FSRGBColor implements FSColor {
 
     public int getRed() {
         return _red;
+    }
+    
+    public float getAlpha()
+    {
+    	return _alpha;
     }
     
     @Override
@@ -112,6 +117,7 @@ public class FSRGBColor implements FSColor {
         return result;
     }
 
+    @Override
     public FSColor lightenColor() {
         float[] hsb = RGBtoHSB(getRed(), getGreen(), getBlue(), null);
         float hBase = hsb[0];
@@ -126,6 +132,7 @@ public class FSRGBColor implements FSColor {
         return new FSRGBColor(rgb[0], rgb[1], rgb[2]);
     }
     
+    @Override
     public FSColor darkenColor() {
         float[] hsb = RGBtoHSB(getRed(), getGreen(), getBlue(), null);
         float hBase = hsb[0];

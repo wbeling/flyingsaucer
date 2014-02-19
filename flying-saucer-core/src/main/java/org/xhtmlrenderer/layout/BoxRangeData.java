@@ -61,6 +61,7 @@ public class BoxRangeData {
         _clip = clip;
     }
     
+    @Override
     public String toString() {
         return "[range= " + _range + ", box=" + _box + ", clip=" + _clip + "]";
     }

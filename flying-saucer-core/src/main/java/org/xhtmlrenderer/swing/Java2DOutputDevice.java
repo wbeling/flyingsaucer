@@ -19,7 +19,6 @@
  */
 package org.xhtmlrenderer.swing;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -32,9 +31,6 @@ import java.awt.RenderingHints.Key;
 import java.awt.font.GlyphVector;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.logging.Level;
-
 import javax.swing.*;
 
 import org.xhtmlrenderer.css.parser.FSColor;
@@ -53,12 +49,9 @@ import org.xhtmlrenderer.render.InlineLayoutBox;
 import org.xhtmlrenderer.render.InlineText;
 import org.xhtmlrenderer.render.JustificationInfo;
 import org.xhtmlrenderer.render.RenderingContext;
-import org.xhtmlrenderer.util.XRLog;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDevice {
-    private Graphics2D _graphics;
+    private final Graphics2D _graphics;
 
     public Java2DOutputDevice(Graphics2D graphics) {
         _graphics = graphics;
@@ -68,7 +61,7 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
         this(outputImage.createGraphics());
     }
     
-    
+    @Override
     public void drawSelection(RenderingContext c, InlineText inlineText) {
         if (inlineText.isSelected()) {
             InlineLayoutBox iB = inlineText.getParent();
@@ -157,6 +150,7 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
                 iB.getAbsY() + iB.getBaseline());
     }    
 
+    @Override
     public void drawBorderLine(
             Rectangle bounds, int side, int lineWidth, boolean solid) {
     	
@@ -186,6 +180,7 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
         }
     }
 
+    @Override
     public void paintReplacedElement(RenderingContext c, BlockBox box) {
         ReplacedElement replaced = box.getReplacedElement();
         if (replaced instanceof SwingReplacedElement) {
@@ -203,6 +198,7 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
         }
     }
     
+    @Override
     public void setColor(FSColor color) {
         if (color instanceof FSRGBColor) {
             FSRGBColor rgb = (FSRGBColor)color;
@@ -212,30 +208,37 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
         }
     }
     
+    @Override
     protected void drawLine(int x1, int y1, int x2, int y2) {
         _graphics.drawLine(x1, y1, x2, y2);
     }
     
+    @Override
     public void drawRect(int x, int y, int width, int height) {
         _graphics.drawRect(x, y, width, height);
     }
     
+    @Override
     public void fillRect(int x, int y, int width, int height) {
         _graphics.fillRect(x, y, width, height);
     }
     
+    @Override
     public void setClip(Shape s) {
         _graphics.setClip(s);
     }
     
+    @Override
     public Shape getClip() {
         return _graphics.getClip();
     }
-    
+
+    @Override    
     public void clip(Shape s) {
         _graphics.clip(s);
     }
     
+    @Override
     public void translate(double tx, double ty) {
         _graphics.translate(tx, ty);
     }
@@ -244,46 +247,57 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
         return _graphics;
     }
 
+    @Override
     public void drawOval(int x, int y, int width, int height) {
         _graphics.drawOval(x, y, width, height);
     }
 
+    @Override
     public void fillOval(int x, int y, int width, int height) {
         _graphics.fillOval(x, y, width, height);
     }
 
+    @Override
     public Object getRenderingHint(Key key) {
         return _graphics.getRenderingHint(key);
     }
 
+    @Override
     public void setRenderingHint(Key key, Object value) {
         _graphics.setRenderingHint(key, value);
     }
     
+    @Override
     public void setFont(FSFont font) {
         _graphics.setFont(((AWTFSFont)font).getAWTFont());
     }
 
+    @Override
     public void setStroke(Stroke s) {
         _graphics.setStroke(s);
     }
 
+    @Override
     public Stroke getStroke() {
         return _graphics.getStroke();
     }
 
+    @Override
     public void fill(Shape s) {
         _graphics.fill(s);
     }
-    
+
+    @Override
     public void drawImage(FSImage image, int x, int y) {
         _graphics.drawImage(((AWTFSImage)image).getImage(), x, y, null);
     }
     
+    @Override
     public boolean isSupportsSelection() {
         return true;
     }
     
+    @Override
     public boolean isSupportsCMYKColors() {
         return true;
     }
@@ -292,7 +306,8 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 	public void drawBorderLine(Shape bounds, int side, int width, boolean solid) {
 		draw(bounds);
 	}
-	
+
+	@Override
 	public void draw(Shape s) {
 		_graphics.draw(s);
 	}
@@ -309,11 +324,14 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 		int i = 0;
 		for (StopValue pt : gradient.getStopPoints())
 		{
-	        if (pt.getColor() instanceof FSRGBColor) {
+	        if (pt.getColor() instanceof FSRGBColor) 
+	        {
 	            FSRGBColor rgb = (FSRGBColor) pt.getColor();
-	            colors[i] = new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue());
-	        } else {
-	            throw new RuntimeException("internal error: unsupported color class " + pt.getColor().getClass().getName());
+	            colors[i] = new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), (int) (rgb.getAlpha() * 255));
+	        }
+	        else {
+	        	assert(false);
+	        	throw new RuntimeException("internal error: unsupported color class " + pt.getColor().getClass().getName());
 	        }
 
 	        if (range != 0)
@@ -321,10 +339,11 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 	        
 	        i++;
 		}
-		
+
 		LinearGradientPaint paint = new LinearGradientPaint(
 				gradient.getStartX() + x, gradient.getStartY() + y,
 				gradient.getEndX() + x, gradient.getEndY() + y, fractions, colors);
+		
 		_graphics.setPaint(paint);
 		_graphics.fillRect(x, y, x + width, y + width);
 		_graphics.setPaint(null);
