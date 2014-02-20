@@ -18,7 +18,11 @@ DONE
 ----
 + Replace XML parser with Jsoup HTML5 parser.
 + Use a better text-breaker (Java's BreakIterator) to handle more languages.
-+ Support border-radius property.
++ CSS3 Support
+  + border-radius (J2D, PDF)
+  + linear-gradient (J2D)
+  + opacity (J2D)
+  + rgba (J2D)
 + Use external libraries for non-core functionality such as commons codec for base64 and Scalr for image scaling.
 + Move to Java 1.7 including use of generic types, enums, etc.
 + Remove SWT, itext5 and docbook support.

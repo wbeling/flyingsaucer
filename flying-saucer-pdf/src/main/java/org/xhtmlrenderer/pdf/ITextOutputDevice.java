@@ -416,7 +416,7 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
     public void setColor(FSColor color) {
         if (color instanceof FSRGBColor) {
             FSRGBColor rgb = (FSRGBColor) color;
-            _color = new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue());
+            _color = new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), (int) (rgb.getAlpha() * 255));
         } else if (color instanceof FSCMYKColor) {
             FSCMYKColor cmyk = (FSCMYKColor) color;
             _color = new CMYKColor(cmyk.getCyan(), cmyk.getMagenta(), cmyk.getYellow(), cmyk.getBlack());
