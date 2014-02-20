@@ -59,7 +59,6 @@ public abstract class AbstractOutputDevice implements OutputDevice {
 
         if (text != null && text.length() > 0) {
             setColor(iB.getStyle().getColor());
-            setOpacity(iB.getStyle().getOpacity());
             
             setFont(iB.getStyle().getFSFont(c));
             setFontSpecification(iB.getStyle().getFontSpecification());
@@ -117,7 +116,6 @@ public abstract class AbstractOutputDevice implements OutputDevice {
             RenderingContext c, InlineLayoutBox iB, TextDecoration decoration) 
     {
         setColor(iB.getStyle().getColor());
-        setOpacity(iB.getStyle().getOpacity());
         
         Rectangle edge = iB.getContentAreaEdge(iB.getAbsX(), iB.getAbsY(), c);
 
@@ -128,7 +126,6 @@ public abstract class AbstractOutputDevice implements OutputDevice {
     public void drawTextDecoration(RenderingContext c, LineBox lineBox) 
     {
         setColor(lineBox.getStyle().getColor());
-        setOpacity(lineBox.getStyle().getOpacity());
 
         Box parent = lineBox.getParent();
         List<TextDecoration> decorations = lineBox.getTextDecorations();
@@ -241,8 +238,6 @@ public abstract class AbstractOutputDevice implements OutputDevice {
         }
 
         Shape borderBounds = border == null ? backgroundBounds : BorderPainter.generateBorderBounds(backgroundBounds, border, false);
-
-        setOpacity(style.getOpacity());
         
         if (backgroundColor != null && backgroundColor != FSRGBColor.TRANSPARENT) {
             setColor(backgroundColor);

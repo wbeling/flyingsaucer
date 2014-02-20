@@ -999,6 +999,9 @@ public class CalculatedStyle {
                 return true;
             }
 
+            if (getOpacity() != 1f)
+            	return true;
+            
             return false;
         }
     }

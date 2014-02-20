@@ -95,6 +95,8 @@ public class Layer {
     private int _selectionEndX;
     private int _selectionEndY;
     
+    private float _opacity;
+    
     public Layer(Box master) {
         this(null, master);
         setStackingContext(true);
@@ -104,9 +106,16 @@ public class Layer {
         _parent = parent;
         _master = master;
         setStackingContext(
-                master.getStyle().isPositioned() && ! master.getStyle().isAutoZIndex());
+                master.getStyle().isPositioned() &&
+                (!master.getStyle().isAutoZIndex() ||
+                 master.getStyle().getOpacity() != 1f));
         master.setLayer(this);
         master.setContainingLayer(this);
+
+        if (_parent != null)
+        	this._opacity = master.getStyle().getOpacity() * _parent._opacity; 
+        else
+        	this._opacity = master.getStyle().getOpacity();
     }
 
     public Layer getParent() {
@@ -122,7 +131,13 @@ public class Layer {
     }
 
     public int getZIndex() {
-        return (int) _master.getStyle().asFloat(CSSName.Z_INDEX);
+    	// Spec says that auto z-index with a opacity other than 1
+    	// should be treated as having a z-index of 0.
+    	if (_master.getStyle().isAutoZIndex() &&
+    		_master.getStyle().getOpacity() != 1f)
+    		return 0;
+    	
+    	return (int) _master.getStyle().asFloat(CSSName.Z_INDEX);
     }
     
     public Box getMaster() {
@@ -298,6 +313,8 @@ public class Layer {
         if (getMaster().getStyle().isFixed()) {
             positionFixedLayer(c);
         }
+
+        c.getOutputDevice().setOpacity(this._opacity);
         
         if (isRootLayer()) {
             getMaster().paintRootElementBackground(c);
