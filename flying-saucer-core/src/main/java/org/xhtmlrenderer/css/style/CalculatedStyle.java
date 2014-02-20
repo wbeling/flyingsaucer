@@ -1282,4 +1282,9 @@ public class CalculatedStyle {
     public boolean isCanBeShrunkToFit() {
         return isInlineBlock() || isFloated() || isAbsolute() || isFixed();
     }
+
+	public float getOpacity()
+	{
+		return asFloat(CSSName.OPACITY);
+	}
 }

@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.swing;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -347,5 +348,18 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
 		_graphics.setPaint(paint);
 		_graphics.fillRect(x, y, x + width, y + width);
 		_graphics.setPaint(null);
+	}
+
+	@Override
+	public void setOpacity(float opacity) 
+	{
+		if (opacity == 1)
+		{
+			_graphics.setComposite(AlphaComposite.SrcOver);
+		}
+		else
+		{
+			_graphics.setComposite(AlphaComposite.SrcOver.derive(opacity));
+		}
 	}
 }

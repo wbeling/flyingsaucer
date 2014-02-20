@@ -1474,8 +1474,8 @@ public enum CSSName {
     OPACITY(
             "opacity",
             Marker.PRIMITIVE,
-            "0",
-            Marker.INHERITS,
+            "1",
+            Marker.NOT_INHERITED,
             true,
             new PrimitivePropertyBuilders.Opacity()
            ),

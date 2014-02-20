@@ -3,7 +3,7 @@
   <head>
     <link rel="stylesheet" type="text/css" href="general.css" title="Style" media="screen" />
     <link rel="stylesheet" type="text/css" href="print.css" title="Style" media="print" />
-    <title>Flying Saucer: CSS gradient support</title>
+    <title>Flying Saucer: CSS gradient &amp; opacity support</title>
     <style type="text/css">
       * {
         margin: 0;
@@ -116,7 +116,7 @@
 
     <div style="width: 100%; border: 0px; ">
 
-    <h3>Backgrounds</h3>
+    <h3>Backgrounds, Gradients &amp; Opacity</h3>
     <div class="test3" style="width: 75%">
 <pre>
 {
@@ -174,6 +174,23 @@
 
     </div>
 
+    </div>
+
+    <div style="opacity: 0; border:10px solid black;">
+      This should be totally invisible.
+
+      <div style="background-image: url(image.png);">So should this.</div>
+      <div style="background-image: linear-gradient(to left, red, green);">And this</div>
+      <div style="text-decoration:underline;">And even this</div>
+      <div style="border: 2px double yellow;border-radius: 15px;">Finally this</div>
+
+      <ul>
+       <li>Invisible list item.</li>
+      </ul>
+    </div>
+
+    <div>
+     This should show with an invisible div above.
     </div>
   </body>
 </html>

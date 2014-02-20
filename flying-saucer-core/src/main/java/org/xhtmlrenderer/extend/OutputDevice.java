@@ -64,6 +64,11 @@ public interface OutputDevice {
     public void setFont(FSFont font);
     
     public void setColor(FSColor color);
+
+    /**
+     * @param opacity A value from 0(tranparent) to 1(opaque).
+     */
+    public void setOpacity(float opacity);
     
     public void drawRect(int x, int y, int width, int height);
     public void drawOval(int x, int y, int width, int height);

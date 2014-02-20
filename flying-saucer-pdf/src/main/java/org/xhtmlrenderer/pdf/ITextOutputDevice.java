@@ -93,6 +93,7 @@ import com.lowagie.text.pdf.PdfBorderDictionary;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfDestination;
 import com.lowagie.text.pdf.PdfDictionary;
+import com.lowagie.text.pdf.PdfGState;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfIndirectReference;
 import com.lowagie.text.pdf.PdfName;
@@ -159,6 +160,8 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
     private int _nextFormFieldIndex;
 
     private Set _linkTargetAreas;
+    
+    private boolean haveOpacity = false;
 
     public ITextOutputDevice(float dotsPerPoint) {
         _dotsPerPoint = dotsPerPoint;
@@ -1347,5 +1350,17 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
 		PdfShading shader = PdfShading.simpleAxial(_writer, x, y, x + width, y + height, s, e);
 		_currentPage.setShadingFill(new PdfShadingPattern(shader));
 		_currentPage.paintShading(shader);
+	}
+
+	@Override
+	public void setOpacity(float opacity) {
+		if (opacity != 1f || haveOpacity)
+		{
+			PdfGState gs = new PdfGState();
+			gs.setBlendMode(PdfGState.BM_NORMAL);
+			gs.setFillOpacity(opacity);
+			_currentPage.setGState(gs);
+			haveOpacity = true;
+		}
 	}
 }
