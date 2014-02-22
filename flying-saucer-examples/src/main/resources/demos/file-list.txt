@@ -10,7 +10,6 @@ Z-index,demo:demos/zindex.xhtml
 Cursors,demo:demos/cursors.xhtml
 Report,demo:demos/report.xhtml
 Forms,demo:demos/forms.xhtml
-Recipe in XML,demo:demos/cream-chicken-rice.xml
 Centered Fluid,demo:demos/centered-fluid.xhtml
 Centered Fluid Auto Margin,demo:demos/centered-fluid-automargin.xhtml
 Twocol Floating Menu,demo:demos/2col-float-menu.xhtml
