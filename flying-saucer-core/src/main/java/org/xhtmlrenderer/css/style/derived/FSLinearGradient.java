@@ -222,7 +222,7 @@ public class FSLinearGradient
 			// linear-gradient( to top right, blue, red);
 			for ( ; i < params.size(); i++)
 			{
-				if (!Idents.looksLikeABGPosition(params.get(i).getStringValue()))
+				if (params.get(i).getStringValue() == null || !Idents.looksLikeABGPosition(params.get(i).getStringValue()))
 					break;
 			}
 			
