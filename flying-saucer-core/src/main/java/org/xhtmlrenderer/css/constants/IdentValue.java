@@ -20,9 +20,15 @@
 package org.xhtmlrenderer.css.constants;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.css.RGBColor;
 import org.xhtmlrenderer.css.parser.FSColor;
+import org.xhtmlrenderer.css.parser.FSFunction;
+import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
+import org.xhtmlrenderer.css.parser.Token;
 import org.xhtmlrenderer.css.style.CssContext;
 import org.xhtmlrenderer.css.style.FSDerivedValue;
 import org.xhtmlrenderer.util.XRRuntimeException;

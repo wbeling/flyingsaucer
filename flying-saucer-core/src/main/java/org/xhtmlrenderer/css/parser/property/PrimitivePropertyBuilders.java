@@ -26,7 +26,6 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -133,16 +132,16 @@ public class PrimitivePropertyBuilders {
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
 
-            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
-                checkIdentType(cssName, value);
-                IdentValue ident = checkIdent(cssName, value);
-
-                checkValidity(cssName, getAllowed(), ident);
+            if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT)
+            {
+                return Collections.singletonList(
+                        new PropertyDeclaration(cssName, value, important, origin));
             }
 
+            checkValueType(cssName, value, EnumSet.of(CSSValueType.CSS_IDENT));
+            checkIdentValidity(cssName, getAllowed(), value);
             return Collections.singletonList(
-                    new PropertyDeclaration(cssName, value, important, origin));
-
+                   new PropertyDeclaration(cssName, value, important, origin));
         }
     }
 
@@ -155,22 +154,21 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
-                checkIdentOrColorType(cssName, value);
+
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) 
+            {
+            	checkValueType(cssName, value, EnumSet.of(CSSValueType.CSS_IDENT, CSSValueType.CSS_RGBCOLOR));
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                     FSRGBColor color = Conversions.getColor(value.getStringValue());
                     if (color != null) {
                         return Collections.singletonList(
                                 new PropertyDeclaration(
-                                        cssName,
-                                        new PropertyValueImp(color),
-                                        important,
-                                        origin));
+                                        cssName, new PropertyValueImp(color),
+                                        important, origin));
                     }
 
-                    IdentValue ident = checkIdent(cssName, value);
-                    checkValidity(cssName, ALLOWED, ident);
+                    checkIdentValidity(cssName, ALLOWED, value);
                 }
             }
 

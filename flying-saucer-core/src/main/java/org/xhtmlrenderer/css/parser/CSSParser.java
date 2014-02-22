@@ -1690,11 +1690,11 @@ public class CSSParser {
     }
 
     private float parseCMYKColorComponent(PropertyValue value, int paramNo) {
-        short type = value.getPrimitiveType();
+        CSSValueType type = value.getPrimitiveTypeN();
         float result;
-        if (type == CSSPrimitiveValue.CSS_NUMBER) {
+        if (type == CSSValueType.CSS_NUMBER) {
             result = value.getFloatValue();
-        } else if (type == CSSPrimitiveValue.CSS_PERCENTAGE) {
+        } else if (type == CSSValueType.CSS_PERCENTAGE) {
             result = value.getFloatValue() / 100.0f;
         } else {
             throw new CSSParseException(

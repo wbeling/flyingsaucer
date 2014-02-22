@@ -40,8 +40,8 @@ public class ConversionUtil {
      */
     public static Color rgbToColor( RGBColor rgbcol ) {
     	// TODO: Remove these casts.
-    	return new java.awt.Color( ((PropertyValue) rgbcol.getRed()).getFloatValue( CSSValueType.CSS_NUMBER ) / 255f,
-        		((PropertyValue) rgbcol.getGreen()).getFloatValue( CSSValueType.CSS_NUMBER ) / 255f,
-        		((PropertyValue) rgbcol.getBlue()).getFloatValue( CSSValueType.CSS_NUMBER ) / 255f );
+    	return new java.awt.Color( ((PropertyValue) rgbcol.getRed()).getFloatValue() / 255f,
+        		((PropertyValue) rgbcol.getGreen()).getFloatValue() / 255f,
+        		((PropertyValue) rgbcol.getBlue()).getFloatValue() / 255f );
     }
 }

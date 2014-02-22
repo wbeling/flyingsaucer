@@ -433,7 +433,7 @@ class ElementPropertiesPanel extends JPanel {
                     break;
                 case 2:
                     if (ValueConstants.isNumber(cpv.getPrimitiveTypeN())) {
-                        val = new Float(cpv.getFloatValue(cpv.getPrimitiveType()));
+                        val = new Float(cpv.getFloatValue());
                     } else {
                         val = "";//actual.cssValue().getCssText();
                     }

@@ -96,8 +96,8 @@ public class BuilderUtil {
 		CSSValueType type = value.getPrimitiveTypeN();
 		if ((type != CSSValueType.CSS_IDENT && type != CSSValueType.CSS_NUMBER)
 			|| (type == CSSValueType.CSS_NUMBER &&
-			(int) value.getFloatValue(CSSValueType.CSS_NUMBER) != 
-			Math.round(value.getFloatValue(CSSValueType.CSS_NUMBER)))) 
+			(int) value.getFloatValue() != 
+			Math.round(value.getFloatValue()))) 
 		{
 			cssThrowError(LangId.MUST_BE_INT_OR_IDENTIFIER, cssName);
 		}
@@ -107,7 +107,7 @@ public class BuilderUtil {
 		CSSValueType type = value.getPrimitiveTypeN();
 		if (type != CSSValueType.CSS_NUMBER ||
 		   (type == CSSValueType.CSS_NUMBER && 
-		    value.getFloatValue(CSSValueType.CSS_NUMBER) % 1f != 0f))
+		    value.getFloatValue() % 1f != 0f))
 		{
 			cssThrowError(LangId.MUST_BE_INT, cssName);
 		}
@@ -192,7 +192,7 @@ public class BuilderUtil {
 				|| unit == CSSValueType.CSS_PT
 				|| unit == CSSValueType.CSS_PC
 				|| (unit == CSSValueType.CSS_NUMBER && value
-					.getFloatValue(CSSValueType.CSS_IN) == 0.0f);
+					.getFloatValue() == 0.0f);
 	}
 
 	public static void checkValidity(CSSName cssName, EnumSet<IdentValue> validValues,
@@ -202,6 +202,15 @@ public class BuilderUtil {
 		}
 	}
 
+	public static void checkIdentValidity(CSSName cssName, EnumSet<IdentValue> validValues,
+			PropertyValue value) {
+		IdentValue ident = checkIdent(cssName, value);
+		
+		if (ident == null || !validValues.contains(ident)) {
+			cssThrowError(LangId.UNSUPPORTED_IDENTIFIER, value, cssName);
+		}
+	}
+	
 	public static IdentValue checkIdent(CSSName cssName, PropertyValue value) {
 		IdentValue result = IdentValue.fsValueOf(value.getStringValue());
 		if (result == null) {

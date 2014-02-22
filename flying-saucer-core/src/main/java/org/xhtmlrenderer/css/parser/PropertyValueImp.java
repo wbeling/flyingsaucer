@@ -165,7 +165,6 @@ public class PropertyValueImp implements PropertyValue {
     }
 
     @Deprecated
-    @Override
     public short getCssValueType() {
         assert(false);
         throw new UnsupportedOperationException();
@@ -231,7 +230,6 @@ public class PropertyValueImp implements PropertyValue {
         }
     }
 
-	@Override
 	@Deprecated
 	public short getPrimitiveType() 
 	{
@@ -239,7 +237,6 @@ public class PropertyValueImp implements PropertyValue {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
 	@Deprecated
 	public float getFloatValue(short arg0) throws DOMException {
 		assert(false);
