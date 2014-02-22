@@ -240,7 +240,7 @@ public class CascadedStyle {
 
     public String getFingerprint() {
         if (this.fingerprint == null) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             Iterator<PropertyDeclaration> iter = cascadedProperties.values().iterator();
             while (iter.hasNext()) {
                 sb.append(iter.next().getFingerprint());

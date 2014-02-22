@@ -521,7 +521,7 @@ public class FontGlyphTableRender {
         }
 
         public String toHtml(String fontFamily, int curFrom) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (Iterator it = headerLines.iterator(); it.hasNext();) {
                 String line = (String) it.next();
                 sb.append("<p>").append(line).append("</p>\n");

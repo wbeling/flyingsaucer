@@ -347,7 +347,7 @@ public class Matcher {
             java.util.List<Selector> childAxes = new ArrayList<Selector>(axes.size() + 10);
             java.util.HashMap<String, List<Selector>> pseudoSelectors = new java.util.HashMap<String, List<Selector>>();
             java.util.List<Selector> mappedSelectors = new java.util.LinkedList<Selector>();
-            StringBuffer key = new StringBuffer();
+            StringBuilder key = new StringBuilder();
             for (int i = 0, size = axes.size(); i < size; i++) {
                 Selector sel = axes.get(i);
                 if (sel.getAxis() == Selector.DESCENDANT_AXIS) {

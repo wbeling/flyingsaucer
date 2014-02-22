@@ -81,7 +81,7 @@ public class LineBox extends Box implements InlinePaintable {
             throw new IllegalArgumentException();
         }
 
-        StringBuffer result = new StringBuffer(indent);
+        StringBuilder result = new StringBuilder(indent);
         result.append(this);
         result.append('\n');
         

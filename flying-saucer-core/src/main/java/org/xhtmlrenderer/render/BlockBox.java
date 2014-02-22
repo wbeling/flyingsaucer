@@ -122,7 +122,7 @@ public class BlockBox extends Box implements InlinePaintable {
     }
 
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String className = getClass().getName();
         result.append(className.substring(className.lastIndexOf('.') + 1));
         result.append(": ");
@@ -168,7 +168,7 @@ public class BlockBox extends Box implements InlinePaintable {
         return result.toString();
     }
 
-    protected void appendPositioningInfo(StringBuffer result) {
+    protected void appendPositioningInfo(StringBuilder result) {
         if (getStyle().isRelative()) {
             result.append("(relative) ");
         }
@@ -184,7 +184,7 @@ public class BlockBox extends Box implements InlinePaintable {
     }
 
     public String dump(LayoutContext c, String indent, int which) {
-        StringBuffer result = new StringBuffer(indent);
+        StringBuilder result = new StringBuilder(indent);
 
         ensureChildren(c);
 
