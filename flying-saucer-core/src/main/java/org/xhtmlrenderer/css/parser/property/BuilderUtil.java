@@ -24,6 +24,17 @@ public class BuilderUtil {
 	private BuilderUtil() {
 	}
 
+	
+	public static final EnumSet<CSSValueType> LENGTH_UNITS = EnumSet.of(
+			CSSValueType.CSS_EMS,
+			CSSValueType.CSS_EXS,
+			CSSValueType.CSS_PX,
+			CSSValueType.CSS_IN,
+			CSSValueType.CSS_CM,
+			CSSValueType.CSS_MM,
+			CSSValueType.CSS_PT,
+			CSSValueType.CSS_PC);
+	
 	public static void cssThrowError(LangId key, Object... args) 
 	{
 		String msg = String.format(SharedContext.ERRS.get().getString(key.toString()), args);
@@ -36,6 +47,18 @@ public class BuilderUtil {
 		String msg = String.format(SharedContext.ERRS.get().getString(key.toString()), args);
 		SharedContext.USER_ERRORS.get().add(msg);
 		XRLog.cssParse(Level.WARNING, msg);
+	}
+	
+	public static void checkValueType(CSSName cssName, PropertyValue value, EnumSet<CSSValueType> in)
+	{
+		if (!in.contains(value.getPrimitiveTypeN()))
+			cssThrowError(LangId.UNSUPPORTED_TYPE, value.getPrimitiveTypeN(), cssName);
+	}
+	
+	public static void checkValueType(CSSName cssName, PropertyValue value, EnumSet<CSSValueType> in, EnumSet<CSSValueType> in2)
+	{
+		if (!in.contains(value.getPrimitiveTypeN()) && !in2.contains(value.getPrimitiveTypeN()))
+			cssThrowError(LangId.UNSUPPORTED_TYPE, value.getPrimitiveTypeN(), cssName);
 	}
 	
 	public static void checkValueCount(CSSName cssName, int expected, int found) {
@@ -195,7 +218,7 @@ public class BuilderUtil {
 
 	public static void checkInheritAllowed(PropertyValue value,
 			boolean inheritAllowed) {
-		if (value.getCssValueType() == CSSPrimitiveValue.CSS_INHERIT
+		if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT
 				&& !inheritAllowed) {
 			cssThrowError(LangId.INVALID_INHERIT);
 		}
@@ -207,7 +230,7 @@ public class BuilderUtil {
 		if (values.size() == 1) {
 			PropertyValue value = values.get(0);
 			checkInheritAllowed(value, inheritAllowed);
-			if (value.getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {
+			if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
 				List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(
 						all.length);
 				for (int i = 0; i < all.length; i++) {

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.w3c.dom.DOMException;
-import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.Counter;
 import org.w3c.dom.css.RGBColor;
 import org.w3c.dom.css.Rect;
@@ -41,7 +40,7 @@ public class PropertyValueImp implements PropertyValue {
     public static final short VALUE_TYPE_FUNCTION = 7;
     
     private CSSValueType _type;
-    private short _cssValueType;
+    private CSSValueType _cssValueType;
     
     private String _stringValue;
     private float _floatValue;
@@ -63,7 +62,7 @@ public class PropertyValueImp implements PropertyValue {
     public PropertyValueImp(CSSValueType type, float floatValue, String cssText) {
         _type = type;
         _floatValue = floatValue;
-        _cssValueType = CSSValue.CSS_PRIMITIVE_VALUE;
+        _cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = cssText;
         
         if (type == CSSValueType.CSS_NUMBER && floatValue != 0.0f) {
@@ -75,7 +74,7 @@ public class PropertyValueImp implements PropertyValue {
     
     public PropertyValueImp(FSColor color) {
         _type = CSSValueType.CSS_RGBCOLOR;
-        _cssValueType = CSSValue.CSS_PRIMITIVE_VALUE;
+        _cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = color.toString();
         _FSColor = color;
         
@@ -87,7 +86,7 @@ public class PropertyValueImp implements PropertyValue {
         _stringValue = stringValue;
         // Must be a case-insensitive compare since ident values aren't normalized
         // for font and font-family
-        _cssValueType = _stringValue.equalsIgnoreCase("inherit") ? CSSValue.CSS_INHERIT : CSSValue.CSS_PRIMITIVE_VALUE;
+        _cssValueType = _stringValue.equalsIgnoreCase("inherit") ? CSSValueType.CSS_INHERIT : CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = cssText;
         
         if (type == CSSValueType.CSS_IDENT) {
@@ -100,7 +99,7 @@ public class PropertyValueImp implements PropertyValue {
     public PropertyValueImp(IdentValue ident) {
         _type = CSSValueType.CSS_IDENT;
         _stringValue = ident.toString();
-        _cssValueType = _stringValue.equals("inherit") ? CSSValue.CSS_INHERIT : CSSValue.CSS_PRIMITIVE_VALUE;
+        _cssValueType = _stringValue.equals("inherit") ? CSSValueType.CSS_INHERIT : CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = ident.toString();
         
         _propertyValueType = VALUE_TYPE_IDENT;
@@ -109,7 +108,7 @@ public class PropertyValueImp implements PropertyValue {
     
     public PropertyValueImp(List<?> values) {
         _type = CSSValueType.CSS_UNKNOWN; // HACK
-        _cssValueType = CSSValue.CSS_CUSTOM;
+        _cssValueType = CSSValueType.CSS_CUSTOM;
         _cssText = values.toString(); // HACK
         
         _values = values;
@@ -118,7 +117,7 @@ public class PropertyValueImp implements PropertyValue {
     
     public PropertyValueImp(FSFunction function) {
         _type = CSSValueType.CSS_UNKNOWN;
-        _cssValueType = CSSValue.CSS_CUSTOM;
+        _cssValueType = CSSValueType.CSS_CUSTOM;
         _cssText = function.toString();
         
         _function = function;
@@ -165,8 +164,11 @@ public class PropertyValueImp implements PropertyValue {
         return _cssText;
     }
 
+    @Deprecated
+    @Override
     public short getCssValueType() {
-        return _cssValueType;
+        assert(false);
+        throw new UnsupportedOperationException();
     }
 
     public void setCssText(String cssText) throws DOMException {
@@ -242,5 +244,11 @@ public class PropertyValueImp implements PropertyValue {
 	public float getFloatValue(short arg0) throws DOMException {
 		assert(false);
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public CSSValueType getCssValueTypeN() 
+	{
+		return _cssValueType;
 	}
 }

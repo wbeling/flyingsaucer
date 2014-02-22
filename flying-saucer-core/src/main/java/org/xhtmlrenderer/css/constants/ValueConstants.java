@@ -165,15 +165,15 @@ public final class ValueConstants {
      * @param cssValue PARAM
      * @return The cssValueTypeDesc value
      */
-    public static String getCssValueTypeDesc(CSSValue cssValue) {
-        switch (cssValue.getCssValueType()) {
-            case CSSValue.CSS_CUSTOM:
+    public static String getCssValueTypeDesc(PropertyValue cssValue) {
+        switch (cssValue.getCssValueTypeN()) {
+            case CSS_CUSTOM:
                 return "CSS_CUSTOM";
-            case CSSValue.CSS_INHERIT:
+            case CSS_INHERIT:
                 return "CSS_INHERIT";
-            case CSSValue.CSS_PRIMITIVE_VALUE:
+            case CSS_PRIMITIVE_VALUE:
                 return "CSS_PRIMITIVE_VALUE";
-            case CSSValue.CSS_VALUE_LIST:
+            case CSS_VALUE_LIST:
                 return "CSS_VALUE_LIST";
             default:
                 return "UNKNOWN";

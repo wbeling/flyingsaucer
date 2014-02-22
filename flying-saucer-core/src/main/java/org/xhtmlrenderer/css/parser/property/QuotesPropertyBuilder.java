@@ -40,7 +40,7 @@ public class QuotesPropertyBuilder implements PropertyBuilder {
     public List<PropertyDeclaration> buildDeclarations(CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
             PropertyValue value = (PropertyValue)values.get(0);
-            if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return Collections.emptyList();
             } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.QUOTES, value);

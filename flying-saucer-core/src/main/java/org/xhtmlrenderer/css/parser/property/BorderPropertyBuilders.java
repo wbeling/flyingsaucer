@@ -53,7 +53,7 @@ public class BorderPropertyBuilders {
             List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(3);
             
             if (values.size() == 1 && 
-                (values.get(0)).getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {
+                (values.get(0)).getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 PropertyValue value = values.get(0);
                 addAll(result, props[0], value, origin, important);
                 addAll(result, props[1], value, origin, important);

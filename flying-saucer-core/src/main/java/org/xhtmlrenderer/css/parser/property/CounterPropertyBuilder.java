@@ -47,7 +47,7 @@ public abstract class CounterPropertyBuilder implements PropertyBuilder {
             
             checkInheritAllowed(value, inheritAllowed);
             
-            if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return Collections.singletonList(new PropertyDeclaration(cssName, value, important, origin));
             } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 if (value.getCssText().equals("none")) {

@@ -127,11 +127,13 @@ public class PrimitivePropertyBuilders {
 
         @Override
         public List<PropertyDeclaration> buildDeclarations(
-                CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
+                CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) 
+        {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentType(cssName, value);
                 IdentValue ident = checkIdent(cssName, value);
 
@@ -153,7 +155,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentOrColorType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -191,7 +193,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentOrLengthType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -221,7 +223,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentOrLengthType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -250,7 +252,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentLengthOrPercentType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -278,7 +280,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkLengthOrPercentType(cssName, value);
 
                 if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
@@ -309,7 +311,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkNumberType(cssName, value);
 
                 if (value.getFloatValue() < 1) {
@@ -329,7 +331,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkInteger(cssName, value);
 
                 if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
@@ -354,7 +356,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkLengthType(cssName, value);
 
                 if (! isNegativeValuesAllowed() && value.getFloatValue() < 0.0f) {
@@ -465,7 +467,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentOrURIType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -524,7 +526,7 @@ public class PrimitivePropertyBuilders {
 
             checkInheritAllowed(first, inheritAllowed);
             if (values.size() == 1 &&
-                    first.getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {
+                    first.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return Collections.singletonList(
                         new PropertyDeclaration(cssName, first, important, origin));
             }
@@ -601,7 +603,7 @@ public class PrimitivePropertyBuilders {
 
             checkInheritAllowed(first, inheritAllowed);
             if (values.size() == 1 &&
-                    first.getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {
+                    first.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return Collections.singletonList(
                         new PropertyDeclaration(cssName, first, important, origin));
             }
@@ -874,7 +876,7 @@ public class PrimitivePropertyBuilders {
             if (values.size() == 1) {
                 PropertyValue value = values.get(0);
                 checkInheritAllowed(value, inheritAllowed);
-                if (value.getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {
+                if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                     return Collections.singletonList(
                             new PropertyDeclaration(cssName, value, important, origin));
                 }
@@ -955,7 +957,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentLengthOrPercentType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -994,7 +996,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentOrNumberType(cssName, value);
 
                 CSSValueType type = value.getPrimitiveTypeN();
@@ -1085,7 +1087,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentOrString(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -1190,7 +1192,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentLengthNumberOrPercentType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
@@ -1308,7 +1310,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentType(cssName, value);
 
                 if (! GeneralUtil.ciEquals(value.getStringValue(), "auto")) {
@@ -1359,7 +1361,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = (PropertyValue)values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                     checkIdentType(cssName, value);
                     IdentValue ident = checkIdent(cssName, value);
@@ -1451,7 +1453,7 @@ public class PrimitivePropertyBuilders {
             if (values.size() == 1) {
                 PropertyValue value = values.get(0);
                 boolean goWithSingle = false;
-                if (value.getCssValueType() == CSSPrimitiveValue.CSS_INHERIT) {
+                if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                     goWithSingle = true;
                 } else {
                     checkIdentType(CSSName.TEXT_DECORATION, value);
@@ -1576,7 +1578,7 @@ public class PrimitivePropertyBuilders {
             checkValueCount(cssName, 1, values.size());
             PropertyValue value = values.get(0);
             checkInheritAllowed(value, inheritAllowed);
-            if (value.getCssValueType() != CSSPrimitiveValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() != CSSValueType.CSS_INHERIT) {
                 checkIdentOrIntegerType(cssName, value);
 
                 if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {

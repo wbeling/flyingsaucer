@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.w3c.dom.css.CSSValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.PropertyValueImp;
@@ -36,7 +37,7 @@ public class DerivedValueFactory {
     
     public static FSDerivedValue newDerivedValue(
             CalculatedStyle style, CSSName cssName, PropertyValue value) {
-        if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
+        if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
             return style.getParent().valueByName(cssName);
         }
         switch (value.getPropertyValueType()) {

@@ -46,7 +46,7 @@ public class SizePropertyBuilder implements PropertyBuilder {
             
             checkInheritAllowed(value, inheritAllowed);
             
-            if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
+            if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return checkInheritAll(ALL, values, origin, important, inheritAllowed);
             } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 PageSize pageSize = PageSize.getPageSize(value.getStringValue());
