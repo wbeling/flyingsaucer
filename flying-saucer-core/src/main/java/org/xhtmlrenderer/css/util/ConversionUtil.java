@@ -22,7 +22,6 @@ package org.xhtmlrenderer.css.util;
 
 import java.awt.Color;
 import org.w3c.dom.css.RGBColor;
-import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 
 

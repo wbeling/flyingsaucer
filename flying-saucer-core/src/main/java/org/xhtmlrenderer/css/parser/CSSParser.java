@@ -34,7 +34,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.MarginBoxName;

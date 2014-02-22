@@ -23,7 +23,6 @@ package org.xhtmlrenderer.css.style.derived;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.w3c.dom.css.CSSValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
