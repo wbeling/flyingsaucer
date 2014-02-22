@@ -50,7 +50,7 @@ public class PropertyDeclaration {
     /**
      * Description of the Field
      */
-    private org.w3c.dom.css.CSSPrimitiveValue cssPrimitiveValue;
+    private PropertyValue cssPrimitiveValue;
 
     /**
      * Whether the property was declared as important! by the user.
@@ -119,7 +119,7 @@ public class PropertyDeclaration {
      *                StylesheetInfo#USER}, and {@link StylesheetInfo#AUTHOR}.
      */
     public PropertyDeclaration(CSSName cssName,
-                               org.w3c.dom.css.CSSPrimitiveValue value,
+                               PropertyValue value,
                                boolean imp,
                                CSSOrigin orig) {
         this.propName = cssName.toString();
@@ -219,7 +219,7 @@ public class PropertyDeclaration {
      *
      * @return See desc.
      */
-    public org.w3c.dom.css.CSSPrimitiveValue getValue() {
+    public PropertyValue getValue() {
         return cssPrimitiveValue;
     }
     

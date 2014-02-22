@@ -3,9 +3,10 @@ package org.xhtmlrenderer.css.mediaquery;
 import java.util.Arrays;
 import java.util.List;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.parser.Token;
 import org.xhtmlrenderer.css.parser.property.BuilderUtil;
 
@@ -57,7 +58,7 @@ public class MediaQueryExpression
     
     private static boolean featureWithValidPositiveLenghtOrNumber(MediaFeatureName mediaFeature, PropertyValue value)
     {
-    	if (!BuilderUtil.isLength(value) && value.getPrimitiveType() != CSSPrimitiveValue.CSS_PERCENTAGE)
+    	if (!BuilderUtil.isLength(value) && value.getPrimitiveTypeN() != CSSValueType.CSS_PERCENTAGE)
     		return false;
     	
     	if (value.getFloatValue() < 0)
@@ -79,9 +80,8 @@ public class MediaQueryExpression
     
     private static boolean featureWithValidDensity(MediaFeatureName mediaFeature, PropertyValue value)
     {
-    	// TODO: Support these types...
-    	//if ((value.getPrimitiveType() != CSSPrimitiveValue.CSS_DPPX && value.getPrimitiveType() != CSSPrimitiveValue.CSS_DPI && value.getPrimitiveType() != CSSPrimitiveValue.CSS_DPCM) || value.getFloatValue() <= 0)
-    	//   return false;
+    	if ((value.getPrimitiveTypeN() != CSSValueType.CSS_DPPX && value.getPrimitiveTypeN() != CSSValueType.CSS_DPI && value.getPrimitiveTypeN() != CSSValueType.CSS_DPCM) || value.getFloatValue() <= 0)
+    	   return false;
 
     	return mediaFeature == MediaFeatureName.RESOLUTION
     	    || mediaFeature == MediaFeatureName.MAX_RESOLUTION
@@ -106,7 +106,7 @@ public class MediaQueryExpression
     
     private static boolean featureWithPositiveNumber(MediaFeatureName mediaFeature, PropertyValue value)
     {
-        if (value.getPrimitiveType() != CSSPrimitiveValue.CSS_NUMBER || value.getFloatValue() < 0)
+        if (value.getPrimitiveTypeN() != CSSValueType.CSS_NUMBER || value.getFloatValue() < 0)
             return false;
 
         // No non-webkit specific media expressions fit this cirteria.
@@ -201,7 +201,7 @@ public class MediaQueryExpression
 
         	List<PropertyValue> values = Arrays.asList(top, bottom);
         	
-        	_cssValue = new PropertyValue(values);
+        	_cssValue = new PropertyValueImp(values);
         	
         	// The aspect-ratio must be <integer> (whitespace)? / (whitespace)? <integer>.
         	if (top.getFloatValue() % 1f == 0f &&

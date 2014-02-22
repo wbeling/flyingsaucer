@@ -29,13 +29,14 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jsoup.nodes.Element;
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.constants.MarginBoxName;
 import org.xhtmlrenderer.css.newmatch.PageInfo;
 import org.xhtmlrenderer.css.parser.FSFunction;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
@@ -149,7 +150,7 @@ public class PageBox {
                     CSSName.FS_PAGE_WIDTH,
                     "8.5in",
                     8.5f,
-                    CSSPrimitiveValue.CSS_IN,
+                    CSSValueType.CSS_IN,
                     0,
                     cssCtx);
         } else {
@@ -158,7 +159,7 @@ public class PageBox {
                     CSSName.FS_PAGE_WIDTH,
                     "210mm",
                     210f,
-                    CSSPrimitiveValue.CSS_MM,
+                    CSSValueType.CSS_MM,
                     0,
                     cssCtx);            
         }
@@ -171,7 +172,7 @@ public class PageBox {
                     CSSName.FS_PAGE_HEIGHT,
                     "11in",
                     11f,
-                    CSSPrimitiveValue.CSS_IN,
+                    CSSValueType.CSS_IN,
                     0,
                     cssCtx);
         } else {
@@ -180,7 +181,7 @@ public class PageBox {
                     CSSName.FS_PAGE_HEIGHT,
                     "297mm",
                     297f,
-                    CSSPrimitiveValue.CSS_MM,
+                    CSSValueType.CSS_MM,
                     0,
                     cssCtx);            
         }
@@ -382,7 +383,7 @@ public class PageBox {
                     List<?> values = value.getValues();
                     if (values.size() == 1) {
                         PropertyValue funcVal = (PropertyValue)values.get(0);
-                        if (funcVal.getPropertyValueType() == PropertyValue.VALUE_TYPE_FUNCTION) {
+                        if (funcVal.getPropertyValueType() == PropertyValueImp.VALUE_TYPE_FUNCTION) {
                             FSFunction func = funcVal.getFunction();
                             if (BoxBuilder.isElementFunction(func)) {
                                 BlockBox metadata = BoxBuilder.getRunningBlock(c, funcVal);

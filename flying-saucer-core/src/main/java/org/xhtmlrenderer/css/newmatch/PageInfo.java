@@ -26,7 +26,7 @@ import java.util.Map;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.constants.MarginBoxName;
-import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
 
@@ -75,12 +75,12 @@ public class PageInfo {
         all.add(CascadedStyle.createLayoutPropertyDeclaration(CSSName.DISPLAY, IdentValue.TABLE_CELL));
         all.add(new PropertyDeclaration(
                     CSSName.VERTICAL_ALIGN, 
-                    new PropertyValue(marginBox.getInitialVerticalAlign()), 
+                    new PropertyValueImp(marginBox.getInitialVerticalAlign()), 
                     false,
                     StylesheetInfo.CSSOrigin.USER_AGENT));
         all.add(new PropertyDeclaration(
                 CSSName.TEXT_ALIGN, 
-                new PropertyValue(marginBox.getInitialTextAlign()), 
+                new PropertyValueImp(marginBox.getInitialTextAlign()), 
                 false,
                 StylesheetInfo.CSSOrigin.USER_AGENT));        
                         

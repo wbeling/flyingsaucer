@@ -22,12 +22,13 @@ package org.xhtmlrenderer.css.parser.property;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
@@ -47,11 +48,11 @@ public class SizePropertyBuilder implements PropertyBuilder {
             
             if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
                 return checkInheritAll(ALL, values, origin, important, inheritAllowed);
-            } else if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
+            } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 PageSize pageSize = PageSize.getPageSize(value.getStringValue());
                 if (pageSize != null) {
                     result.add(new PropertyDeclaration(
-                            CSSName.FS_PAGE_ORIENTATION, new PropertyValue(IdentValue.AUTO), important, origin));
+                            CSSName.FS_PAGE_ORIENTATION, new PropertyValueImp(IdentValue.AUTO), important, origin));
                     result.add(new PropertyDeclaration(
                             CSSName.FS_PAGE_WIDTH, pageSize.getPageWidth(), important, origin));
                     result.add(new PropertyDeclaration(
@@ -64,9 +65,9 @@ public class SizePropertyBuilder implements PropertyBuilder {
                     result.add(new PropertyDeclaration(
                             CSSName.FS_PAGE_ORIENTATION, value, important, origin));
                     result.add(new PropertyDeclaration(
-                            CSSName.FS_PAGE_WIDTH, new PropertyValue(IdentValue.AUTO), important, origin));
+                            CSSName.FS_PAGE_WIDTH, new PropertyValueImp(IdentValue.AUTO), important, origin));
                     result.add(new PropertyDeclaration(
-                            CSSName.FS_PAGE_HEIGHT, new PropertyValue(IdentValue.AUTO), important, origin));
+                            CSSName.FS_PAGE_HEIGHT, new PropertyValueImp(IdentValue.AUTO), important, origin));
                     return result;
                 } else if (ident == IdentValue.AUTO) {
                     result.add(new PropertyDeclaration(
@@ -85,7 +86,7 @@ public class SizePropertyBuilder implements PropertyBuilder {
                 }
                 
                 result.add(new PropertyDeclaration(
-                        CSSName.FS_PAGE_ORIENTATION, new PropertyValue(IdentValue.AUTO), important, origin));
+                        CSSName.FS_PAGE_ORIENTATION, new PropertyValueImp(IdentValue.AUTO), important, origin));
                 result.add(new PropertyDeclaration(
                         CSSName.FS_PAGE_WIDTH, value, important, origin));
                 result.add(new PropertyDeclaration(
@@ -111,15 +112,15 @@ public class SizePropertyBuilder implements PropertyBuilder {
                 }
                 
                 result.add(new PropertyDeclaration(
-                        CSSName.FS_PAGE_ORIENTATION, new PropertyValue(IdentValue.AUTO), important, origin));
+                        CSSName.FS_PAGE_ORIENTATION, new PropertyValueImp(IdentValue.AUTO), important, origin));
                 result.add(new PropertyDeclaration(
                         CSSName.FS_PAGE_WIDTH, value1, important, origin));
                 result.add(new PropertyDeclaration(
                         CSSName.FS_PAGE_HEIGHT, value2, important, origin));
                 
                 return result;
-            } else if (value1.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT &&
-                            value2.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
+            } else if (value1.getPrimitiveTypeN() == CSSValueType.CSS_IDENT &&
+                       value2.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 if (value2.getStringValue().equals("landscape") || 
                         value2.getStringValue().equals("portrait")) {
                     PropertyValue temp = value1;

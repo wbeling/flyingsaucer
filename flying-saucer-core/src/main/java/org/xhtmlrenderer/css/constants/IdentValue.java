@@ -208,7 +208,8 @@ public enum IdentValue implements FSDerivedValue
     X_LARGE("x-large"),
     X_SMALL("x-small"),
     XX_LARGE("xx-large"),
-    XX_SMALL("xx-small");
+    XX_SMALL("xx-small"),
+    INITIAL("initial");
 
 	private final String ident;
     public final int fsId;

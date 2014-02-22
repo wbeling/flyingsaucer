@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.Idents;
 import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.css.parser.FSFunction;
@@ -28,11 +28,11 @@ public class FSLinearGradient
 	public static class StopValue implements Comparable<StopValue>
 	{
 		private final FSColor color;
-		private final short lengthType;
+		private final CSSValueType lengthType;
 		private final Float length;
 		private Float dotsValue;
 		
-		private StopValue(FSColor color, Float value, short lengthType)
+		private StopValue(FSColor color, Float value, CSSValueType lengthType)
 		{
 			this.color = color;
 			this.length = value;
@@ -43,7 +43,7 @@ public class FSLinearGradient
 		{
 			this.color = color;
 			this.length = null;
-			this.lengthType = 0;
+			this.lengthType = null;
 		}
 		
 		public FSColor getColor()
@@ -309,12 +309,12 @@ public class FSLinearGradient
 				return;
 			}
 		}
-		else if (params.get(0).getPrimitiveType() == CSSPrimitiveValue.CSS_DEG)
+		else if (params.get(0).getPrimitiveTypeN() == CSSValueType.CSS_DEG)
 		{
 			// linear-gradient(45deg, ...)
 			endPointsFromAngle(params.get(0).getFloatValue(), width, height);
 		}
-		else if (params.get(0).getPrimitiveType() == CSSPrimitiveValue.CSS_RAD)
+		else if (params.get(0).getPrimitiveTypeN() == CSSValueType.CSS_RAD)
 		{
 			// linear-gradient(2rad, ...)
 			endPointsFromAngle(rad2deg(params.get(0).getFloatValue()), width, height);
@@ -340,7 +340,7 @@ public class FSLinearGradient
 			PropertyValue value = params.get(i);
 			FSRGBColor color = null;
 			
-			if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT)
+			if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT)
 			{
                 color = Conversions.getColor(value.getStringValue());
 			}
@@ -358,10 +358,10 @@ public class FSLinearGradient
 			
             if (i + 1 < params.size() &&
               	(BuilderUtil.isLength(params.get(i + 1)) || 
-               	params.get(i + 1).getPrimitiveType() == CSSPrimitiveValue.CSS_PERCENTAGE))
+               	params.get(i + 1).getPrimitiveTypeN() == CSSValueType.CSS_PERCENTAGE))
             {
               	PropertyValue val2 = params.get(i + 1);
-              	stopPoints.add(new StopValue(color, val2.getFloatValue(), val2.getPrimitiveType()));
+              	stopPoints.add(new StopValue(color, val2.getFloatValue(), val2.getPrimitiveTypeN()));
               	i++;
             }
             else
@@ -388,7 +388,7 @@ public class FSLinearGradient
 			{
 				// Last value is 100%.
 				pt.dotsValue = 
-           			LengthValue.calcFloatProportionalValue(style, CSSName.BACKGROUND_IMAGE, "100%", 100f, CSSPrimitiveValue.CSS_PERCENTAGE, width, ctx);
+           			LengthValue.calcFloatProportionalValue(style, CSSName.BACKGROUND_IMAGE, "100%", 100f, CSSValueType.CSS_PERCENTAGE, width, ctx);
 			}
 		}
 		

@@ -21,8 +21,9 @@
 package org.xhtmlrenderer.css.util;
 
 import java.awt.Color;
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.RGBColor;
+import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.parser.PropertyValue;
 
 
 /**
@@ -38,24 +39,9 @@ public class ConversionUtil {
      * @return        Returns
      */
     public static Color rgbToColor( RGBColor rgbcol ) {
-        return new java.awt.Color( rgbcol.getRed().getFloatValue( CSSPrimitiveValue.CSS_NUMBER ) / 255f,
-                rgbcol.getGreen().getFloatValue( CSSPrimitiveValue.CSS_NUMBER ) / 255f,
-                rgbcol.getBlue().getFloatValue( CSSPrimitiveValue.CSS_NUMBER ) / 255f );
+    	// TODO: Remove these casts.
+    	return new java.awt.Color( ((PropertyValue) rgbcol.getRed()).getFloatValue( CSSValueType.CSS_NUMBER ) / 255f,
+        		((PropertyValue) rgbcol.getGreen()).getFloatValue( CSSValueType.CSS_NUMBER ) / 255f,
+        		((PropertyValue) rgbcol.getBlue()).getFloatValue( CSSValueType.CSS_NUMBER ) / 255f );
     }
-}// end class
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.3  2005/01/29 20:22:23  pdoubleya
- * Clean/reformat code. Removed commented blocks, checked copyright.
- *
- * Revision 1.2  2004/10/23 13:30:42  pdoubleya
- * Re-formatted using JavaStyle tool.
- * Cleaned imports to resolve wildcards except for common packages (java.io, java.util, etc).
- * Added CVS log comments at bottom.
- *
- *
- */
-
+}

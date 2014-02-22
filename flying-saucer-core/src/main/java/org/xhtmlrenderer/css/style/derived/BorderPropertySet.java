@@ -171,7 +171,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
         			blCorner.getRadiusOne().getStringValue(),
         			blCorner.getRadiusOne().getFloatValue(),
-        			blCorner.getRadiusOne().getPrimitiveType(),
+        			blCorner.getRadiusOne().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
 
@@ -179,7 +179,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_BOTTOM_LEFT_RADIUS,
         			blCorner.getRadiusTwo().getStringValue(),
         			blCorner.getRadiusTwo().getFloatValue(),
-        			blCorner.getRadiusTwo().getPrimitiveType(),
+        			blCorner.getRadiusTwo().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
         }
@@ -195,7 +195,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
         			brCorner.getRadiusOne().getStringValue(),
         			brCorner.getRadiusOne().getFloatValue(),
-        			brCorner.getRadiusOne().getPrimitiveType(),
+        			brCorner.getRadiusOne().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
 
@@ -203,7 +203,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_BOTTOM_RIGHT_RADIUS,
         			brCorner.getRadiusTwo().getStringValue(),
         			brCorner.getRadiusTwo().getFloatValue(),
-        			brCorner.getRadiusTwo().getPrimitiveType(),
+        			brCorner.getRadiusTwo().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
         }
@@ -219,7 +219,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_TOP_LEFT_RADIUS,
         			tlCorner.getRadiusOne().getStringValue(),
         			tlCorner.getRadiusOne().getFloatValue(),
-        			tlCorner.getRadiusOne().getPrimitiveType(),
+        			tlCorner.getRadiusOne().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
 
@@ -227,7 +227,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_TOP_LEFT_RADIUS,
         			tlCorner.getRadiusTwo().getStringValue(),
         			tlCorner.getRadiusTwo().getFloatValue(),
-        			tlCorner.getRadiusTwo().getPrimitiveType(),
+        			tlCorner.getRadiusTwo().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
         }
@@ -243,7 +243,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_TOP_RIGHT_RADIUS,
         			trCorner.getRadiusOne().getStringValue(),
         			trCorner.getRadiusOne().getFloatValue(),
-        			trCorner.getRadiusOne().getPrimitiveType(),
+        			trCorner.getRadiusOne().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
 
@@ -251,7 +251,7 @@ public class BorderPropertySet extends RectPropertySet
         			CSSName.BORDER_TOP_RIGHT_RADIUS,
         			trCorner.getRadiusTwo().getStringValue(),
         			trCorner.getRadiusTwo().getFloatValue(),
-        			trCorner.getRadiusTwo().getPrimitiveType(),
+        			trCorner.getRadiusTwo().getPrimitiveTypeN(),
         			style.getFont(ctx).size,
         			ctx);
         }

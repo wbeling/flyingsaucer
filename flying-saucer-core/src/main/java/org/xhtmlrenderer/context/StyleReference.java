@@ -28,12 +28,12 @@ import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
 import org.xhtmlrenderer.css.extend.lib.DOMTreeResolver;
 import org.xhtmlrenderer.css.newmatch.CascadedStyle;
 import org.xhtmlrenderer.css.newmatch.PageInfo;
+import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.sheet.FontFaceRule;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.Stylesheet;
@@ -157,9 +157,9 @@ public class StyleReference {
      * @param e The DOM Element for which to find properties
      * @return Map of CSS property names to CSSValue instance assigned to it.
      */
-    public java.util.Map<String, CSSPrimitiveValue> getCascadedPropertiesMap(Element e) {
+    public java.util.Map<String, PropertyValue> getCascadedPropertiesMap(Element e) {
         CascadedStyle cs = _matcher.getCascadedStyle(e, false);//this is only for debug, I think
-        java.util.LinkedHashMap<String, CSSPrimitiveValue> props = new java.util.LinkedHashMap<String, CSSPrimitiveValue>();
+        java.util.LinkedHashMap<String, PropertyValue> props = new java.util.LinkedHashMap<>();
         for (java.util.Iterator<PropertyDeclaration> i = cs.getCascadedPropertyDeclarations(); i.hasNext();) {
             PropertyDeclaration pd = (PropertyDeclaration) i.next();
 

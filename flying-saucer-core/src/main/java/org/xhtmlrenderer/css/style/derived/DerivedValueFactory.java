@@ -27,6 +27,7 @@ import org.w3c.dom.css.CSSValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.FSDerivedValue;
 
@@ -39,28 +40,28 @@ public class DerivedValueFactory {
             return style.getParent().valueByName(cssName);
         }
         switch (value.getPropertyValueType()) {
-            case PropertyValue.VALUE_TYPE_LENGTH:
+            case PropertyValueImp.VALUE_TYPE_LENGTH:
                 return new LengthValue(style, cssName, value);
-            case PropertyValue.VALUE_TYPE_IDENT:
+            case PropertyValueImp.VALUE_TYPE_IDENT:
                 IdentValue ident = value.getIdentValue();
                 if (ident == null) {
                     ident = IdentValue.getByIdentString(value.getStringValue());
                 }
                 return ident;
-            case PropertyValue.VALUE_TYPE_STRING:
+            case PropertyValueImp.VALUE_TYPE_STRING:
                 return new StringValue(cssName, value);
-            case PropertyValue.VALUE_TYPE_NUMBER:
+            case PropertyValueImp.VALUE_TYPE_NUMBER:
                 return new NumberValue(cssName, value);
-            case PropertyValue.VALUE_TYPE_COLOR:
+            case PropertyValueImp.VALUE_TYPE_COLOR:
                 FSDerivedValue color = CACHED_COLORS.get(value.getCssText());
                 if (color == null) {
                     color = new ColorValue(cssName, value);
                     CACHED_COLORS.put(value.getCssText(), color);
                 }
                 return color;
-            case PropertyValue.VALUE_TYPE_LIST:
+            case PropertyValueImp.VALUE_TYPE_LIST:
                 return new ListValue(cssName, value);
-            case PropertyValue.VALUE_TYPE_FUNCTION:
+            case PropertyValueImp.VALUE_TYPE_FUNCTION:
                 return new FunctionValue(cssName, value);
             default:
                 throw new IllegalArgumentException();

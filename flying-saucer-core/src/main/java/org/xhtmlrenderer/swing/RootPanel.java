@@ -42,11 +42,12 @@ import javax.swing.JViewport;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.derived.ColorValue;
 import org.xhtmlrenderer.css.style.derived.LengthValue;
@@ -411,16 +412,16 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     private void initFontFromComponent(BlockBox root) {
         if (isDefaultFontFromComponent()) {
             CalculatedStyle style = root.getStyle();
-            PropertyValue fontFamilyProp = new PropertyValue(CSSPrimitiveValue.CSS_STRING, getFont().getFamily(),
+            PropertyValue fontFamilyProp = new PropertyValueImp(CSSValueType.CSS_STRING, getFont().getFamily(),
                     getFont().getFamily());
             fontFamilyProp.setStringArrayValue(new String[] { fontFamilyProp.getStringValue() });
             style.setDefaultValue(CSSName.FONT_FAMILY, new StringValue(CSSName.FONT_FAMILY, fontFamilyProp));
             style.setDefaultValue(CSSName.FONT_SIZE, new LengthValue(style, CSSName.FONT_SIZE,
-                    new PropertyValue(CSSPrimitiveValue.CSS_PX, getFont().getSize(), Integer
+                    new PropertyValueImp(CSSValueType.CSS_PX, getFont().getSize(), Integer
                             .toString(getFont().getSize()))));
             Color c = getForeground();
             style.setDefaultValue(CSSName.COLOR, new ColorValue(CSSName.COLOR,
-                    new PropertyValue(new FSRGBColor(c.getRed(), c.getGreen(), c.getBlue()))));
+                    new PropertyValueImp(new FSRGBColor(c.getRed(), c.getGreen(), c.getBlue()))));
 
             if (getFont().isBold()) {
                 style.setDefaultValue(CSSName.FONT_WEIGHT, IdentValue.BOLD);

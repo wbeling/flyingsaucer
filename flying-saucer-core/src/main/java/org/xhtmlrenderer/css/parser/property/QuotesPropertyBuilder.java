@@ -24,12 +24,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
@@ -41,7 +42,7 @@ public class QuotesPropertyBuilder implements PropertyBuilder {
             PropertyValue value = (PropertyValue)values.get(0);
             if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
                 return Collections.emptyList();
-            } else if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
+            } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.QUOTES, value);
                 if (ident == IdentValue.NONE) {
                     return Collections.singletonList(
@@ -64,16 +65,16 @@ public class QuotesPropertyBuilder implements PropertyBuilder {
                         "Found unexpected operator, " + value.getOperator().getExternalName(), -1);
             }
             
-            short type = value.getPrimitiveType();
-            if (type == CSSPrimitiveValue.CSS_STRING) {
+            CSSValueType type = value.getPrimitiveTypeN();
+            if (type == CSSValueType.CSS_STRING) {
                 resultValues.add(value.getStringValue());
-            } else if (type == CSSPrimitiveValue.CSS_URI) {
+            } else if (type == CSSValueType.CSS_URI) {
                 throw new CSSParseException(
                         "URI is not allowed here", -1);
-            } else if (value.getPropertyValueType() == PropertyValue.VALUE_TYPE_FUNCTION) {
+            } else if (value.getPropertyValueType() == PropertyValueImp.VALUE_TYPE_FUNCTION) {
                 throw new CSSParseException(
                         "Function " + value.getFunction().getName() + " is not allowed here", -1);
-            } else if (type == CSSPrimitiveValue.CSS_IDENT) {
+            } else if (type == CSSValueType.CSS_IDENT) {
                 throw new CSSParseException(
                         "Identifier is not a valid value for the quotes property", -1);
             } else {
@@ -84,7 +85,7 @@ public class QuotesPropertyBuilder implements PropertyBuilder {
         
         if (resultValues.size() > 0) {
             return Collections.singletonList(
-                    new PropertyDeclaration(CSSName.QUOTES, new PropertyValue(resultValues), important, origin));
+                    new PropertyDeclaration(CSSName.QUOTES, new PropertyValueImp(resultValues), important, origin));
         } else {
             return Collections.emptyList();
         }

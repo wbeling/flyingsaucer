@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.parser.Token;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
@@ -59,14 +60,14 @@ public class FontPropertyBuilder implements PropertyBuilder {
         ListIterator<PropertyValue> i = values.listIterator();
         while (i.hasNext()) {
             PropertyValue value = (PropertyValue)i.next();
-            int type = value.getPrimitiveType();
-            if (type == CSSPrimitiveValue.CSS_IDENT) {
+            CSSValueType type = value.getPrimitiveTypeN();
+            if (type == CSSValueType.CSS_IDENT) {
                 // The parser will have given us ident values as they appear
                 // (case-wise) in the CSS text since we might be creating
                 // a font-family list out of them.  Here we want the normalized
                 // (lowercase) version though.
                 String lowerCase = value.getStringValue().toLowerCase();
-                value = new PropertyValue(CSSPrimitiveValue.CSS_IDENT, lowerCase, lowerCase);
+                value = new PropertyValueImp(CSSValueType.CSS_IDENT, lowerCase, lowerCase);
                 IdentValue ident = checkIdent(cssName, value);
                 if (ident == IdentValue.NORMAL) { // skip to avoid double set false positives
                     continue;
@@ -90,7 +91,7 @@ public class FontPropertyBuilder implements PropertyBuilder {
                     keepGoing = true;
                     break;
                 }
-            } else if (type == CSSPrimitiveValue.CSS_NUMBER && value.getFloatValue() > 0) {
+            } else if (type == CSSValueType.CSS_NUMBER && value.getFloatValue() > 0) {
                 if (fontWeight != null) {
                     throw new CSSParseException("font-weight cannot be set twice", -1);
                 }
@@ -100,8 +101,8 @@ public class FontPropertyBuilder implements PropertyBuilder {
                     throw new CSSParseException(value + " is not a valid font weight", -1);
                 }
                 
-                PropertyValue replacement = new PropertyValue(
-                        CSSPrimitiveValue.CSS_IDENT, weight.toString(), weight.toString());
+                PropertyValue replacement = new PropertyValueImp(
+                		CSSValueType.CSS_IDENT, weight.toString(), weight.toString());
                 replacement.setIdentValue(weight);
                 
                 fontWeight = new PropertyDeclaration(CSSName.FONT_WEIGHT, replacement, important, origin);
@@ -115,9 +116,9 @@ public class FontPropertyBuilder implements PropertyBuilder {
             i.previous();
             PropertyValue value = (PropertyValue)i.next();
             
-            if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
+            if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 String lowerCase = value.getStringValue().toLowerCase();
-                value = new PropertyValue(CSSPrimitiveValue.CSS_IDENT, lowerCase, lowerCase);
+                value = new PropertyValueImp(CSSValueType.CSS_IDENT, lowerCase, lowerCase);
             }
             
             PropertyBuilder fontSizeBuilder = CSSName.getPropertyBuilder(CSSName.FONT_SIZE);
@@ -152,17 +153,17 @@ public class FontPropertyBuilder implements PropertyBuilder {
         
         if (fontStyle == null) {
             fontStyle = new PropertyDeclaration(
-                    CSSName.FONT_STYLE, new PropertyValue(IdentValue.NORMAL), important, origin);
+                    CSSName.FONT_STYLE, new PropertyValueImp(IdentValue.NORMAL), important, origin);
         }
         
         if (fontVariant == null) {
             fontVariant = new PropertyDeclaration(
-                    CSSName.FONT_VARIANT, new PropertyValue(IdentValue.NORMAL), important, origin);
+                    CSSName.FONT_VARIANT, new PropertyValueImp(IdentValue.NORMAL), important, origin);
         }
         
         if (fontWeight == null) {
             fontWeight = new PropertyDeclaration(
-                    CSSName.FONT_WEIGHT, new PropertyValue(IdentValue.NORMAL), important, origin);
+                    CSSName.FONT_WEIGHT, new PropertyValueImp(IdentValue.NORMAL), important, origin);
         }
         
         if (fontSize == null) {
@@ -171,7 +172,7 @@ public class FontPropertyBuilder implements PropertyBuilder {
         
         if (lineHeight == null) {
             lineHeight = new PropertyDeclaration(
-                    CSSName.LINE_HEIGHT, new PropertyValue(IdentValue.NORMAL), important, origin);
+                    CSSName.LINE_HEIGHT, new PropertyValueImp(IdentValue.NORMAL), important, origin);
         }
         
         // XXX font-family should be reset too (although does this really make sense?)

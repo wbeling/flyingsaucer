@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
 
@@ -68,7 +68,7 @@ public class CascadedStyle {
      * to the value of the <code>display</code> parameter.  
      */
     public static CascadedStyle createAnonymousStyle(IdentValue display) {
-        CSSPrimitiveValue val = new PropertyValue(display);
+        PropertyValue val = new PropertyValueImp(display);
         
         List<PropertyDeclaration> props = Collections.singletonList(
                 new PropertyDeclaration(CSSName.DISPLAY, val, true, StylesheetInfo.CSSOrigin.USER));
@@ -112,7 +112,7 @@ public class CascadedStyle {
      */
     public static PropertyDeclaration createLayoutPropertyDeclaration(
             CSSName cssName, IdentValue display) {
-        CSSPrimitiveValue val = new PropertyValue(display);
+        PropertyValue val = new PropertyValueImp(display);
         // Urk... kind of ugly, but we really want this value to be used
         return new PropertyDeclaration(cssName, val, true, StylesheetInfo.CSSOrigin.USER);
     }

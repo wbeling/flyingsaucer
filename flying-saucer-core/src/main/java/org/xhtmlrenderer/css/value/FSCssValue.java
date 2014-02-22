@@ -1,6 +1,14 @@
 package org.xhtmlrenderer.css.value;
 
+import java.util.List;
+
 import org.w3c.dom.css.*;
+import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.IdentValue;
+import org.xhtmlrenderer.css.parser.FSColor;
+import org.xhtmlrenderer.css.parser.FSFunction;
+import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.Token;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
 
@@ -12,7 +20,7 @@ import org.xhtmlrenderer.util.XRRuntimeException;
  *
  * @author empty
  */
-public class FSCssValue implements org.w3c.dom.css.CSSPrimitiveValue {
+public class FSCssValue implements PropertyValue {
     /** */
     //not used private String propName;
     /** Description of the Field */
@@ -32,7 +40,7 @@ public class FSCssValue implements org.w3c.dom.css.CSSPrimitiveValue {
     /**
      * Description of the Field
      */
-    private short primitiveType;
+    private CSSValueType primitiveType;
     /**
      * Description of the Field
      */
@@ -47,11 +55,11 @@ public class FSCssValue implements org.w3c.dom.css.CSSPrimitiveValue {
      *
      * @param primitive PARAM
      */
-    public FSCssValue(org.w3c.dom.css.CSSPrimitiveValue primitive) {
+    public FSCssValue(PropertyValue primitive) {
         //not used this.cssName = cssName;
         //not used this.propName = cssName.toString();
-        this.primitiveType = primitive.getPrimitiveType();
-        this._cssText = (primitiveType == CSSPrimitiveValue.CSS_STRING ?
+        this.primitiveType = primitive.getPrimitiveTypeN();
+        this._cssText = (primitiveType == CSSValueType.CSS_STRING ?
                 primitive.getStringValue() :
                 primitive.getCssText());
 
@@ -65,42 +73,42 @@ public class FSCssValue implements org.w3c.dom.css.CSSPrimitiveValue {
 
         // convert type as necessary
         switch (primitiveType) {
-            case org.w3c.dom.css.CSSPrimitiveValue.CSS_RGBCOLOR:
+            case CSS_RGBCOLOR:
                 this.rgbColorValue = primitive.getRGBColorValue();
                 break;
-            case org.w3c.dom.css.CSSPrimitiveValue.CSS_IDENT:
+            case CSS_IDENT:
                 break;
-            case org.w3c.dom.css.CSSPrimitiveValue.CSS_STRING:
+            case CSS_STRING:
                 // ASK: do we need this? not clear when a CSS_STRING is meaningful (PWW 24-01-05)
                 break;
-            case org.w3c.dom.css.CSSPrimitiveValue.CSS_COUNTER:
+            case CSS_COUNTER:
                 this.counter = primitive.getCounterValue();
                 break;
-            case org.w3c.dom.css.CSSPrimitiveValue.CSS_RECT:
+            case CSS_RECT:
                 this.rectValue = primitive.getRectValue();
                 break;
-            case org.w3c.dom.css.CSSPrimitiveValue.CSS_URI:
+            case CSS_URI:
                 this._cssText = primitive.getStringValue();
                 break;
-            case CSSPrimitiveValue.CSS_IN:
+            case CSS_IN:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_CM:
+            case CSS_CM:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_EMS:
+            case CSS_EMS:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_EXS:
+            case CSS_EXS:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_MM:
+            case CSS_MM:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_NUMBER:
+            case CSS_NUMBER:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_PC:
+            case CSS_PC:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_PERCENTAGE:
+            case CSS_PERCENTAGE:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_PT:
+            case CSS_PT:
                 // fall-thru
-            case CSSPrimitiveValue.CSS_PX:
+            case CSS_PX:
                 this.floatValue = primitive.getFloatValue(primitiveType);
                 break;
             default:
@@ -117,18 +125,18 @@ public class FSCssValue implements org.w3c.dom.css.CSSPrimitiveValue {
      * @param primitive PARAM
      * @param newValue  PARAM
      */
-    public FSCssValue(org.w3c.dom.css.CSSPrimitiveValue primitive, String newValue) {
+    public FSCssValue(PropertyValue primitive, String newValue) {
         this(primitive);
         this._cssText = newValue;
     }
 
-    FSCssValue(short primitiveType, String value) {
+    FSCssValue(CSSValueType primitiveType, String value) {
         this.primitiveType = primitiveType;
         this._cssText = value;
     }
 
     public static FSCssValue getNewIdentValue(String identValue) {
-        return new FSCssValue(CSSPrimitiveValue.CSS_IDENT, identValue);
+        return new FSCssValue(CSSValueType.CSS_IDENT, identValue);
     }
 
     /**
@@ -235,8 +243,11 @@ public class FSCssValue implements org.w3c.dom.css.CSSPrimitiveValue {
      *
      * @return The primitiveType value
      */
+    @Deprecated
+    @Override
     public short getPrimitiveType() {
-        return primitiveType;
+    	assert(false);
+    	return 0;
     }
 
     /**
@@ -265,33 +276,87 @@ public class FSCssValue implements org.w3c.dom.css.CSSPrimitiveValue {
     public String getStringValue() {
         return this._cssText;
     }
-}// end class
 
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.7  2005/12/28 00:50:53  peterbrant
- * Continue ripping out first try at pagination / Minor method name refactoring
- *
- * Revision 1.6  2005/05/08 13:02:38  tobega
- * Fixed a bug whereby styles could get lost for inline elements, notably if root element was inline. Did a few other things which probably has no importance at this moment, e.g. refactored out some unused stuff.
- *
- * Revision 1.5  2005/02/02 12:13:23  pdoubleya
- * For URIs, return string value.
- *
- * Revision 1.4  2005/01/29 16:18:13  pdoubleya
- * Fixed error: wasn't storing RGB color value passed in.
- *
- * Revision 1.3  2005/01/29 16:04:15  pdoubleya
- * No longer look up identifier when instantiating; value remains as specified in CSS.
- *
- * Revision 1.2  2005/01/24 19:01:07  pdoubleya
- * Mass checkin. Changed to use references to CSSName, which now has a Singleton instance for each property, everywhere property names were being used before. Removed commented code. Cascaded and Calculated style now store properties in arrays rather than maps, for optimization.
- *
- * Revision 1.1  2005/01/24 14:27:52  pdoubleya
- * Added to CVS.
- *
- *
- */
+	@Override
+	public CSSValueType getPrimitiveTypeN() {
+		return primitiveType;
+	}
 
+	@Override
+	public float getFloatValue() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public FSFunction getFunction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IdentValue getIdentValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<?> getValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setIdentValue(IdentValue identValue) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setOperator(Token operatorToken) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public FSColor getFSColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Token getOperator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public float getFloatValue(CSSValueType cssNumber) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setStringArrayValue(String[] strings) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public short getPropertyValueType() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getFingerprint() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String[] getStringArrayValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

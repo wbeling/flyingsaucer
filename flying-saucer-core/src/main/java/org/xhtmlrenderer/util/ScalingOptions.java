@@ -20,9 +20,6 @@
 package org.xhtmlrenderer.util;
 
 import java.awt.*;
-import java.awt.RenderingHints.Key;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**

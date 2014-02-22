@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.extend.ContentFunction;
 import org.xhtmlrenderer.css.parser.FSFunction;
@@ -97,14 +97,14 @@ public class ContentFunctionFactory
                 List<PropertyValue> parameters = function.getParameters();
                 if (parameters.size() == 1 || parameters.size() == 2) {
                     PropertyValue param = parameters.get(0);
-                    if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT ||
+                    if (param.getPrimitiveTypeN() != CSSValueType.CSS_IDENT ||
                             ! param.getStringValue().equals(counterName)) {
                         return false;
                     }
                     
                     if (parameters.size() == 2) {
                         param = parameters.get(1);
-                        if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT) {
+                        if (param.getPrimitiveTypeN() != CSSValueType.CSS_IDENT) {
                             return false;
                         }
                     }
@@ -185,13 +185,13 @@ public class ContentFunctionFactory
                     FSFunction f = ((PropertyValue)parameters.get(0)).getFunction();
                     if (f == null ||
                             f.getParameters().size() != 1 ||
-                            ((PropertyValue)f.getParameters().get(0)).getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT ||
+                            ((PropertyValue)f.getParameters().get(0)).getPrimitiveTypeN() != CSSValueType.CSS_IDENT ||
                             ! ((PropertyValue)f.getParameters().get(0)).getStringValue().equals("href")) {
                         return false;
                     }
 
                     PropertyValue param = (PropertyValue)parameters.get(1);
-                    if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT ||
+                    if (param.getPrimitiveTypeN() != CSSValueType.CSS_IDENT ||
                             ! param.getStringValue().equals("page")) {
                         return false;
                     }
@@ -238,9 +238,9 @@ public class ContentFunctionFactory
             }
 
             // Get leader value and value width
-            PropertyValue param = (PropertyValue)function.getParameters().get(0);
+            PropertyValue param = function.getParameters().get(0);
             String value = param.getStringValue();
-            if (param.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
+            if (param.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 if (value.equals("dotted")) {
                     value = ". ";
                 } else if (value.equals("solid")) {
@@ -299,8 +299,8 @@ public class ContentFunctionFactory
                 List<PropertyValue> parameters = function.getParameters();
                 if (parameters.size() == 1) {
                     PropertyValue param = (PropertyValue)parameters.get(0);
-                    if (param.getPrimitiveType() != CSSPrimitiveValue.CSS_STRING &&
-                            (param.getPrimitiveType() != CSSPrimitiveValue.CSS_IDENT ||
+                    if (param.getPrimitiveTypeN() != CSSValueType.CSS_STRING &&
+                            (param.getPrimitiveTypeN() != CSSValueType.CSS_IDENT ||
                                 (!param.getStringValue().equals("dotted") &&
                                         !param.getStringValue().equals("solid") &&
                                         !param.getStringValue().equals("space")))) {

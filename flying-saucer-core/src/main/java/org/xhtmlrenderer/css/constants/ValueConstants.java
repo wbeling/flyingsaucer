@@ -20,15 +20,12 @@
  */
 package org.xhtmlrenderer.css.constants;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
+import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.util.GeneralUtil;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.*;
 import java.util.logging.Level;
 
 
@@ -38,81 +35,42 @@ import java.util.logging.Level;
  * @author empty
  */
 public final class ValueConstants {
-    /**
-     * Type descriptions--a crude approximation taken by scanning CSSValue
-     * statics
-     */
-    private final static List<String> TYPE_DESCRIPTIONS;
-    /**
-     * Description of the Field
-     */
-    private final static Map<Short, String> sacTypesStrings;
 
-    /**
-     * A text representation of the CSS type for this value.
-     *
-     * @param cssType            PARAM
-     * @param primitiveValueType PARAM
-     * @return Returns
-     */
-    public static String cssType(int cssType, int primitiveValueType) {
-        String desc = null;
-        if (cssType == CSSValue.CSS_PRIMITIVE_VALUE) {
-            if (primitiveValueType >= TYPE_DESCRIPTIONS.size()) {
-                desc = "{unknown: " + primitiveValueType + "}";
-            } else {
-                desc = TYPE_DESCRIPTIONS.get(primitiveValueType);
-                if (desc == null) {
-                    desc = "{UNKNOWN VALUE TYPE}";
-                }
-            }
-        } else {
-            desc = "{value list}";
-        }
-        return desc;
-    }
-
-    /**
+     /**
      * Description of the Method
      *
      * @param type PARAM
      * @return Returns
      */
-    public static short sacPrimitiveTypeForString(String type) {
+    public static CSSValueType sacPrimitiveTypeForString(String type) {
         if ("em".equals(type)) {
-            return CSSPrimitiveValue.CSS_EMS;
+            return CSSValueType.CSS_EMS;
         } else if ("ex".equals(type)) {
-            return CSSPrimitiveValue.CSS_EXS;
+            return CSSValueType.CSS_EXS;
         } else if ("px".equals(type)) {
-            return CSSPrimitiveValue.CSS_PX;
+            return CSSValueType.CSS_PX;
         } else if ("%".equals(type)) {
-            return CSSPrimitiveValue.CSS_PERCENTAGE;
+            return CSSValueType.CSS_PERCENTAGE;
         } else if ("in".equals(type)) {
-            return CSSPrimitiveValue.CSS_IN;
+            return CSSValueType.CSS_IN;
         } else if ("cm".equals(type)) {
-            return CSSPrimitiveValue.CSS_CM;
+            return CSSValueType.CSS_CM;
         } else if ("mm".equals(type)) {
-            return CSSPrimitiveValue.CSS_MM;
+            return CSSValueType.CSS_MM;
         } else if ("pt".equals(type)) {
-            return CSSPrimitiveValue.CSS_PT;
+            return CSSValueType.CSS_PT;
         } else if ("pc".equals(type)) {
-            return CSSPrimitiveValue.CSS_PC;
+            return CSSValueType.CSS_PC;
         } else if (type == null) {
             //this is only valid if length is 0
-            return CSSPrimitiveValue.CSS_PX;
+            return CSSValueType.CSS_PX;
         } else {
             throw new XRRuntimeException("Unknown type on CSS value: " + type);
         }
     }
 
-    /**
-     * Description of the Method
-     *
-     * @param type PARAM
-     * @return Returns
-     */
-    public static String stringForSACPrimitiveType(short type) {
-        return sacTypesStrings.get(new Short(type));
+    public static String stringForSACPrimitiveType(CSSValueType type) {
+        return type.toString();
     }
 
     /**
@@ -125,9 +83,9 @@ public final class ValueConstants {
      * @return See desc.
      */
     //TODO: method may be unnecessary (tobe)
-    public static boolean isAbsoluteUnit(CSSPrimitiveValue primitive) {
-        short type = 0;
-        type = ((CSSPrimitiveValue) primitive).getPrimitiveType();
+    public static boolean isAbsoluteUnit(PropertyValue primitive) {
+    	CSSValueType type;
+        type = primitive.getPrimitiveTypeN();
         return isAbsoluteUnit(type);
     }
 
@@ -141,57 +99,57 @@ public final class ValueConstants {
      * @return See desc.
      */
     //TODO: method may be unnecessary (tobe)
-    public static boolean isAbsoluteUnit(short type) {
+    public static boolean isAbsoluteUnit(CSSValueType type) {
         // TODO: check this list...
 
         // note, all types are included here to make sure none are missed
         switch (type) {
             // proportional length or size
-            case CSSPrimitiveValue.CSS_PERCENTAGE:
+            case CSS_PERCENTAGE:
                 return false;
                 // refer to values known to the DerivedValue instance (tobe)
-            case CSSPrimitiveValue.CSS_EMS:
-            case CSSPrimitiveValue.CSS_EXS:
+            case CSS_EMS:
+            case CSS_EXS:
                 // length
-            case CSSPrimitiveValue.CSS_IN:
-            case CSSPrimitiveValue.CSS_CM:
-            case CSSPrimitiveValue.CSS_MM:
-            case CSSPrimitiveValue.CSS_PT:
-            case CSSPrimitiveValue.CSS_PC:
-            case CSSPrimitiveValue.CSS_PX:
+            case CSS_IN:
+            case CSS_CM:
+            case CSS_MM:
+            case CSS_PT:
+            case CSS_PC:
+            case CSS_PX:
 
                 // color
-            case CSSPrimitiveValue.CSS_RGBCOLOR:
+            case CSS_RGBCOLOR:
 
                 // ?
-            case CSSPrimitiveValue.CSS_ATTR:
-            case CSSPrimitiveValue.CSS_DIMENSION:
-            case CSSPrimitiveValue.CSS_NUMBER:
-            case CSSPrimitiveValue.CSS_RECT:
+            case CSS_ATTR:
+            case CSS_DIMENSION:
+            case CSS_NUMBER:
+            case CSS_RECT:
 
                 // counters
-            case CSSPrimitiveValue.CSS_COUNTER:
+            case CSS_COUNTER:
 
                 // angles
-            case CSSPrimitiveValue.CSS_DEG:
-            case CSSPrimitiveValue.CSS_GRAD:
-            case CSSPrimitiveValue.CSS_RAD:
+            case CSS_DEG:
+            case CSS_GRAD:
+            case CSS_RAD:
 
                 // aural - freq
-            case CSSPrimitiveValue.CSS_HZ:
-            case CSSPrimitiveValue.CSS_KHZ:
+            case CSS_HZ:
+            case CSS_KHZ:
 
                 // time
-            case CSSPrimitiveValue.CSS_S:
-            case CSSPrimitiveValue.CSS_MS:
+            case CSS_S:
+            case CSS_MS:
 
                 // URI
-            case CSSPrimitiveValue.CSS_URI:
+            case CSS_URI:
 
-            case CSSPrimitiveValue.CSS_IDENT:
-            case CSSPrimitiveValue.CSS_STRING:
+            case CSS_IDENT:
+            case CSS_STRING:
                 return true;
-            case CSSPrimitiveValue.CSS_UNKNOWN:
+            case CSS_UNKNOWN:
                 XRLog.cascade(Level.WARNING, "Asked whether type was absolute, given CSS_UNKNOWN as the type. " +
                         "Might be one of those funny values like background-position.");
                 GeneralUtil.dumpShortException(new Exception());
@@ -230,79 +188,26 @@ public final class ValueConstants {
      * @param cssPrimitiveType PARAM
      * @return See desc.
      */
-    public static boolean isNumber(short cssPrimitiveType) {
+    public static boolean isNumber(CSSValueType cssPrimitiveType) {
         switch (cssPrimitiveType) {
             // fall thru on all these
             // relative length or size
-            case CSSPrimitiveValue.CSS_EMS:
-            case CSSPrimitiveValue.CSS_EXS:
-            case CSSPrimitiveValue.CSS_PERCENTAGE:
+            case CSS_EMS:
+            case CSS_EXS:
+            case CSS_PERCENTAGE:
                 // relatives will be treated separately from lengths;
                 return false;
                 // length
-            case CSSPrimitiveValue.CSS_PX:
-            case CSSPrimitiveValue.CSS_IN:
-            case CSSPrimitiveValue.CSS_CM:
-            case CSSPrimitiveValue.CSS_MM:
-            case CSSPrimitiveValue.CSS_PT:
-            case CSSPrimitiveValue.CSS_PC:
+            case CSS_PX:
+            case CSS_IN:
+            case CSS_CM:
+            case CSS_MM:
+            case CSS_PT:
+            case CSS_PC:
                 return true;
             default:
                 return false;
         }
-    }
-
-    static {
-        SortedMap<Short, String> map = new TreeMap<Short, String>();
-        TYPE_DESCRIPTIONS = new ArrayList<String>();
-        try {
-            Field fields[] = CSSPrimitiveValue.class.getFields();
-            for (int i = 0; i < fields.length; i++) {
-                Field f = fields[i];
-                int mod = f.getModifiers();
-                if (Modifier.isFinal(mod) &&
-                        Modifier.isStatic(mod) &&
-                        Modifier.isPublic(mod)) {
-
-                    Short val = (Short) f.get(null);
-                    String name = f.getName();
-                    if (name.startsWith("CSS_")) {
-                        if (!name.equals("CSS_INHERIT") &&
-                                !name.equals("CSS_PRIMITIVE_VALUE") &&
-                                !name.equals("CSS_VALUE_LIST") &&
-                                !name.equals("CSS_CUSTOM")) {
-
-                            map.put(val, name.substring("CSS_".length()));
-                        }
-                    }
-                }
-            }
-            // now sort by the key--the short constant for the public fields
-            List<Short> keys = new ArrayList<Short>(map.keySet());
-            Collections.sort(keys);
-
-            // then add to our static list, in the order the keys appear. this means
-            // list.get(index) will return the item at index, which should be the description
-            // for that constant
-            Iterator<Short> iter = keys.iterator();
-            while (iter.hasNext()) {
-                TYPE_DESCRIPTIONS.add(map.get(iter.next()));
-            }
-        } catch (Exception ex) {
-            throw new XRRuntimeException("Could not build static list of CSS type descriptions.", ex);
-        }
-
-        // HACK: this is a quick way to perform the lookup, but dumb if the short assigned are > 100; but the compiler will tell us that (PWW 21-01-05)
-        sacTypesStrings = new HashMap<Short, String>(25);
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_EMS), "em");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_EXS), "ex");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_PX), "px");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_PERCENTAGE), "%");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_IN), "in");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_CM), "cm");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_MM), "mm");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_PT), "pt");
-        sacTypesStrings.put(new Short(CSSPrimitiveValue.CSS_PC), "pc");
     }
 
     /**
@@ -313,82 +218,43 @@ public final class ValueConstants {
      * @param value PARAM
      * @return Returns
      */
-    public static short guessType(String value) {
-        short type = CSSPrimitiveValue.CSS_STRING;
+    public static CSSValueType guessType(String value) {
+    	CSSValueType type = CSSValueType.CSS_STRING;
         if (value != null && value.length() > 1) {
             if (value.endsWith("%")) {
-                type = CSSPrimitiveValue.CSS_PERCENTAGE;
+                type = CSSValueType.CSS_PERCENTAGE;
             } else if (value.startsWith("rgb") || value.startsWith("#")) {
-                type = CSSPrimitiveValue.CSS_RGBCOLOR;
+                type = CSSValueType.CSS_RGBCOLOR;
             } else {
                 String hmm = value.substring(value.length() - 2);
                 if ("pt".equals(hmm)) {
-                    type = CSSPrimitiveValue.CSS_PT;
+                    type = CSSValueType.CSS_PT;
                 } else if ("px".equals(hmm)) {
-                    type = CSSPrimitiveValue.CSS_PX;
+                    type = CSSValueType.CSS_PX;
                 } else if ("em".equals(hmm)) {
-                    type = CSSPrimitiveValue.CSS_EMS;
+                    type = CSSValueType.CSS_EMS;
                 } else if ("ex".equals(hmm)) {
-                    type = CSSPrimitiveValue.CSS_EXS;
+                    type = CSSValueType.CSS_EXS;
                 } else if ("in".equals(hmm)) {
-                    type = CSSPrimitiveValue.CSS_IN;
+                    type = CSSValueType.CSS_IN;
                 } else if ("cm".equals(hmm)) {
-                    type = CSSPrimitiveValue.CSS_CM;
+                    type = CSSValueType.CSS_CM;
                 } else if ("mm".equals(hmm)) {
-                    type = CSSPrimitiveValue.CSS_MM;
+                    type = CSSValueType.CSS_MM;
                 } else {
                     if (Character.isDigit(value.charAt(value.length() - 1))) {
                         try {
                             new Float(value);
-                            type = CSSPrimitiveValue.CSS_NUMBER;
+                            type = CSSValueType.CSS_NUMBER;
                         } catch (NumberFormatException ex) {
-                            type = CSSPrimitiveValue.CSS_STRING;
+                            type = CSSValueType.CSS_STRING;
                         }
                     } else {
-                        type = CSSPrimitiveValue.CSS_STRING;
+                        type = CSSValueType.CSS_STRING;
                     }
                 }
             }
         }
         return type;
     }
-}// end class
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.10  2005/10/25 16:06:49  pdoubleya
- * For guessing type, with no type code, check last char, not first.
- *
- * Revision 1.9  2005/10/25 15:38:27  pdoubleya
- * Moved guessType() to ValueConstants, applied fix to method suggested by Chris Oliver, to avoid exception-based catch.
- *
- * Revision 1.8  2005/09/11 20:43:15  tobega
- * Fixed table-css interaction bug, colspan now works again
- *
- * Revision 1.7  2005/06/01 00:47:01  tobega
- * Partly confused hack trying to get width and height working properly for replaced elements.
- *
- * Revision 1.6  2005/01/29 20:18:40  pdoubleya
- * Clean/reformat code. Removed commented blocks, checked copyright.
- *
- * Revision 1.5  2005/01/24 14:52:20  pdoubleya
- * Fixed accidental access modifier change to private--isAbsoluteUnit() is used in tests.
- *
- * Revision 1.4  2005/01/24 14:36:32  pdoubleya
- * Mass commit, includes: updated for changes to property declaration instantiation, and new use of DerivedValue. Removed any references to older XR... classes (e.g. XRProperty). Cleaned imports.
- *
- * Revision 1.3  2004/11/16 10:38:21  pdoubleya
- * Use XRR exception, added comments.
- *
- * Revision 1.2  2004/10/23 13:09:13  pdoubleya
- * Re-formatted using JavaStyle tool.
- * Cleaned imports to resolve wildcards
- * except for common packages
- * (java.io, java.util, etc).
- * Added CVS log comments at bottom.
- *
- *
- */
-
+}

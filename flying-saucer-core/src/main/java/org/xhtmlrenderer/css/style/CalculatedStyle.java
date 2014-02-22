@@ -412,7 +412,7 @@ public class CalculatedStyle {
                 }
                 _font.size = LengthValue.calcFloatProportionalValue(
                         this, CSSName.FONT_SIZE, replacement.getCssText(),
-                        replacement.getFloatValue(), replacement.getPrimitiveType(), 0, ctx);
+                        replacement.getFloatValue(), replacement.getPrimitiveTypeN(), 0, ctx);
             } else {
                 _font.size = getFloatPropertyProportionalTo(CSSName.FONT_SIZE, 0, ctx);
             }
@@ -633,8 +633,8 @@ public class CalculatedStyle {
         }
     }
 
-    private FSDerivedValue deriveValue(CSSName cssName, org.w3c.dom.css.CSSPrimitiveValue value) {
-        return DerivedValueFactory.newDerivedValue(this, cssName, (PropertyValue) value);
+    private FSDerivedValue deriveValue(CSSName cssName, PropertyValue value) {
+        return DerivedValueFactory.newDerivedValue(this, cssName, value);
     }
 
     private String genStyleKey() {

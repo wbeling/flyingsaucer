@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
@@ -49,8 +49,8 @@ public class ListStylePropertyBuilder implements PropertyBuilder {
         for (Iterator<PropertyValue> i = values.iterator(); i.hasNext(); ) {
             PropertyValue value = (PropertyValue)i.next();
             checkInheritAllowed(value, false);
-            short type = value.getPrimitiveType();
-            if (type == CSSPrimitiveValue.CSS_IDENT) {
+            CSSValueType type = value.getPrimitiveTypeN();
+            if (type == CSSValueType.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.LIST_STYLE_SHORTHAND, value);
                 
                 if (ident == IdentValue.NONE) {
@@ -78,7 +78,7 @@ public class ListStylePropertyBuilder implements PropertyBuilder {
                     listStyleType = new PropertyDeclaration(
                             CSSName.LIST_STYLE_TYPE, value, important, origin);
                 }
-            } else if (type == CSSPrimitiveValue.CSS_URI) {
+            } else if (type == CSSValueType.CSS_URI) {
                 if (listStyleImage != null) {
                     throw new CSSParseException("A list-style-image value cannot be set twice", -1);
                 }

@@ -24,9 +24,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.css.constants.ValueConstants;
+import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.layout.SharedContext;
 
 import javax.swing.*;
@@ -297,7 +297,7 @@ class ElementPropertiesPanel extends JPanel {
             Toolkit.getDefaultToolkit().beep();
             return _defaultTableModel;
         }
-        Map<String, CSSPrimitiveValue> props = _sr.getCascadedPropertiesMap((Element) node);
+        Map<String, PropertyValue> props = _sr.getCascadedPropertiesMap((Element) node);
         return new PropertiesTableModel(props);
     }
 
@@ -345,8 +345,8 @@ class ElementPropertiesPanel extends JPanel {
                 label.setFont(propLabelFont);
             } else if (col == 2) {
                 PropertiesTableModel pmodel = (PropertiesTableModel) this.getModel();
-                Map.Entry<String, CSSPrimitiveValue> me = (Map.Entry<String, CSSPrimitiveValue>) pmodel._properties.entrySet().toArray()[row];
-                CSSPrimitiveValue cpv = (CSSPrimitiveValue) me.getValue();
+                Map.Entry<String, PropertyValue> me = (Map.Entry<String, PropertyValue>) pmodel._properties.entrySet().toArray()[row];
+                PropertyValue cpv = me.getValue();
                 if (cpv.getCssText().startsWith("rgb")) {
                     label.setBackground(org.xhtmlrenderer.css.util.ConversionUtil.rgbToColor(cpv.getRGBColorValue()));
                 }
@@ -372,14 +372,14 @@ class ElementPropertiesPanel extends JPanel {
         /**
          * Description of the Field
          */
-        Map<String, CSSPrimitiveValue> _properties;
+        Map<String, PropertyValue> _properties;
 
         /**
          * Constructor for the PropertiesTableModel object
          *
          * @param cssProperties PARAM
          */
-        PropertiesTableModel(Map<String, CSSPrimitiveValue> cssProperties) {
+        PropertiesTableModel(Map<String, PropertyValue> cssProperties) {
             _properties = cssProperties;
         }
 
@@ -419,8 +419,8 @@ class ElementPropertiesPanel extends JPanel {
          * @return The valueAt value
          */
         public Object getValueAt(int row, int col) {
-            Map.Entry<String, CSSPrimitiveValue> me = (Map.Entry<String, CSSPrimitiveValue>) _properties.entrySet().toArray()[row];
-            CSSPrimitiveValue cpv = (CSSPrimitiveValue) me.getValue();
+            Map.Entry<String, PropertyValue> me = (Map.Entry<String, PropertyValue>) _properties.entrySet().toArray()[row];
+            PropertyValue cpv = me.getValue();
 
             Object val = null;
             switch (col) {
@@ -432,7 +432,7 @@ class ElementPropertiesPanel extends JPanel {
                     val = cpv.getCssText();
                     break;
                 case 2:
-                    if (ValueConstants.isNumber(cpv.getPrimitiveType())) {
+                    if (ValueConstants.isNumber(cpv.getPrimitiveTypeN())) {
                         val = new Float(cpv.getFloatValue(cpv.getPrimitiveType()));
                     } else {
                         val = "";//actual.cssValue().getCssText();

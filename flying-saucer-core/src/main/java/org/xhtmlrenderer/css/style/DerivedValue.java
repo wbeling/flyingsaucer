@@ -19,8 +19,8 @@
  */
 package org.xhtmlrenderer.css.style;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.constants.ValueConstants;
 import org.xhtmlrenderer.css.parser.FSColor;
@@ -30,13 +30,13 @@ import org.xhtmlrenderer.util.XRRuntimeException;
 public abstract class DerivedValue implements FSDerivedValue {
     private String _asString;
 
-    private short _cssSacUnitType;
+    private CSSValueType _cssSacUnitType;
 
     protected DerivedValue() {}
 
     protected DerivedValue(
             CSSName name,
-            short cssSACUnitType,
+            CSSValueType cssSACUnitType,
             String cssText,
             String cssStringValue) {
         this._cssSacUnitType = cssSACUnitType;
@@ -51,10 +51,10 @@ public abstract class DerivedValue implements FSDerivedValue {
 
     private String deriveStringValue(String cssText, String cssStringValue) {
             switch (_cssSacUnitType) {
-                case CSSPrimitiveValue.CSS_IDENT:
-                case CSSPrimitiveValue.CSS_STRING:
-                case CSSPrimitiveValue.CSS_URI:
-                case CSSPrimitiveValue.CSS_ATTR:
+                case CSS_IDENT:
+                case CSS_STRING:
+                case CSS_URI:
+                case CSS_ATTR:
                     return ( cssStringValue == null ? cssText : cssStringValue );
                 default:
                     return cssText;
@@ -74,7 +74,7 @@ public abstract class DerivedValue implements FSDerivedValue {
         return false;
     }
 
-    public short getCssSacUnitType() {
+    public CSSValueType getCssSacUnitType() {
         return _cssSacUnitType;
     }
 

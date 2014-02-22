@@ -24,13 +24,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.constants.CSSValueType;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.FSFunction;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
@@ -40,10 +41,10 @@ public class ContentPropertyBuilder implements PropertyBuilder {
     public List<PropertyDeclaration> buildDeclarations(
             CSSName cssName, List<PropertyValue> values, CSSOrigin origin, boolean important, boolean inheritAllowed) {
         if (values.size() == 1) {
-            PropertyValue value = (PropertyValue)values.get(0);
+            PropertyValue value = values.get(0);
             if (value.getCssValueType() == CSSValue.CSS_INHERIT) {
                 return Collections.emptyList();
-            } else if (value.getPrimitiveType() == CSSPrimitiveValue.CSS_IDENT) {
+            } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.CONTENT, value);
                 if (ident == IdentValue.NONE || ident == IdentValue.NORMAL) {
                     return Collections.singletonList(
@@ -54,25 +55,25 @@ public class ContentPropertyBuilder implements PropertyBuilder {
         
         List<PropertyValue> resultValues = new ArrayList<PropertyValue>();
         for (Iterator<PropertyValue> i = values.iterator(); i.hasNext(); ) {
-            PropertyValue value = (PropertyValue)i.next();
+            PropertyValue value = i.next();
             
             if (value.getOperator() != null) {
                 throw new CSSParseException(
                         "Found unexpected operator, " + value.getOperator().getExternalName(), -1);
             }
             
-            short type = value.getPrimitiveType();
-            if (type == CSSPrimitiveValue.CSS_URI) {
+            CSSValueType type = value.getPrimitiveTypeN();
+            if (type == CSSValueType.CSS_URI) {
                 continue;
-            } else if (type == CSSPrimitiveValue.CSS_STRING) {
+            } else if (type == CSSValueType.CSS_STRING) {
                 resultValues.add(value);
-            } else if (value.getPropertyValueType() == PropertyValue.VALUE_TYPE_FUNCTION) {
+            } else if (value.getPropertyValueType() == PropertyValueImp.VALUE_TYPE_FUNCTION) {
                 if (! isFunctionAllowed(value.getFunction())) {
                     throw new CSSParseException(
                             "Function " + value.getFunction().getName() + " is not allowed here", -1);
                 }
                 resultValues.add(value);
-            } else if (type == CSSPrimitiveValue.CSS_IDENT) {
+            } else if (type == CSSValueType.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.CONTENT, value);
                 if (ident == IdentValue.OPEN_QUOTE || ident == IdentValue.CLOSE_QUOTE ||
                         ident == IdentValue.NO_CLOSE_QUOTE || ident == IdentValue.NO_OPEN_QUOTE) {
@@ -89,7 +90,7 @@ public class ContentPropertyBuilder implements PropertyBuilder {
         
         if (resultValues.size() > 0) {
             return Collections.singletonList(
-                    new PropertyDeclaration(CSSName.CONTENT, new PropertyValue(resultValues), important, origin));
+                    new PropertyDeclaration(CSSName.CONTENT, new PropertyValueImp(resultValues), important, origin));
         } else {
             return Collections.emptyList();
         }
