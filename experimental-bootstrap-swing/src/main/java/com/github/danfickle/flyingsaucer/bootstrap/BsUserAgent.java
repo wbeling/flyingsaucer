@@ -39,6 +39,7 @@ import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.swing.AWTFSImage;
+import org.xhtmlrenderer.swing.StylesheetCache;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 
@@ -54,7 +55,7 @@ public class BsUserAgent implements UserAgentCallback {
     private String baseUrl;
     private int index = -1;
     private ArrayList history = new ArrayList();
-
+    private StylesheetCache _styleCache = new StylesheetCache();
     /**
      * an LRU cache
      */
@@ -259,4 +260,9 @@ public class BsUserAgent implements UserAgentCallback {
             return false;
         }
     }
+
+	@Override
+	public StylesheetCache getStylesheetCache() {
+		return _styleCache;
+	}
 }

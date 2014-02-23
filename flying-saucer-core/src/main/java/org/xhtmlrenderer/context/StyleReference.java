@@ -54,20 +54,8 @@ public class StyleReference {
      * resolution.
      */
     private SharedContext _context;
-
-    /**
-     * Description of the Field
-     */
     private NamespaceHandler _nsh;
-
-    /**
-     * Description of the Field
-     */
     private Document _doc;
-
-    /**
-     * Description of the Field
-     */
     private StylesheetFactoryImpl _stylesheetFactory;
 
     /**
@@ -79,11 +67,6 @@ public class StyleReference {
     /** */
     private UserAgentCallback _uac;
     
-    /**
-     * Default constructor for initializing members.
-     *
-     * @param userAgent PARAM
-     */
     public StyleReference(UserAgentCallback userAgent) {
         _uac = userAgent;
         _stylesheetFactory = new StylesheetFactoryImpl(userAgent);
@@ -91,11 +74,6 @@ public class StyleReference {
 
     /**
      * Sets the documentContext attribute of the StyleReference object
-     *
-     * @param context The new documentContext value
-     * @param nsh     The new documentContext value
-     * @param doc     The new documentContext value
-     * @param ui
      */
     public void setDocumentContext(SharedContext context, NamespaceHandler nsh, Document doc, UserInterface ui) {
         _context = context;
@@ -135,12 +113,6 @@ public class StyleReference {
         return result;
     }
     
-    /**
-     * Description of the Method
-     *
-     * @param e PARAM
-     * @return Returns
-     */
     public boolean isHoverStyled(Element e) {
         return _matcher.isHoverStyled(e);
     }
@@ -161,7 +133,7 @@ public class StyleReference {
         CascadedStyle cs = _matcher.getCascadedStyle(e, false);//this is only for debug, I think
         java.util.LinkedHashMap<String, PropertyValue> props = new java.util.LinkedHashMap<>();
         for (java.util.Iterator<PropertyDeclaration> i = cs.getCascadedPropertyDeclarations(); i.hasNext();) {
-            PropertyDeclaration pd = (PropertyDeclaration) i.next();
+            PropertyDeclaration pd = i.next();
 
             String propName = pd.getPropertyName();
             CSSName cssName = CSSName.getByPropertyName(propName);
@@ -172,10 +144,6 @@ public class StyleReference {
 
     /**
      * Gets the pseudoElementStyle attribute of the StyleReference object
-     *
-     * @param node          PARAM
-     * @param pseudoElement PARAM
-     * @return The pseudoElementStyle value
      */
     public CascadedStyle getPseudoElementStyle(Node node, String pseudoElement) {
         Element e = null;
@@ -190,10 +158,6 @@ public class StyleReference {
     /**
      * Gets the CascadedStyle for an element. This must then be converted in the
      * current context to a CalculatedStyle (use getDerivedStyle)
-     *
-     * @param e       The element
-     * @param restyle
-     * @return The style value
      */
     public CascadedStyle getCascadedStyle(Element e, boolean restyle) {
         if (e == null) return CascadedStyle.emptyCascadedStyle;
@@ -212,17 +176,16 @@ public class StyleReference {
         StylesheetInfo info = new StylesheetInfo();
         info.setUri(uri);
         info.setOrigin(StylesheetInfo.CSSOrigin.AUTHOR);
-        if (_stylesheetFactory.containsStylesheet(uri)) {
-            _stylesheetFactory.removeCachedStylesheet(uri);
+        if (_stylesheetFactory.getUac().getStylesheetCache().containsStylesheet(uri)) {
+            _stylesheetFactory.getUac().getStylesheetCache().removeCachedStylesheet(uri);
             XRLog.cssParse("Removing stylesheet '" + uri + "' from cache by request.");
         } else {
             XRLog.cssParse("Requested removing stylesheet '" + uri + "', but it's not in cache.");
-
         }
     }
     
     public void flushAllStyleSheets() {
-        _stylesheetFactory.flushCachedStylesheets();
+        _stylesheetFactory.getUac().getStylesheetCache().flushCachedStylesheets();
     }
 
     /**

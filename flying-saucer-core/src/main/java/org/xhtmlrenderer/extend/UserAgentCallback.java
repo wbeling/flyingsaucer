@@ -22,6 +22,7 @@ package org.xhtmlrenderer.extend;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.resource.HTMLResource;
+import org.xhtmlrenderer.swing.StylesheetCache;
 
 
 /**
@@ -109,5 +110,10 @@ public interface UserAgentCallback {
      * @return the full uri in uri-spaces known to the current implementation.
      */
     String resolveURI(String uri);
-}
 
+    /**
+     * Used to return a stylesheet instance from cache. If not possible, should return 
+     * null.
+     */
+	StylesheetCache getStylesheetCache();
+}
