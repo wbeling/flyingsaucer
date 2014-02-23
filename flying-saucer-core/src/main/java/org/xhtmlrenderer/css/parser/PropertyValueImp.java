@@ -26,7 +26,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.css.Counter;
 import org.w3c.dom.css.RGBColor;
 import org.w3c.dom.css.Rect;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.util.ArrayUtil;
 
@@ -39,7 +39,16 @@ public class PropertyValueImp implements PropertyValue {
     public static final short VALUE_TYPE_LIST = 6;
     public static final short VALUE_TYPE_FUNCTION = 7;
     
-    private CSSValueType _type;
+    public static enum CSSValueType
+    {
+        CSS_INHERIT,
+        CSS_CUSTOM,
+        CSS_PRIMITIVE_VALUE,
+        CSS_VALUE_LIST;
+    }
+    
+    
+    private CSSPrimitiveUnit _type;
     private CSSValueType _cssValueType;
     
     private String _stringValue;
@@ -59,13 +68,13 @@ public class PropertyValueImp implements PropertyValue {
     private List<?> _values;
     private FSFunction _function;
 
-    public PropertyValueImp(CSSValueType type, float floatValue, String cssText) {
+    public PropertyValueImp(CSSPrimitiveUnit type, float floatValue, String cssText) {
         _type = type;
         _floatValue = floatValue;
         _cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = cssText;
         
-        if (type == CSSValueType.CSS_NUMBER && floatValue != 0.0f) {
+        if (type == CSSPrimitiveUnit.CSS_NUMBER && floatValue != 0.0f) {
             _propertyValueType = VALUE_TYPE_NUMBER;
         } else {
             _propertyValueType = VALUE_TYPE_LENGTH;
@@ -73,7 +82,7 @@ public class PropertyValueImp implements PropertyValue {
     }
     
     public PropertyValueImp(FSColor color) {
-        _type = CSSValueType.CSS_RGBCOLOR;
+        _type = CSSPrimitiveUnit.CSS_RGBCOLOR;
         _cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = color.toString();
         _FSColor = color;
@@ -81,7 +90,7 @@ public class PropertyValueImp implements PropertyValue {
         _propertyValueType = VALUE_TYPE_COLOR;
     }
     
-    public PropertyValueImp(CSSValueType type, String stringValue, String cssText) {
+    public PropertyValueImp(CSSPrimitiveUnit type, String stringValue, String cssText) {
         _type = type;
         _stringValue = stringValue;
         // Must be a case-insensitive compare since ident values aren't normalized
@@ -89,7 +98,7 @@ public class PropertyValueImp implements PropertyValue {
         _cssValueType = _stringValue.equalsIgnoreCase("inherit") ? CSSValueType.CSS_INHERIT : CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = cssText;
         
-        if (type == CSSValueType.CSS_IDENT) {
+        if (type == CSSPrimitiveUnit.CSS_IDENT) {
             _propertyValueType = VALUE_TYPE_IDENT;
         } else {
             _propertyValueType = VALUE_TYPE_STRING;
@@ -97,7 +106,7 @@ public class PropertyValueImp implements PropertyValue {
     }
     
     public PropertyValueImp(IdentValue ident) {
-        _type = CSSValueType.CSS_IDENT;
+        _type = CSSPrimitiveUnit.CSS_IDENT;
         _stringValue = ident.toString();
         _cssValueType = _stringValue.equals("inherit") ? CSSValueType.CSS_INHERIT : CSSValueType.CSS_PRIMITIVE_VALUE;
         _cssText = ident.toString();
@@ -107,7 +116,7 @@ public class PropertyValueImp implements PropertyValue {
     }
     
     public PropertyValueImp(List<?> values) {
-        _type = CSSValueType.CSS_UNKNOWN; // HACK
+        _type = CSSPrimitiveUnit.CSS_UNKNOWN; // HACK
         _cssValueType = CSSValueType.CSS_CUSTOM;
         _cssText = values.toString(); // HACK
         
@@ -116,7 +125,7 @@ public class PropertyValueImp implements PropertyValue {
     }
     
     public PropertyValueImp(FSFunction function) {
-        _type = CSSValueType.CSS_UNKNOWN;
+        _type = CSSPrimitiveUnit.CSS_UNKNOWN;
         _cssValueType = CSSValueType.CSS_CUSTOM;
         _cssText = function.toString();
         
@@ -128,7 +137,7 @@ public class PropertyValueImp implements PropertyValue {
         throw new UnsupportedOperationException();
     }
 
-    public float getFloatValue(CSSValueType unitType) throws DOMException {
+    public float getFloatValue(CSSPrimitiveUnit unitType) throws DOMException {
         return _floatValue;
     }
     
@@ -136,7 +145,7 @@ public class PropertyValueImp implements PropertyValue {
         return _floatValue;
     }
 
-    public CSSValueType getPrimitiveTypeN() {
+    public CSSPrimitiveUnit getPrimitiveTypeN() {
         return _type;
     }
 

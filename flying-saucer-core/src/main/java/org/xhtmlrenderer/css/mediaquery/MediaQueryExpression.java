@@ -3,7 +3,7 @@ package org.xhtmlrenderer.css.mediaquery;
 import java.util.Arrays;
 import java.util.List;
 
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.PropertyValueImp;
@@ -58,7 +58,7 @@ public class MediaQueryExpression
     
     private static boolean featureWithValidPositiveLenghtOrNumber(MediaFeatureName mediaFeature, PropertyValue value)
     {
-    	if (!BuilderUtil.isLength(value) && value.getPrimitiveTypeN() != CSSValueType.CSS_PERCENTAGE)
+    	if (!BuilderUtil.isLength(value) && value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_PERCENTAGE)
     		return false;
     	
     	if (value.getFloatValue() < 0)
@@ -80,7 +80,7 @@ public class MediaQueryExpression
     
     private static boolean featureWithValidDensity(MediaFeatureName mediaFeature, PropertyValue value)
     {
-    	if ((value.getPrimitiveTypeN() != CSSValueType.CSS_DPPX && value.getPrimitiveTypeN() != CSSValueType.CSS_DPI && value.getPrimitiveTypeN() != CSSValueType.CSS_DPCM) || value.getFloatValue() <= 0)
+    	if ((value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_DPPX && value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_DPI && value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_DPCM) || value.getFloatValue() <= 0)
     	   return false;
 
     	return mediaFeature == MediaFeatureName.RESOLUTION
@@ -106,7 +106,7 @@ public class MediaQueryExpression
     
     private static boolean featureWithPositiveNumber(MediaFeatureName mediaFeature, PropertyValue value)
     {
-        if (value.getPrimitiveTypeN() != CSSValueType.CSS_NUMBER || value.getFloatValue() < 0)
+        if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_NUMBER || value.getFloatValue() < 0)
             return false;
 
         // No non-webkit specific media expressions fit this cirteria.

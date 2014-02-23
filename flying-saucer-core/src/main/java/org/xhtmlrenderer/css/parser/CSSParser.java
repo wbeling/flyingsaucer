@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.MarginBoxName;
 import org.xhtmlrenderer.css.extend.TreeResolver;
 import org.xhtmlrenderer.css.newmatch.Selector;
@@ -1485,16 +1485,16 @@ public class CSSParser {
             case Token.ANGLE:
             {
             	String normal = getTokenValue(t).toLowerCase(Locale.US);
-            	CSSValueType type;
+            	CSSPrimitiveUnit type;
             	
             	if (normal.contains("deg"))
             	{
-            		type = CSSValueType.CSS_DEG;
+            		type = CSSPrimitiveUnit.CSS_DEG;
             		normal = normal.replace("deg", "");
             	}
             	else
             	{
-            		type = CSSValueType.CSS_RAD;
+            		type = CSSPrimitiveUnit.CSS_RAD;
             		normal = normal.replace("rad", "");
             	}
             	result = new PropertyValueImp(type,
@@ -1510,7 +1510,7 @@ public class CSSParser {
                 throw new CSSParseException("Unsupported CSS unit " + extractUnit(t), getCurrentLine());
             case Token.NUMBER:
                 result = new PropertyValueImp(
-                        CSSValueType.CSS_NUMBER,
+                        CSSPrimitiveUnit.CSS_NUMBER,
                         sign*Float.parseFloat(getTokenValue(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1518,7 +1518,7 @@ public class CSSParser {
                 break;
             case Token.PERCENTAGE:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_PERCENTAGE,
+                		CSSPrimitiveUnit.CSS_PERCENTAGE,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1526,7 +1526,7 @@ public class CSSParser {
                 break;
             case Token.EMS:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_EMS,
+                		CSSPrimitiveUnit.CSS_EMS,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1534,7 +1534,7 @@ public class CSSParser {
                 break;
             case Token.EXS:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_EXS,
+                		CSSPrimitiveUnit.CSS_EXS,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1542,7 +1542,7 @@ public class CSSParser {
                 break;
             case Token.PX:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_PX,
+                		CSSPrimitiveUnit.CSS_PX,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1550,7 +1550,7 @@ public class CSSParser {
                 break;
             case Token.CM:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_CM,
+                		CSSPrimitiveUnit.CSS_CM,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1558,7 +1558,7 @@ public class CSSParser {
                 break;
             case Token.MM:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_MM,
+                		CSSPrimitiveUnit.CSS_MM,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1566,7 +1566,7 @@ public class CSSParser {
                 break;
             case Token.IN:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_IN,
+                		CSSPrimitiveUnit.CSS_IN,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1574,7 +1574,7 @@ public class CSSParser {
                 break;
             case Token.PT:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_PT,
+                		CSSPrimitiveUnit.CSS_PT,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1582,7 +1582,7 @@ public class CSSParser {
                 break;
             case Token.PC:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_PC,
+                		CSSPrimitiveUnit.CSS_PC,
                         sign*Float.parseFloat(extractNumber(t)),
                         sign(sign) + getTokenValue(t));
                 next();
@@ -1591,7 +1591,7 @@ public class CSSParser {
             case Token.STRING:
                 String s = getTokenValue(t);
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_STRING,
+                		CSSPrimitiveUnit.CSS_STRING,
                         s,
                         getRawTokenValue());
                 next();
@@ -1600,7 +1600,7 @@ public class CSSParser {
             case Token.IDENT:
                 String value = getTokenValue(t, literal);
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_IDENT,
+                		CSSPrimitiveUnit.CSS_IDENT,
                         value,
                         value);
                 next();
@@ -1608,7 +1608,7 @@ public class CSSParser {
                 break;
             case Token.URI:
                 result = new PropertyValueImp(
-                		CSSValueType.CSS_URI,
+                		CSSPrimitiveUnit.CSS_URI,
                         getTokenValue(t),
                         getRawTokenValue());
                 next();
@@ -1689,11 +1689,11 @@ public class CSSParser {
     }
 
     private float parseCMYKColorComponent(PropertyValue value, int paramNo) {
-        CSSValueType type = value.getPrimitiveTypeN();
+        CSSPrimitiveUnit type = value.getPrimitiveTypeN();
         float result;
-        if (type == CSSValueType.CSS_NUMBER) {
+        if (type == CSSPrimitiveUnit.CSS_NUMBER) {
             result = value.getFloatValue();
-        } else if (type == CSSValueType.CSS_PERCENTAGE) {
+        } else if (type == CSSPrimitiveUnit.CSS_PERCENTAGE) {
             result = value.getFloatValue() / 100.0f;
         } else {
             throw new CSSParseException(
@@ -1723,16 +1723,16 @@ public class CSSParser {
         
         for (int i = 0; i < params.size(); i++) {
             PropertyValue value = params.get(i);
-            CSSValueType type = value.getPrimitiveTypeN();
-            if (type != CSSValueType.CSS_PERCENTAGE &&
-                    type != CSSValueType.CSS_NUMBER) {
+            CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+            if (type != CSSPrimitiveUnit.CSS_PERCENTAGE &&
+                    type != CSSPrimitiveUnit.CSS_NUMBER) {
                 throw new CSSParseException(
                         "Parameter " + (i+1) + " to the rgb() function is " +
                         "not a number or percentage", getCurrentLine());
             }
 
-			if (type != CSSValueType.CSS_PERCENTAGE &&
-				type != CSSValueType.CSS_NUMBER && i == 3) 
+			if (type != CSSPrimitiveUnit.CSS_PERCENTAGE &&
+				type != CSSPrimitiveUnit.CSS_NUMBER && i == 3) 
 			{
 				throw new CSSParseException(
 						"Parameter alpha to the rgba() function is " + "not a number",
@@ -1740,7 +1740,7 @@ public class CSSParser {
 			}
             
             float f = value.getFloatValue();
-            if (type == CSSValueType.CSS_PERCENTAGE) {
+            if (type == CSSPrimitiveUnit.CSS_PERCENTAGE) {
                 f = f/100 * 255;
             }
             if (f < 0) {

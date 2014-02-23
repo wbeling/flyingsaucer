@@ -43,7 +43,7 @@ import javax.swing.JViewport;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.parser.PropertyValue;
@@ -412,12 +412,12 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
     private void initFontFromComponent(BlockBox root) {
         if (isDefaultFontFromComponent()) {
             CalculatedStyle style = root.getStyle();
-            PropertyValue fontFamilyProp = new PropertyValueImp(CSSValueType.CSS_STRING, getFont().getFamily(),
+            PropertyValue fontFamilyProp = new PropertyValueImp(CSSPrimitiveUnit.CSS_STRING, getFont().getFamily(),
                     getFont().getFamily());
             fontFamilyProp.setStringArrayValue(new String[] { fontFamilyProp.getStringValue() });
             style.setDefaultValue(CSSName.FONT_FAMILY, new StringValue(CSSName.FONT_FAMILY, fontFamilyProp));
             style.setDefaultValue(CSSName.FONT_SIZE, new LengthValue(style, CSSName.FONT_SIZE,
-                    new PropertyValueImp(CSSValueType.CSS_PX, getFont().getSize(), Integer
+                    new PropertyValueImp(CSSPrimitiveUnit.CSS_PX, getFont().getSize(), Integer
                             .toString(getFont().getSize()))));
             Color c = getForeground();
             style.setDefaultValue(CSSName.COLOR, new ColorValue(CSSName.COLOR,

@@ -20,7 +20,7 @@
 package org.xhtmlrenderer.css.style;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.constants.ValueConstants;
 import org.xhtmlrenderer.css.parser.FSColor;
@@ -30,13 +30,13 @@ import org.xhtmlrenderer.util.XRRuntimeException;
 public abstract class DerivedValue implements FSDerivedValue {
     private String _asString;
 
-    private CSSValueType _cssSacUnitType;
+    private CSSPrimitiveUnit _cssSacUnitType;
 
     protected DerivedValue() {}
 
     protected DerivedValue(
             CSSName name,
-            CSSValueType cssSACUnitType,
+            CSSPrimitiveUnit cssSACUnitType,
             String cssText,
             String cssStringValue) {
         this._cssSacUnitType = cssSACUnitType;
@@ -74,7 +74,7 @@ public abstract class DerivedValue implements FSDerivedValue {
         return false;
     }
 
-    public CSSValueType getCssSacUnitType() {
+    public CSSPrimitiveUnit getCssSacUnitType() {
         return _cssSacUnitType;
     }
 

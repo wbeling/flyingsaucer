@@ -25,12 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.FSFunction;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.PropertyValueImp;
+import org.xhtmlrenderer.css.parser.PropertyValueImp.CSSValueType;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
@@ -43,7 +44,7 @@ public class ContentPropertyBuilder implements PropertyBuilder {
             PropertyValue value = values.get(0);
             if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return Collections.emptyList();
-            } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
+            } else if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.CONTENT, value);
                 if (ident == IdentValue.NONE || ident == IdentValue.NORMAL) {
                     return Collections.singletonList(
@@ -61,10 +62,10 @@ public class ContentPropertyBuilder implements PropertyBuilder {
                         "Found unexpected operator, " + value.getOperator().getExternalName(), -1);
             }
             
-            CSSValueType type = value.getPrimitiveTypeN();
-            if (type == CSSValueType.CSS_URI) {
+            CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+            if (type == CSSPrimitiveUnit.CSS_URI) {
                 continue;
-            } else if (type == CSSValueType.CSS_STRING) {
+            } else if (type == CSSPrimitiveUnit.CSS_STRING) {
                 resultValues.add(value);
             } else if (value.getPropertyValueType() == PropertyValueImp.VALUE_TYPE_FUNCTION) {
                 if (! isFunctionAllowed(value.getFunction())) {
@@ -72,7 +73,7 @@ public class ContentPropertyBuilder implements PropertyBuilder {
                             "Function " + value.getFunction().getName() + " is not allowed here", -1);
                 }
                 resultValues.add(value);
-            } else if (type == CSSValueType.CSS_IDENT) {
+            } else if (type == CSSPrimitiveUnit.CSS_IDENT) {
                 IdentValue ident = checkIdent(CSSName.CONTENT, value);
                 if (ident == IdentValue.OPEN_QUOTE || ident == IdentValue.CLOSE_QUOTE ||
                         ident == IdentValue.NO_CLOSE_QUOTE || ident == IdentValue.NO_OPEN_QUOTE) {

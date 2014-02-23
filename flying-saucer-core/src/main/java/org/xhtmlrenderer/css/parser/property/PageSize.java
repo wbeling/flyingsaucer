@@ -22,7 +22,7 @@ package org.xhtmlrenderer.css.parser.property;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.PropertyValueImp;
 
@@ -31,57 +31,57 @@ public class PageSize {
      * ISO A5 media: 148mm wide and 210 mm high
      */
     public static final PageSize A5 = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_MM, 148f, "148mm"),
-            new PropertyValueImp(CSSValueType.CSS_MM, 210f, "210mm"));
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 148f, "148mm"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 210f, "210mm"));
     
     /**
      * IS0 A4 media: 210 mm wide and 297 mm high
      */
     public static final PageSize A4 = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_MM, 210f, "210mm"),
-            new PropertyValueImp(CSSValueType.CSS_MM, 297f, "297mm"));
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 210f, "210mm"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 297f, "297mm"));
     
     /**
      * ISO A3 media: 297mm wide and 420mm high
      */
     public static final PageSize A3 = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_MM, 297f, "297mm"),
-            new PropertyValueImp(CSSValueType.CSS_MM, 420f, "420mm"));
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 297f, "297mm"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 420f, "420mm"));
     
     /**
      * ISO B3 media: 176mm wide by 250mm high
      */
     public static final PageSize B3 = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_MM, 176f, "176mm"),
-            new PropertyValueImp(CSSValueType.CSS_MM, 250, "250mm"));    
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 176f, "176mm"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 250, "250mm"));    
     
     /**
      * ISO B4 media: 250mm wide by 353mm high
      */
     public static final PageSize B4 = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_MM, 250f, "250mm"),
-            new PropertyValueImp(CSSValueType.CSS_MM, 353f, "353mm"));
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 250f, "250mm"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_MM, 353f, "353mm"));
     
     /**
      * North American letter media: 8.5 inches wide and 11 inches high
      */
     public static final PageSize LETTER = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_IN, 8.5f, "8.5in"),
-            new PropertyValueImp(CSSValueType.CSS_IN, 11f, "11in"));
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_IN, 8.5f, "8.5in"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_IN, 11f, "11in"));
     
     /**
      * North American legal: 8.5 inches wide by 14 inches high
      */
     public static final PageSize LEGAL = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_IN, 8.5f, "8.5in"),
-            new PropertyValueImp(CSSValueType.CSS_IN, 14f, "14in"));
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_IN, 8.5f, "8.5in"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_IN, 14f, "14in"));
     
     /**
      * North American ledger: 11 inches wide by 17 inches high
      */
     public static final PageSize LEDGER = new PageSize(
-            new PropertyValueImp(CSSValueType.CSS_IN, 11f, "11in"),
-            new PropertyValueImp(CSSValueType.CSS_IN, 17f, "17in"));
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_IN, 11f, "11in"),
+            new PropertyValueImp(CSSPrimitiveUnit.CSS_IN, 17f, "17in"));
     
     private static final Map<String, PageSize> SIZE_MAP;
     

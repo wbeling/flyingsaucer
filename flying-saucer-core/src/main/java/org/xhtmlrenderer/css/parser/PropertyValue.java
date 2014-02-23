@@ -3,12 +3,13 @@ package org.xhtmlrenderer.css.parser;
 import java.util.List;
 
 import org.w3c.dom.css.RGBColor;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp.CSSValueType;
 
 public interface PropertyValue
 {
-	public CSSValueType getPrimitiveTypeN();
+	public CSSPrimitiveUnit getPrimitiveTypeN();
 	public CSSValueType getCssValueTypeN();
 	
 	public float getFloatValue();

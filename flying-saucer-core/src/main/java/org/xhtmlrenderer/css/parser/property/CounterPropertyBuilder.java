@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.CounterData;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.PropertyValueImp;
+import org.xhtmlrenderer.css.parser.PropertyValueImp.CSSValueType;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
@@ -48,7 +49,7 @@ public abstract class CounterPropertyBuilder implements PropertyBuilder {
             
             if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return Collections.singletonList(new PropertyDeclaration(cssName, value, important, origin));
-            } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
+            } else if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT) {
                 if (value.getCssText().equals("none")) {
                     return Collections.singletonList(new PropertyDeclaration(cssName, value, important, origin));
                 } else {
@@ -68,13 +69,13 @@ public abstract class CounterPropertyBuilder implements PropertyBuilder {
             for (int i = 0; i < values.size(); i++) {
                 PropertyValue value = (PropertyValue)values.get(i);
                 
-                if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
+                if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT) {
                     String name = value.getStringValue();
                     int cValue = getDefaultValue();
                     
                     if (i < values.size() - 1) {
                         PropertyValue next = (PropertyValue)values.get(i+1);
-                        if (next.getPrimitiveTypeN() == CSSValueType.CSS_NUMBER) {
+                        if (next.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_NUMBER) {
                             checkNumberIsInteger(cssName, next);
                             
                             cValue = (int)next.getFloatValue();

@@ -42,34 +42,34 @@ public final class ValueConstants {
      * @param type PARAM
      * @return Returns
      */
-    public static CSSValueType sacPrimitiveTypeForString(String type) {
+    public static CSSPrimitiveUnit sacPrimitiveTypeForString(String type) {
         if ("em".equals(type)) {
-            return CSSValueType.CSS_EMS;
+            return CSSPrimitiveUnit.CSS_EMS;
         } else if ("ex".equals(type)) {
-            return CSSValueType.CSS_EXS;
+            return CSSPrimitiveUnit.CSS_EXS;
         } else if ("px".equals(type)) {
-            return CSSValueType.CSS_PX;
+            return CSSPrimitiveUnit.CSS_PX;
         } else if ("%".equals(type)) {
-            return CSSValueType.CSS_PERCENTAGE;
+            return CSSPrimitiveUnit.CSS_PERCENTAGE;
         } else if ("in".equals(type)) {
-            return CSSValueType.CSS_IN;
+            return CSSPrimitiveUnit.CSS_IN;
         } else if ("cm".equals(type)) {
-            return CSSValueType.CSS_CM;
+            return CSSPrimitiveUnit.CSS_CM;
         } else if ("mm".equals(type)) {
-            return CSSValueType.CSS_MM;
+            return CSSPrimitiveUnit.CSS_MM;
         } else if ("pt".equals(type)) {
-            return CSSValueType.CSS_PT;
+            return CSSPrimitiveUnit.CSS_PT;
         } else if ("pc".equals(type)) {
-            return CSSValueType.CSS_PC;
+            return CSSPrimitiveUnit.CSS_PC;
         } else if (type == null) {
             //this is only valid if length is 0
-            return CSSValueType.CSS_PX;
+            return CSSPrimitiveUnit.CSS_PX;
         } else {
             throw new XRRuntimeException("Unknown type on CSS value: " + type);
         }
     }
 
-    public static String stringForSACPrimitiveType(CSSValueType type) {
+    public static String stringForSACPrimitiveType(CSSPrimitiveUnit type) {
         return type.toString();
     }
 
@@ -84,7 +84,7 @@ public final class ValueConstants {
      */
     //TODO: method may be unnecessary (tobe)
     public static boolean isAbsoluteUnit(PropertyValue primitive) {
-    	CSSValueType type;
+    	CSSPrimitiveUnit type;
         type = primitive.getPrimitiveTypeN();
         return isAbsoluteUnit(type);
     }
@@ -99,7 +99,7 @@ public final class ValueConstants {
      * @return See desc.
      */
     //TODO: method may be unnecessary (tobe)
-    public static boolean isAbsoluteUnit(CSSValueType type) {
+    public static boolean isAbsoluteUnit(CSSPrimitiveUnit type) {
         // TODO: check this list...
 
         // note, all types are included here to make sure none are missed
@@ -188,7 +188,7 @@ public final class ValueConstants {
      * @param cssPrimitiveType PARAM
      * @return See desc.
      */
-    public static boolean isNumber(CSSValueType cssPrimitiveType) {
+    public static boolean isNumber(CSSPrimitiveUnit cssPrimitiveType) {
         switch (cssPrimitiveType) {
             // fall thru on all these
             // relative length or size
@@ -218,39 +218,39 @@ public final class ValueConstants {
      * @param value PARAM
      * @return Returns
      */
-    public static CSSValueType guessType(String value) {
-    	CSSValueType type = CSSValueType.CSS_STRING;
+    public static CSSPrimitiveUnit guessType(String value) {
+    	CSSPrimitiveUnit type = CSSPrimitiveUnit.CSS_STRING;
         if (value != null && value.length() > 1) {
             if (value.endsWith("%")) {
-                type = CSSValueType.CSS_PERCENTAGE;
+                type = CSSPrimitiveUnit.CSS_PERCENTAGE;
             } else if (value.startsWith("rgb") || value.startsWith("#")) {
-                type = CSSValueType.CSS_RGBCOLOR;
+                type = CSSPrimitiveUnit.CSS_RGBCOLOR;
             } else {
                 String hmm = value.substring(value.length() - 2);
                 if ("pt".equals(hmm)) {
-                    type = CSSValueType.CSS_PT;
+                    type = CSSPrimitiveUnit.CSS_PT;
                 } else if ("px".equals(hmm)) {
-                    type = CSSValueType.CSS_PX;
+                    type = CSSPrimitiveUnit.CSS_PX;
                 } else if ("em".equals(hmm)) {
-                    type = CSSValueType.CSS_EMS;
+                    type = CSSPrimitiveUnit.CSS_EMS;
                 } else if ("ex".equals(hmm)) {
-                    type = CSSValueType.CSS_EXS;
+                    type = CSSPrimitiveUnit.CSS_EXS;
                 } else if ("in".equals(hmm)) {
-                    type = CSSValueType.CSS_IN;
+                    type = CSSPrimitiveUnit.CSS_IN;
                 } else if ("cm".equals(hmm)) {
-                    type = CSSValueType.CSS_CM;
+                    type = CSSPrimitiveUnit.CSS_CM;
                 } else if ("mm".equals(hmm)) {
-                    type = CSSValueType.CSS_MM;
+                    type = CSSPrimitiveUnit.CSS_MM;
                 } else {
                     if (Character.isDigit(value.charAt(value.length() - 1))) {
                         try {
                             new Float(value);
-                            type = CSSValueType.CSS_NUMBER;
+                            type = CSSPrimitiveUnit.CSS_NUMBER;
                         } catch (NumberFormatException ex) {
-                            type = CSSValueType.CSS_STRING;
+                            type = CSSPrimitiveUnit.CSS_STRING;
                         }
                     } else {
-                        type = CSSValueType.CSS_STRING;
+                        type = CSSPrimitiveUnit.CSS_STRING;
                     }
                 }
             }

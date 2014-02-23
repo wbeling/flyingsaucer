@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
@@ -42,11 +42,11 @@ public class BackgroundPropertyBuilder implements PropertyBuilder {
         CSSName.BACKGROUND_ATTACHMENT, CSSName.BACKGROUND_POSITION };
     
     private boolean isAppliesToBackgroundPosition(PropertyValue value) {
-    	CSSValueType type = value.getPrimitiveTypeN();
+    	CSSPrimitiveUnit type = value.getPrimitiveTypeN();
         
-        if (isLength(value) || type == CSSValueType.CSS_PERCENTAGE) {
+        if (isLength(value) || type == CSSPrimitiveUnit.CSS_PERCENTAGE) {
             return true;
-        } else if (type != CSSValueType.CSS_IDENT) {
+        } else if (type != CSSPrimitiveUnit.CSS_IDENT) {
             return false;
         } else {
             IdentValue ident = IdentValue.fsValueOf(value.getStringValue());
@@ -73,8 +73,8 @@ public class BackgroundPropertyBuilder implements PropertyBuilder {
             checkInheritAllowed(value, false);
             
             boolean processingBackgroundPosition = false;
-            CSSValueType type = value.getPrimitiveTypeN();
-            if (type == CSSValueType.CSS_IDENT) {
+            CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+            if (type == CSSPrimitiveUnit.CSS_IDENT) {
                 FSRGBColor color = Conversions.getColor(value.getStringValue());
                 if (color != null) {
                     if (backgroundColor != null) {
@@ -129,14 +129,14 @@ public class BackgroundPropertyBuilder implements PropertyBuilder {
                 if (PrimitivePropertyBuilders.BACKGROUND_POSITIONS.contains(ident)) {
                     processingBackgroundPosition = true;
                 }
-            } else if (type == CSSValueType.CSS_RGBCOLOR) {
+            } else if (type == CSSPrimitiveUnit.CSS_RGBCOLOR) {
                 if (backgroundColor != null) {
                     throw new CSSParseException("A background-color value cannot be set twice", -1);
                 }
                 
                 backgroundColor = new PropertyDeclaration(
                         CSSName.BACKGROUND_COLOR, value, important, origin);
-            } else if (type == CSSValueType.CSS_URI || value.toString().toLowerCase(Locale.US).startsWith(IdentValue.LINEAR_GRADIENT.asString())) {
+            } else if (type == CSSPrimitiveUnit.CSS_URI || value.toString().toLowerCase(Locale.US).startsWith(IdentValue.LINEAR_GRADIENT.asString())) {
                 if (backgroundImage != null) {
                     throw new CSSParseException("A background-image value cannot be set twice", -1);
                 }
@@ -145,7 +145,7 @@ public class BackgroundPropertyBuilder implements PropertyBuilder {
                         CSSName.BACKGROUND_IMAGE, value, important, origin);
             }
             
-            if (processingBackgroundPosition || isLength(value) || type == CSSValueType.CSS_PERCENTAGE) {
+            if (processingBackgroundPosition || isLength(value) || type == CSSPrimitiveUnit.CSS_PERCENTAGE) {
                 if (backgroundPosition != null) {
                     throw new CSSParseException("A background-position value cannot be set twice", -1);
                 }
@@ -189,8 +189,8 @@ public class BackgroundPropertyBuilder implements PropertyBuilder {
         
         if (backgroundPosition == null) {
             List<PropertyValue> v = new ArrayList<PropertyValue>(2);
-            v.add(new PropertyValueImp(CSSValueType.CSS_PERCENTAGE, 0.0f, "0%"));
-            v.add(new PropertyValueImp(CSSValueType.CSS_PERCENTAGE, 0.0f, "0%"));
+            v.add(new PropertyValueImp(CSSPrimitiveUnit.CSS_PERCENTAGE, 0.0f, "0%"));
+            v.add(new PropertyValueImp(CSSPrimitiveUnit.CSS_PERCENTAGE, 0.0f, "0%"));
             backgroundPosition = new PropertyDeclaration(
                     CSSName.BACKGROUND_POSITION, new PropertyValueImp(v), important, origin);
         }

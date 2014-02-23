@@ -23,11 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.PropertyValueImp;
+import org.xhtmlrenderer.css.parser.PropertyValueImp.CSSValueType;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
@@ -47,7 +48,7 @@ public class SizePropertyBuilder implements PropertyBuilder {
             
             if (value.getCssValueTypeN() == CSSValueType.CSS_INHERIT) {
                 return checkInheritAll(ALL, values, origin, important, inheritAllowed);
-            } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
+            } else if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT) {
                 PageSize pageSize = PageSize.getPageSize(value.getStringValue());
                 if (pageSize != null) {
                     result.add(new PropertyDeclaration(
@@ -118,8 +119,8 @@ public class SizePropertyBuilder implements PropertyBuilder {
                         CSSName.FS_PAGE_HEIGHT, value2, important, origin));
                 
                 return result;
-            } else if (value1.getPrimitiveTypeN() == CSSValueType.CSS_IDENT &&
-                       value2.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
+            } else if (value1.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT &&
+                       value2.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT) {
                 if (value2.getStringValue().equals("landscape") || 
                         value2.getStringValue().equals("portrait")) {
                     PropertyValue temp = value1;

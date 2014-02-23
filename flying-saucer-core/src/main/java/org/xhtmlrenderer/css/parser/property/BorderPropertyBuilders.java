@@ -24,12 +24,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.parser.PropertyValueImp;
+import org.xhtmlrenderer.css.parser.PropertyValueImp.CSSValueType;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import static org.xhtmlrenderer.css.parser.property.BuilderUtil.*;
@@ -120,7 +121,7 @@ public class BorderPropertyBuilders {
         }
         
         private boolean isBorderStyle(PropertyValue value) {
-            if (value.getPrimitiveTypeN() != CSSValueType.CSS_IDENT) {
+            if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_IDENT) {
                 return false;
             }
             
@@ -133,8 +134,8 @@ public class BorderPropertyBuilders {
         }
         
         private PropertyValue convertToBorderWidth(PropertyValue value) {
-        	CSSValueType type = value.getPrimitiveTypeN();
-            if (type != CSSValueType.CSS_IDENT && ! isLength(value)) {
+        	CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+            if (type != CSSPrimitiveUnit.CSS_IDENT && ! isLength(value)) {
                 return null;
             }
             
@@ -155,12 +156,12 @@ public class BorderPropertyBuilders {
         } 
         
         private PropertyValue convertToBorderColor(PropertyValue value) {
-        	CSSValueType type = value.getPrimitiveTypeN();
-            if (type != CSSValueType.CSS_IDENT && type != CSSValueType.CSS_RGBCOLOR) {
+        	CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+            if (type != CSSPrimitiveUnit.CSS_IDENT && type != CSSPrimitiveUnit.CSS_RGBCOLOR) {
                 return null;
             }
             
-            if (type == CSSValueType.CSS_RGBCOLOR) {
+            if (type == CSSPrimitiveUnit.CSS_RGBCOLOR) {
                 return value;
             } else {
                 FSRGBColor color = Conversions.getColor(value.getStringValue());

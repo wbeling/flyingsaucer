@@ -34,7 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.constants.MarginBoxName;
 import org.xhtmlrenderer.css.constants.PageElementPosition;
@@ -154,7 +154,7 @@ public class BoxBuilder {
                                 StylesheetInfo.CSSOrigin.USER),
                         new PropertyDeclaration(
                                 CSSName.WIDTH,
-                                new PropertyValueImp(CSSValueType.CSS_PERCENTAGE, 100.0f, "100%"),
+                                new PropertyValueImp(CSSPrimitiveUnit.CSS_PERCENTAGE, 100.0f, "100%"),
                                 true,
                                 StylesheetInfo.CSSOrigin.USER),
                 }));
@@ -677,7 +677,7 @@ public class BoxBuilder {
             List<PropertyValue> params = function.getParameters();
             if (params.size() == 1) {
                 PropertyValue value = (PropertyValue) params.get(0);
-                return value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT;
+                return value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT;
             }
         }
 
@@ -692,10 +692,10 @@ public class BoxBuilder {
             }
             boolean ok = true;
             PropertyValue value1 = (PropertyValue) params.get(0);
-            ok = value1.getPrimitiveTypeN() == CSSValueType.CSS_IDENT;
+            ok = value1.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT;
             if (ok && params.size() == 2) {
                 PropertyValue value2 = (PropertyValue) params.get(1);
-                ok = value2.getPrimitiveTypeN() == CSSValueType.CSS_IDENT;
+                ok = value2.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT;
             }
 
             return ok;
@@ -712,7 +712,7 @@ public class BoxBuilder {
             }
 
             PropertyValue value = (PropertyValue) params.get(0);
-            if (value.getPrimitiveTypeN() != CSSValueType.CSS_IDENT) {
+            if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_IDENT) {
                 return null;
             }
 
@@ -726,7 +726,7 @@ public class BoxBuilder {
             IdentValue listStyleType = IdentValue.DECIMAL;
             if (params.size() == 2) {
                 value = (PropertyValue) params.get(1);
-                if (value.getPrimitiveTypeN() != CSSValueType.CSS_IDENT) {
+                if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_IDENT) {
                     return null;
                 }
 
@@ -747,14 +747,14 @@ public class BoxBuilder {
             }
 
             PropertyValue value = (PropertyValue) params.get(0);
-            if (value.getPrimitiveTypeN() != CSSValueType.CSS_IDENT) {
+            if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_IDENT) {
                 return null;
             }
 
             String counter = value.getStringValue();
 
             value = (PropertyValue) params.get(1);
-            if (value.getPrimitiveTypeN() != CSSValueType.CSS_STRING) {
+            if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_STRING) {
                 return null;
             }
 
@@ -763,7 +763,7 @@ public class BoxBuilder {
             IdentValue listStyleType = IdentValue.DECIMAL;
             if (params.size() == 3) {
                 value = (PropertyValue) params.get(2);
-                if (value.getPrimitiveTypeN() != CSSValueType.CSS_IDENT) {
+                if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_IDENT) {
                     return null;
                 }
 
@@ -807,8 +807,8 @@ public class BoxBuilder {
 
             String content = null;
 
-            CSSValueType type = value.getPrimitiveTypeN();
-            if (type == CSSValueType.CSS_STRING) {
+            CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+            if (type == CSSPrimitiveUnit.CSS_STRING) {
                 content = value.getStringValue();
             } else if (value.getPropertyValueType() == PropertyValueImp.VALUE_TYPE_FUNCTION) {
                 if (mode == CONTENT_LIST_DOCUMENT && isAttrFunction(value.getFunction())) {
@@ -847,7 +847,7 @@ public class BoxBuilder {
                         }
                     }
                 }
-            } else if (type == CSSValueType.CSS_IDENT) {
+            } else if (type == CSSPrimitiveUnit.CSS_IDENT) {
                 FSDerivedValue dv = style.valueByName(CSSName.QUOTES);
                 
                 if (dv != IdentValue.NONE) {

@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
+import org.xhtmlrenderer.css.parser.PropertyValueImp.CSSValueType;
 import org.xhtmlrenderer.css.sheet.PropertyDeclaration;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo.CSSOrigin;
 import org.xhtmlrenderer.layout.SharedContext;
@@ -24,15 +25,15 @@ public class BuilderUtil {
 	}
 
 	
-	public static final EnumSet<CSSValueType> LENGTH_UNITS = EnumSet.of(
-			CSSValueType.CSS_EMS,
-			CSSValueType.CSS_EXS,
-			CSSValueType.CSS_PX,
-			CSSValueType.CSS_IN,
-			CSSValueType.CSS_CM,
-			CSSValueType.CSS_MM,
-			CSSValueType.CSS_PT,
-			CSSValueType.CSS_PC);
+	public static final EnumSet<CSSPrimitiveUnit> LENGTH_UNITS = EnumSet.of(
+			CSSPrimitiveUnit.CSS_EMS,
+			CSSPrimitiveUnit.CSS_EXS,
+			CSSPrimitiveUnit.CSS_PX,
+			CSSPrimitiveUnit.CSS_IN,
+			CSSPrimitiveUnit.CSS_CM,
+			CSSPrimitiveUnit.CSS_MM,
+			CSSPrimitiveUnit.CSS_PT,
+			CSSPrimitiveUnit.CSS_PC);
 	
 	public static void cssThrowError(LangId key, Object... args) 
 	{
@@ -48,13 +49,13 @@ public class BuilderUtil {
 		XRLog.cssParse(Level.WARNING, msg);
 	}
 	
-	public static void checkValueType(CSSName cssName, PropertyValue value, EnumSet<CSSValueType> in)
+	public static void checkValueType(CSSName cssName, PropertyValue value, EnumSet<CSSPrimitiveUnit> in)
 	{
 		if (!in.contains(value.getPrimitiveTypeN()))
 			cssThrowError(LangId.UNSUPPORTED_TYPE, value.getPrimitiveTypeN(), cssName);
 	}
 	
-	public static void checkValueType(CSSName cssName, PropertyValue value, EnumSet<CSSValueType> in, EnumSet<CSSValueType> in2)
+	public static void checkValueType(CSSName cssName, PropertyValue value, EnumSet<CSSPrimitiveUnit> in, EnumSet<CSSPrimitiveUnit> in2)
 	{
 		if (!in.contains(value.getPrimitiveTypeN()) && !in2.contains(value.getPrimitiveTypeN()))
 			cssThrowError(LangId.UNSUPPORTED_TYPE, value.getPrimitiveTypeN(), cssName);
@@ -71,30 +72,30 @@ public class BuilderUtil {
 	}
 
 	public static void checkIdentType(CSSName cssName, PropertyValue value) {
-		if (value.getPrimitiveTypeN() != CSSValueType.CSS_IDENT) 
+		if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_IDENT) 
 			cssThrowError(LangId.MUST_BE_IDENTIFIER, cssName);
 	}
 
 	public static void checkIdentOrURIType(CSSName cssName, PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
 
-		if (type != CSSValueType.CSS_IDENT &&
-			type != CSSValueType.CSS_URI)
+		if (type != CSSPrimitiveUnit.CSS_IDENT &&
+			type != CSSPrimitiveUnit.CSS_URI)
 			cssThrowError(LangId.MUST_BE_URI_OR_IDENTIFIER, cssName);
 	}
 
 	public static void checkIdentOrColorType(CSSName cssName, PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
 
-		if (type != CSSValueType.CSS_IDENT
-			&& type != CSSValueType.CSS_RGBCOLOR)
+		if (type != CSSPrimitiveUnit.CSS_IDENT
+			&& type != CSSPrimitiveUnit.CSS_RGBCOLOR)
 		cssThrowError(LangId.MUST_BE_COLOR_OR_IDENTIFIER, cssName);
 	}
 
 	public static void checkIdentOrIntegerType(CSSName cssName, PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if ((type != CSSValueType.CSS_IDENT && type != CSSValueType.CSS_NUMBER)
-			|| (type == CSSValueType.CSS_NUMBER &&
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if ((type != CSSPrimitiveUnit.CSS_IDENT && type != CSSPrimitiveUnit.CSS_NUMBER)
+			|| (type == CSSPrimitiveUnit.CSS_NUMBER &&
 			(int) value.getFloatValue() != 
 			Math.round(value.getFloatValue()))) 
 		{
@@ -103,9 +104,9 @@ public class BuilderUtil {
 	}
 
 	public static void checkInteger(CSSName cssName, PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if (type != CSSValueType.CSS_NUMBER ||
-		   (type == CSSValueType.CSS_NUMBER && 
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if (type != CSSPrimitiveUnit.CSS_NUMBER ||
+		   (type == CSSPrimitiveUnit.CSS_NUMBER && 
 		    value.getFloatValue() % 1f != 0f))
 		{
 			cssThrowError(LangId.MUST_BE_INT, cssName);
@@ -113,33 +114,33 @@ public class BuilderUtil {
 	}
 
 	public static void checkIdentOrLengthType(CSSName cssName, PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if (type != CSSValueType.CSS_IDENT && !isLength(value)) {
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if (type != CSSPrimitiveUnit.CSS_IDENT && !isLength(value)) {
 			cssThrowError(LangId.MUST_BE_LENGTH_OR_IDENTIFIER, cssName);
 		}
 	}
 
 	public static void checkIdentOrNumberType(CSSName cssName, PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if (type != CSSValueType.CSS_IDENT
-				&& type != CSSValueType.CSS_NUMBER) {
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if (type != CSSPrimitiveUnit.CSS_IDENT
+				&& type != CSSPrimitiveUnit.CSS_NUMBER) {
 			cssThrowError(LangId.MUST_BE_NUMBER_OR_IDENTIFIER, cssName);
 		}
 	}
 
 	public static void checkIdentLengthOrPercentType(CSSName cssName,
 			PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if (type != CSSValueType.CSS_IDENT && !isLength(value)
-				&& type != CSSValueType.CSS_PERCENTAGE) {
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if (type != CSSPrimitiveUnit.CSS_IDENT && !isLength(value)
+				&& type != CSSPrimitiveUnit.CSS_PERCENTAGE) {
 			cssThrowError(LangId.MUST_BE_LENGTH_PERCENT_OR_IDENTIFIER, cssName);
 		}
 	}
 
 	public static void checkLengthOrPercentType(CSSName cssName,
 			PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if (!isLength(value) && type != CSSValueType.CSS_PERCENTAGE) {
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if (!isLength(value) && type != CSSPrimitiveUnit.CSS_PERCENTAGE) {
 			cssThrowError(LangId.MUST_BE_LENGTH_OR_PERCENT, cssName);
 		}
 	}
@@ -151,46 +152,46 @@ public class BuilderUtil {
 	}
 
 	public static void checkNumberType(CSSName cssName, PropertyValue value) {
-		if (value.getPrimitiveTypeN() != CSSValueType.CSS_NUMBER) {
+		if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_NUMBER) {
 			cssThrowError(LangId.MUST_BE_NUMBER, cssName);
 		}
 	}
 
 	public static void checkStringType(CSSName cssName, PropertyValue value) {
-		if (value.getPrimitiveTypeN() != CSSValueType.CSS_STRING) {
+		if (value.getPrimitiveTypeN() != CSSPrimitiveUnit.CSS_STRING) {
 			cssThrowError(LangId.MUST_BE_STRING, cssName);
 		}
 	}
 
 	public static void checkIdentOrString(CSSName cssName, PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if (type != CSSValueType.CSS_STRING
-				&& type != CSSValueType.CSS_IDENT) {
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if (type != CSSPrimitiveUnit.CSS_STRING
+				&& type != CSSPrimitiveUnit.CSS_IDENT) {
 			cssThrowError(LangId.MUST_BE_STRING_OR_IDENTIFIER, cssName);
 		}
 	}
 
 	public static void checkIdentLengthNumberOrPercentType(CSSName cssName,
 			PropertyValue value) {
-		CSSValueType type = value.getPrimitiveTypeN();
-		if (type != CSSValueType.CSS_IDENT && !isLength(value)
-				&& type != CSSValueType.CSS_PERCENTAGE
-				&& type != CSSValueType.CSS_NUMBER) {
+		CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+		if (type != CSSPrimitiveUnit.CSS_IDENT && !isLength(value)
+				&& type != CSSPrimitiveUnit.CSS_PERCENTAGE
+				&& type != CSSPrimitiveUnit.CSS_NUMBER) {
 			cssThrowError(LangId.MUST_BE_LENGTH_NUMBER_PERCENT_OR_IDENTIFIER, cssName);
 		}
 	}
 
 	public static boolean isLength(PropertyValue value) {
-		CSSValueType unit = value.getPrimitiveTypeN();
-		return unit == CSSValueType.CSS_EMS
-				|| unit == CSSValueType.CSS_EXS
-				|| unit == CSSValueType.CSS_PX
-				|| unit == CSSValueType.CSS_IN
-				|| unit == CSSValueType.CSS_CM
-				|| unit == CSSValueType.CSS_MM
-				|| unit == CSSValueType.CSS_PT
-				|| unit == CSSValueType.CSS_PC
-				|| (unit == CSSValueType.CSS_NUMBER && value
+		CSSPrimitiveUnit unit = value.getPrimitiveTypeN();
+		return unit == CSSPrimitiveUnit.CSS_EMS
+				|| unit == CSSPrimitiveUnit.CSS_EXS
+				|| unit == CSSPrimitiveUnit.CSS_PX
+				|| unit == CSSPrimitiveUnit.CSS_IN
+				|| unit == CSSPrimitiveUnit.CSS_CM
+				|| unit == CSSPrimitiveUnit.CSS_MM
+				|| unit == CSSPrimitiveUnit.CSS_PT
+				|| unit == CSSPrimitiveUnit.CSS_PC
+				|| (unit == CSSPrimitiveUnit.CSS_NUMBER && value
 					.getFloatValue() == 0.0f);
 	}
 

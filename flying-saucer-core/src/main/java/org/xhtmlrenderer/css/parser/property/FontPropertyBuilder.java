@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.CSSParseException;
 import org.xhtmlrenderer.css.parser.PropertyValue;
@@ -60,14 +60,14 @@ public class FontPropertyBuilder implements PropertyBuilder {
         ListIterator<PropertyValue> i = values.listIterator();
         while (i.hasNext()) {
             PropertyValue value = (PropertyValue)i.next();
-            CSSValueType type = value.getPrimitiveTypeN();
-            if (type == CSSValueType.CSS_IDENT) {
+            CSSPrimitiveUnit type = value.getPrimitiveTypeN();
+            if (type == CSSPrimitiveUnit.CSS_IDENT) {
                 // The parser will have given us ident values as they appear
                 // (case-wise) in the CSS text since we might be creating
                 // a font-family list out of them.  Here we want the normalized
                 // (lowercase) version though.
                 String lowerCase = value.getStringValue().toLowerCase();
-                value = new PropertyValueImp(CSSValueType.CSS_IDENT, lowerCase, lowerCase);
+                value = new PropertyValueImp(CSSPrimitiveUnit.CSS_IDENT, lowerCase, lowerCase);
                 IdentValue ident = checkIdent(cssName, value);
                 if (ident == IdentValue.NORMAL) { // skip to avoid double set false positives
                     continue;
@@ -91,7 +91,7 @@ public class FontPropertyBuilder implements PropertyBuilder {
                     keepGoing = true;
                     break;
                 }
-            } else if (type == CSSValueType.CSS_NUMBER && value.getFloatValue() > 0) {
+            } else if (type == CSSPrimitiveUnit.CSS_NUMBER && value.getFloatValue() > 0) {
                 if (fontWeight != null) {
                     throw new CSSParseException("font-weight cannot be set twice", -1);
                 }
@@ -102,7 +102,7 @@ public class FontPropertyBuilder implements PropertyBuilder {
                 }
                 
                 PropertyValue replacement = new PropertyValueImp(
-                		CSSValueType.CSS_IDENT, weight.toString(), weight.toString());
+                		CSSPrimitiveUnit.CSS_IDENT, weight.toString(), weight.toString());
                 replacement.setIdentValue(weight);
                 
                 fontWeight = new PropertyDeclaration(CSSName.FONT_WEIGHT, replacement, important, origin);
@@ -116,9 +116,9 @@ public class FontPropertyBuilder implements PropertyBuilder {
             i.previous();
             PropertyValue value = (PropertyValue)i.next();
             
-            if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) {
+            if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT) {
                 String lowerCase = value.getStringValue().toLowerCase();
-                value = new PropertyValueImp(CSSValueType.CSS_IDENT, lowerCase, lowerCase);
+                value = new PropertyValueImp(CSSPrimitiveUnit.CSS_IDENT, lowerCase, lowerCase);
             }
             
             PropertyBuilder fontSizeBuilder = CSSName.getPropertyBuilder(CSSName.FONT_SIZE);

@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
@@ -371,7 +371,7 @@ public abstract class AbstractOutputDevice implements OutputDevice {
     }
 
     private int calcOffset(CssContext c, CalculatedStyle style, PropertyValue value, float boundsDim, float imageDim) {
-        if (value.getPrimitiveTypeN() == CSSValueType.CSS_PERCENTAGE) {
+        if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_PERCENTAGE) {
             float percent = value.getFloatValue() / 100.0f;
             return Math.round(boundsDim*percent - imageDim*percent);
         } else { /* it's a <length> */
@@ -415,9 +415,9 @@ public abstract class AbstractOutputDevice implements OutputDevice {
     }
 
     private int calcBackgroundSizeLength(CssContext c, CalculatedStyle style, PropertyValue value, float boundsDim) {
-        if (value.getPrimitiveTypeN() == CSSValueType.CSS_IDENT) { // 'auto'
+        if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_IDENT) { // 'auto'
             return -1;
-        } else if (value.getPrimitiveTypeN() == CSSValueType.CSS_PERCENTAGE) {
+        } else if (value.getPrimitiveTypeN() == CSSPrimitiveUnit.CSS_PERCENTAGE) {
             float percent = value.getFloatValue() / 100.0f;
             return Math.round(boundsDim*percent);
         } else {

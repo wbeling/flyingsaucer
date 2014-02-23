@@ -22,7 +22,7 @@ package org.xhtmlrenderer.css.style.derived;
 import java.util.logging.Level;
 
 import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.constants.CSSValueType;
+import org.xhtmlrenderer.css.constants.CSSPrimitiveUnit;
 import org.xhtmlrenderer.css.constants.ValueConstants;
 import org.xhtmlrenderer.css.parser.PropertyValue;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
@@ -47,7 +47,7 @@ public class LengthValue extends DerivedValue {
     /**
      * The specified primitive SAC data type given for this length, from the CSS text
      */
-    private CSSValueType _lengthPrimitiveType;
+    private CSSPrimitiveUnit _lengthPrimitiveType;
     
     public LengthValue(CalculatedStyle style, CSSName name, PropertyValue value) {
         super(name, value.getPrimitiveTypeN(), value.getCssText(), value.getCssText());
@@ -88,15 +88,15 @@ public class LengthValue extends DerivedValue {
     }
     
     public boolean isDependentOnFontSize() {
-        return _lengthPrimitiveType == CSSValueType.CSS_EXS ||
-               _lengthPrimitiveType == CSSValueType.CSS_EMS;
+        return _lengthPrimitiveType == CSSPrimitiveUnit.CSS_EXS ||
+               _lengthPrimitiveType == CSSPrimitiveUnit.CSS_EMS;
     }
 
     public static float calcFloatProportionalValue(CalculatedStyle style,
                                                       CSSName cssName,
                                                       String stringValue,
                                                       float relVal,
-                                                      CSSValueType primitiveType,
+                                                      CSSPrimitiveUnit primitiveType,
                                                       float baseValue,
                                                       CssContext ctx) {
 

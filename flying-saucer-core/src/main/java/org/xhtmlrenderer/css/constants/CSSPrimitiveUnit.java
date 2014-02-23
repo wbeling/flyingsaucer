@@ -5,7 +5,7 @@ package org.xhtmlrenderer.css.constants;
  * Aims to enumerate all CSS unit types. From Webkit, not all units
  * are supported by Flyingsaucer.
  */
-public enum CSSValueType
+public enum CSSPrimitiveUnit
 {
 	CSS_ATTR,
 	CSS_CM,
@@ -62,12 +62,5 @@ public enum CSSValueType
     CSS_CALC_PERCENTAGE_WITH_LENGTH,
 
     CSS_PROPERTY_ID,
-    CSS_VALUE_ID,
-    
-    // TODO: These should go into a separate enum
-    // as they are types of types.
-    CSS_INHERIT,
-    CSS_CUSTOM,
-    CSS_PRIMITIVE_VALUE,
-    CSS_VALUE_LIST;
+    CSS_VALUE_ID;
 }
