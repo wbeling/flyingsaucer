@@ -28,6 +28,7 @@ import java.util.Map;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.extend.NamespaceHandler;
+import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.extend.UserInterface;
 import org.xhtmlrenderer.layout.BoxBuilder;
@@ -371,8 +372,9 @@ public class Java2DRenderer {
 		AWTFontResolver fontResolver = new AWTFontResolver();
 		sharedContext.setFontResolver(fontResolver);
 
-		SwingReplacedElementFactory replacedElementFactory = new SwingReplacedElementFactory();
-		sharedContext.setReplacedElementFactory(replacedElementFactory);
+		// TODO
+		//ReplacedElementFactory replacedElementFactory = new SwingReplacedElementFactory();
+		sharedContext.setReplacedElementFactory(null);
 
 		sharedContext.setTextRenderer(new Java2DTextRenderer());
 		sharedContext.setDPI(72 * this.dotsPerPoint);

@@ -1,8 +1,9 @@
 package org.xhtmlrenderer.demo.browser.actions;
 
 import org.xhtmlrenderer.demo.browser.BrowserStartup;
-import org.xhtmlrenderer.simple.XHTMLPrintable;
 import org.xhtmlrenderer.util.Uu;
+
+import com.github.danfickle.flyingsaucer.swing.XHTMLPrintable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

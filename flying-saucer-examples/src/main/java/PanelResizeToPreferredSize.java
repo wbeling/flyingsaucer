@@ -20,7 +20,9 @@
 
 
 import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+
+import com.github.danfickle.flyingsaucer.swing.XHTMLPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;

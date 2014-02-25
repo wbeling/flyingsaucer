@@ -18,15 +18,15 @@
  * }}}
  */
 
-import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.simple.XHTMLPrintable;
-
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+
+import com.github.danfickle.flyingsaucer.swing.XHTMLPanel;
+import com.github.danfickle.flyingsaucer.swing.XHTMLPrintable;
 
 
 /**

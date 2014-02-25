@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  * }}}
  */
-package org.xhtmlrenderer.swing;
+package com.github.danfickle.flyingsaucer.swing;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -53,6 +53,7 @@ import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
+import org.xhtmlrenderer.swing.Java2DOutputDevice;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
@@ -64,7 +65,9 @@ import org.xhtmlrenderer.util.XRLog;
  * @author Joshua Marinacci
  */
 @SuppressWarnings("serial")
-public abstract class BasicPanel extends RootPanel implements FormSubmissionListener {
+public abstract class BasicPanel extends RootPanel implements
+	FormSubmissionListener 
+{
     private static final int PAGE_PAINTING_CLEARANCE_WIDTH = 10;
     private static final int PAGE_PAINTING_CLEARANCE_HEIGHT = 10;
 

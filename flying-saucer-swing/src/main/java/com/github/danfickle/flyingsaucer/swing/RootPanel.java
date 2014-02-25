@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  * }}}
  */
-package org.xhtmlrenderer.swing;
+package com.github.danfickle.flyingsaucer.swing;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -65,11 +65,17 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.render.ViewportBox;
+import org.xhtmlrenderer.swing.ContentStore;
+import org.xhtmlrenderer.swing.Java2DFontContext;
+import org.xhtmlrenderer.swing.Java2DOutputDevice;
+import org.xhtmlrenderer.swing.RepaintListener;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 
-public class RootPanel extends JPanel implements ComponentListener, UserInterface, FSCanvas, RepaintListener {
+public class RootPanel extends JPanel implements ComponentListener,
+			UserInterface, FSCanvas, RepaintListener 
+{
     static final long serialVersionUID = 1L;
 
     private Box rootBox = null;
@@ -79,8 +85,7 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
 
     private boolean defaultFontFromComponent;
 
-    public RootPanel() {
-    }
+    public RootPanel() { }
 
     public SharedContext getSharedContext() {
         return sharedContext;
@@ -106,6 +111,8 @@ public class RootPanel extends JPanel implements ComponentListener, UserInterfac
         } else {
             getSharedContext().getCss().flushAllStyleSheets();
         }
+
+        ContentStore store = new ContentStore(doc);
 
         getSharedContext().reset();
         getSharedContext().setBaseURL(url);

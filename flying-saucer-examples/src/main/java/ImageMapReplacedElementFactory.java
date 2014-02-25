@@ -27,9 +27,10 @@ import org.xhtmlrenderer.extend.FSCanvas;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.swing.AWTFSImage;
-import org.xhtmlrenderer.swing.SwingReplacedElement;
-import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.XRLog;
+
+import com.github.danfickle.flyingsaucer.swing.SwingReplacedElement;
+import com.github.danfickle.flyingsaucer.swing.SwingReplacedElementFactory;
 
 import javax.swing.*;
 import java.awt.*;

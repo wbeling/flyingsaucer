@@ -17,6 +17,9 @@
  */
 
 
+import com.github.danfickle.flyingsaucer.swing.FSMouseListener;
+import com.github.danfickle.flyingsaucer.swing.LinkListener;
+import com.github.danfickle.flyingsaucer.swing.XHTMLPanel;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 
@@ -27,11 +30,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
-import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.swing.FSMouseListener;
-import org.xhtmlrenderer.swing.LinkListener;
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

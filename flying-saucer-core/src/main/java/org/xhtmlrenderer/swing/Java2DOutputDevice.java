@@ -184,13 +184,15 @@ public class Java2DOutputDevice extends AbstractOutputDevice implements OutputDe
     @Override
     public void paintReplacedElement(RenderingContext c, BlockBox box) {
         ReplacedElement replaced = box.getReplacedElement();
-        if (replaced instanceof SwingReplacedElement) {
-            Rectangle contentBounds = box.getContentAreaEdge(box.getAbsX(), box.getAbsY(), c);
-            JComponent component = ((SwingReplacedElement)box.getReplacedElement()).getJComponent();
-            RootPanel canvas = (RootPanel)c.getCanvas();
-            CellRendererPane pane = canvas.getCellRendererPane();
-            pane.paintComponent(_graphics, component, canvas, contentBounds.x,  contentBounds.y, contentBounds.width, contentBounds.height,true);
-        } else if (replaced instanceof ImageReplacedElement) {
+//      if (replaced instanceof SwingReplacedElement) {
+// TODO
+//            Rectangle contentBounds = box.getContentAreaEdge(box.getAbsX(), box.getAbsY(), c);
+//            JComponent component = ((SwingReplacedElement)box.getReplacedElement()).getJComponent();
+//            RootPanel canvas = (RootPanel)c.getCanvas();
+//            CellRendererPane pane = canvas.getCellRendererPane();
+//            pane.paintComponent(_graphics, component, canvas, contentBounds.x,  contentBounds.y, contentBounds.width, contentBounds.height,true);
+//        }
+    if (replaced instanceof ImageReplacedElement) {
             Image image = ((ImageReplacedElement)replaced).getImage();
             
             Point location = replaced.getLocation();

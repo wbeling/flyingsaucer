@@ -18,7 +18,7 @@
  * }}}
  */
 
-package org.xhtmlrenderer.swing;
+package com.github.danfickle.flyingsaucer.swing;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -32,7 +32,7 @@ import org.xhtmlrenderer.layout.Layer;
 import org.xhtmlrenderer.layout.PaintingInfo;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.RenderingContext;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.Java2DOutputDevice;
 
 /**
  * ScalableXHTMLPanel extends {@see XHTMLPanel} to allow zoom on output.

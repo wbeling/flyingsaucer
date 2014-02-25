@@ -20,8 +20,9 @@
 
 
 import org.xhtmlrenderer.event.DefaultDocumentListener;
-import org.xhtmlrenderer.simple.XHTMLPanel;
 import org.xhtmlrenderer.util.XRLog;
+
+import com.github.danfickle.flyingsaucer.swing.XHTMLPanel;
 
 import javax.swing.*;
 import java.awt.*;

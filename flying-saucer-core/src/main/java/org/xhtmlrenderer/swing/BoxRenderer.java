@@ -22,6 +22,7 @@ package org.xhtmlrenderer.swing;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.extend.NamespaceHandler;
+import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.extend.UserInterface;
 import org.xhtmlrenderer.layout.BoxBuilder;
@@ -333,8 +334,9 @@ public class BoxRenderer {
         AWTFontResolver fontResolver = new AWTFontResolver();
         context.setFontResolver(fontResolver);
 
-        SwingReplacedElementFactory replacedElementFactory = new SwingReplacedElementFactory();
-        context.setReplacedElementFactory(replacedElementFactory);
+        // TODO
+        //ReplacedElementFactory replacedElementFactory = new SwingReplacedElementFactory();
+        context.setReplacedElementFactory(null);
 
         context.setTextRenderer(new Java2DTextRenderer());
         context.setDPI(72 * this.dotsPerPoint);

@@ -33,8 +33,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
-import org.xhtmlrenderer.simple.XHTMLPanel;
 import org.xhtmlrenderer.util.Uu;
+
+import com.github.danfickle.flyingsaucer.swing.XHTMLPanel;
 
 
 /**

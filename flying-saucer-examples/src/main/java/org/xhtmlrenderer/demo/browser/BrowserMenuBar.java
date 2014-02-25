@@ -24,6 +24,11 @@ import org.xhtmlrenderer.swing.*;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.Uu;
 
+import com.github.danfickle.flyingsaucer.swing.BasicPanel;
+import com.github.danfickle.flyingsaucer.swing.FSMouseListener;
+import com.github.danfickle.flyingsaucer.swing.LinkListener;
+import com.github.danfickle.flyingsaucer.swing.ScalableXHTMLPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

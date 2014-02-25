@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.xhtmlrenderer</groupId>
     <artifactId>flying-saucer-parent</artifactId>
-    <version>9.0.5-SNAPSHOT</version>
+    <version>9.0.5-SNAPSHOTX</version>
   </parent>
 
   <artifactId>flying-saucer-examples</artifactId>
@@ -32,7 +32,12 @@
       <artifactId>flying-saucer-pdf</artifactId>
       <version>${project.version}</version>
     </dependency>
-  </dependencies>
+    <dependency>
+      <groupId>org.xhtmlrenderer</groupId>
+      <artifactId>flying-saucer-swing</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+   </dependencies>
 
   <build>
     <plugins>

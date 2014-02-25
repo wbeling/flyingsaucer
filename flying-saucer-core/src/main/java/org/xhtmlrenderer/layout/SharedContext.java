@@ -43,16 +43,17 @@ import org.xhtmlrenderer.extend.FSCanvas;
 import org.xhtmlrenderer.extend.FontContext;
 import org.xhtmlrenderer.extend.FontResolver;
 import org.xhtmlrenderer.extend.NamespaceHandler;
+import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.TextRenderer;
 import org.xhtmlrenderer.extend.UserAgentCallback;
+import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.FSFont;
 import org.xhtmlrenderer.render.FSFontMetrics;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.swing.Java2DTextRenderer;
-import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.XRLog;
 
 /**
@@ -124,7 +125,33 @@ public class SharedContext {
     	this();
     	
     	font_resolver = new AWTFontResolver();
-        replacedElementFactory = new SwingReplacedElementFactory();
+        replacedElementFactory = new ReplacedElementFactory() {
+			
+			@Override
+			public void setFormSubmissionListener(FormSubmissionListener listener) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void reset() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void remove(Element e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public ReplacedElement createReplacedElement(LayoutContext c, BlockBox box,
+					UserAgentCallback uac, int cssWidth, int cssHeight) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		}; // TODO new SwingReplacedElementFactory();
         setMedia("screen");
         this.uac = uac;
         setCss(new StyleReference(uac));

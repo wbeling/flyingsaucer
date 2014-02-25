@@ -25,13 +25,13 @@ import org.xhtmlrenderer.resource.HTMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.PDFRenderer;
 import org.xhtmlrenderer.swing.ImageResourceLoader;
-import org.xhtmlrenderer.swing.ScalableXHTMLPanel;
-import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.GeneralUtil;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
+import com.github.danfickle.flyingsaucer.swing.ScalableXHTMLPanel;
+import com.github.danfickle.flyingsaucer.swing.SwingReplacedElementFactory;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
 

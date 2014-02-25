@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  * }}}
  */
-package org.xhtmlrenderer.swing;
+package com.github.danfickle.flyingsaucer.swing;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -30,6 +30,12 @@ import org.xhtmlrenderer.simple.extend.DefaultFormSubmissionListener;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.simple.extend.form.FormField;
+import org.xhtmlrenderer.swing.AWTFSImage;
+import org.xhtmlrenderer.swing.DeferredImageReplacedElement;
+import org.xhtmlrenderer.swing.EmptyReplacedElement;
+import org.xhtmlrenderer.swing.ImageReplacedElement;
+import org.xhtmlrenderer.swing.ImageResourceLoader;
+import org.xhtmlrenderer.swing.RepaintListener;
 import org.xhtmlrenderer.util.ImageUtil;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.resource.ImageResource;

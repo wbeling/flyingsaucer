@@ -1,7 +1,8 @@
 package org.xhtmlrenderer.demo.browser.actions;
 
 import org.xhtmlrenderer.demo.browser.ScaleFactor;
-import org.xhtmlrenderer.swing.ScalableXHTMLPanel;
+
+import com.github.danfickle.flyingsaucer.swing.ScalableXHTMLPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

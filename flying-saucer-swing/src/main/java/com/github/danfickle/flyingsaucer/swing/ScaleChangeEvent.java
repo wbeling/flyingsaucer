@@ -17,9 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  * }}}
  */
-package org.xhtmlrenderer.swing;
-
-import org.xhtmlrenderer.simple.XHTMLPanel;
+package com.github.danfickle.flyingsaucer.swing;
 
 /**
  * ScaleChangeEvent is used to notify interested parties that XHTMLPanel's scale factor has changed.

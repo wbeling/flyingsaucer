@@ -22,8 +22,9 @@ package org.xhtmlrenderer.demo.browser;
 import org.xhtmlrenderer.demo.browser.actions.FontSizeAction;
 import org.xhtmlrenderer.demo.browser.actions.GenerateDiffAction;
 import org.xhtmlrenderer.layout.SharedContext;
-import org.xhtmlrenderer.simple.XHTMLPanel;
 import org.xhtmlrenderer.util.Uu;
+
+import com.github.danfickle.flyingsaucer.swing.XHTMLPanel;
 
 import javax.swing.*;
 import java.awt.*;

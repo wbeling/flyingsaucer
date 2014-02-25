@@ -1,4 +1,4 @@
-package org.xhtmlrenderer.simple;
+package com.github.danfickle.flyingsaucer.swing;
 
 import org.xhtmlrenderer.util.Uu;
 

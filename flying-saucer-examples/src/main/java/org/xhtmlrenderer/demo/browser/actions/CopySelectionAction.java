@@ -1,11 +1,6 @@
 package org.xhtmlrenderer.demo.browser.actions;
 
 import org.xhtmlrenderer.demo.browser.BrowserStartup;
-import org.xhtmlrenderer.layout.SharedContext;
-import org.xhtmlrenderer.render.Box;
-import org.xhtmlrenderer.render.LineBox;
-import org.xhtmlrenderer.swing.BasicPanel;
-
 import javax.swing.*;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
