@@ -1,7 +1,7 @@
 // package PACKAGE;
 package org.xhtmlrenderer.tool;
 
-import org.xhtmlrenderer.test.DocumentDiffTest;
+//import org.xhtmlrenderer.test.DocumentDiffTest;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ public class Boxer {
                 throw new IllegalArgumentException(filen + " not a file, or is a directory. Give me a single file name.");
             }
 
-            System.out.println(DocumentDiffTest.xhtmlToDiff(filen, 1024, 768));
+//            System.out.println(DocumentDiffTest.xhtmlToDiff(filen, 1024, 768));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
