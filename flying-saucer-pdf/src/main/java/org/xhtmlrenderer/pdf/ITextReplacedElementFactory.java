@@ -19,6 +19,8 @@
  */
 package org.xhtmlrenderer.pdf;
 
+import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,6 +37,10 @@ import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.util.JsoupUtil;
+
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Image;
+import com.lowagie.text.pdf.Barcode128;
 
 import static org.xhtmlrenderer.util.GeneralUtil.ciEquals;
 
@@ -59,13 +65,39 @@ public class ITextReplacedElementFactory implements ReplacedElementFactory {
         if (nodeName.equals("img")) {
             String srcAttr = e.attr("src");
             if (srcAttr != null && srcAttr.length() > 0) {
-                FSImage fsImage = uac.getImageResource(srcAttr).getImage();
-                if (fsImage != null) {
-                    if (cssWidth != -1 || cssHeight != -1) {
-                        fsImage.scale(cssWidth, cssHeight);
-                    }
-                    return new ITextImageElement(fsImage);
-                }                    
+            	String typeAttr = e.attr("type");
+            	if (typeAttr != null && typeAttr.equalsIgnoreCase("code128")) {
+            		Barcode128 code = new Barcode128();
+            		code.setCode(srcAttr);
+            		try {
+						FSImage fsImage = new ITextFSImage(
+							Image.getInstance(
+								code.createAwtImage(
+									Color.BLACK, Color.WHITE
+								), Color.WHITE
+							)	
+						);
+						if(fsImage != null) {
+							if (cssWidth != -1 || cssHeight != -1) {
+		                        fsImage.scale(cssWidth, cssHeight);
+		                    }
+		                    return new ITextImageElement(fsImage);
+						}
+					} catch (BadElementException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+            		
+            	} else {
+	                FSImage fsImage = uac.getImageResource(srcAttr).getImage();
+	                if (fsImage != null) {
+	                    if (cssWidth != -1 || cssHeight != -1) {
+	                        fsImage.scale(cssWidth, cssHeight);
+	                    }
+	                    return new ITextImageElement(fsImage);
+	                }       
+            	}
             }
 
         } else if (nodeName.equals("input")) {
