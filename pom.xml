@@ -27,7 +27,6 @@
     <module>flying-saucer-pdf</module>
     <module>flying-saucer-log4j</module>
     <module>flying-saucer-examples</module>
-    <module>experimental-bootstrap-swing</module>
     <module>flying-saucer-swing</module>
   </modules>
 
