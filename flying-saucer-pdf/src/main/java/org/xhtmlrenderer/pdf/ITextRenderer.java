@@ -231,29 +231,35 @@ public class ITextRenderer {
     }
 
     public void createPDF(OutputStream os) throws DocumentException {
-        createPDF(os, true, 0);
+        createPDF(os, true, 0, false);
+    }
+    
+    public void createPDF(OutputStream os, boolean oneSidedPrint) throws DocumentException {
+        createPDF(os, true, 0, oneSidedPrint);
     }
 
-    public void writeNextDocument() throws DocumentException {
-        writeNextDocument(0);
-    }
-
-    public void writeNextDocument(int initialPageNo) throws DocumentException {
-        List pages = _root.getLayer().getPages();
-
-        RenderingContext c = newRenderingContext();
-        c.setInitialPageNo(initialPageNo);
-        PageBox firstPage = (PageBox) pages.get(0);
-        com.lowagie.text.Rectangle firstPageSize = new com.lowagie.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
-                firstPage.getHeight(c) / _dotsPerPoint);
-
-        _outputDevice.setStartPageNo(_writer.getPageNumber());
-
-        _pdfDoc.setPageSize(firstPageSize);
-        _pdfDoc.newPage();
-
-        writePDF(pages, c, firstPageSize, _pdfDoc, _writer);
-    }
+//    public void writeNextDocument() throws DocumentException {
+//        writeNextDocument(0);
+//    }
+//
+//    public void writeNextDocument(int initialPageNo) throws DocumentException {
+//        List pages = _root.getLayer().getPages();
+//
+//        RenderingContext c = newRenderingContext();
+//        c.setInitialPageNo(initialPageNo);
+//        PageBox firstPage = (PageBox) pages.get(0);
+//        com.lowagie.text.Rectangle firstPageSize = new com.lowagie.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
+//                firstPage.getHeight(c) / _dotsPerPoint);
+//
+//        _outputDevice.setStartPageNo(_writer.getPageNumber());
+//
+//        _pdfDoc.setPageSize(firstPageSize);
+//        _pdfDoc.newPage();
+//        _pdfDoc.addCreator("Kotek");
+//        _pdfDoc.addAuthor("Piesek");
+//
+//        writePDF(pages, c, firstPageSize, _pdfDoc, _writer);
+//    }
 
     public void finishPDF() {
         if (_pdfDoc != null) {
@@ -262,15 +268,15 @@ public class ITextRenderer {
         }
     }
 
-    public void createPDF(OutputStream os, boolean finish) throws DocumentException {
-        createPDF(os, finish, 0);
+    public void createPDF(OutputStream os, boolean finish, boolean oneSidedPrint) throws DocumentException {
+        createPDF(os, finish, 0, oneSidedPrint);
     }
 
     /**
      * <B>NOTE:</B> Caller is responsible for cleaning up the OutputStream if
      * something goes wrong.
      */
-    public void createPDF(OutputStream os, boolean finish, int initialPageNo) throws DocumentException {
+    public void createPDF(OutputStream os, boolean finish, int initialPageNo, boolean oneSidedPrint) throws DocumentException {
         List pages = _root.getLayer().getPages();
 
         RenderingContext c = newRenderingContext();
@@ -294,8 +300,9 @@ public class ITextRenderer {
         firePreOpen();
         doc.open();
 
-        writePDF(pages, c, firstPageSize, doc, writer);
+        writePDF(pages, c, firstPageSize, doc, writer, oneSidedPrint);
 
+        
         if (finish) {
             fireOnClose();
             doc.close();
@@ -321,7 +328,7 @@ public class ITextRenderer {
     }
 
     private void writePDF(List pages, RenderingContext c, com.lowagie.text.Rectangle firstPageSize, com.lowagie.text.Document doc,
-            PdfWriter writer) throws DocumentException {
+            PdfWriter writer, boolean oneSidedPrint) throws DocumentException {
         _outputDevice.setRoot(_root);
 
         _outputDevice.start(_doc);
@@ -339,6 +346,14 @@ public class ITextRenderer {
             c.setPage(i, currentPage);
             paintPage(c, writer, currentPage);
             _outputDevice.finishPage();
+            if(oneSidedPrint) {
+                com.lowagie.text.Rectangle thisPageSize = new com.lowagie.text.Rectangle(0, 0, currentPage.getWidth(c) / _dotsPerPoint,
+                		currentPage.getHeight(c) / _dotsPerPoint);
+                doc.setPageSize(thisPageSize);
+                doc.newPage();
+                _outputDevice.initializePage(writer.getDirectContent(), thisPageSize.getHeight());
+                _outputDevice.finishPage();
+            }
             if (i != pageCount - 1) {
                 PageBox nextPage = (PageBox) pages.get(i + 1);
                 com.lowagie.text.Rectangle nextPageSize = new com.lowagie.text.Rectangle(0, 0, nextPage.getWidth(c) / _dotsPerPoint,
