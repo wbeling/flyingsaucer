@@ -238,28 +238,28 @@ public class ITextRenderer {
         createPDF(os, true, 0, oneSidedPrint);
     }
 
-//    public void writeNextDocument() throws DocumentException {
-//        writeNextDocument(0);
-//    }
-//
-//    public void writeNextDocument(int initialPageNo) throws DocumentException {
-//        List pages = _root.getLayer().getPages();
-//
-//        RenderingContext c = newRenderingContext();
-//        c.setInitialPageNo(initialPageNo);
-//        PageBox firstPage = (PageBox) pages.get(0);
-//        com.lowagie.text.Rectangle firstPageSize = new com.lowagie.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
-//                firstPage.getHeight(c) / _dotsPerPoint);
-//
-//        _outputDevice.setStartPageNo(_writer.getPageNumber());
-//
-//        _pdfDoc.setPageSize(firstPageSize);
-//        _pdfDoc.newPage();
-//        _pdfDoc.addCreator("Kotek");
-//        _pdfDoc.addAuthor("Piesek");
-//
-//        writePDF(pages, c, firstPageSize, _pdfDoc, _writer);
-//    }
+    public void writeNextDocument() throws DocumentException {
+        writeNextDocument(0);
+    }
+
+    public void writeNextDocument(int initialPageNo) throws DocumentException {
+        List pages = _root.getLayer().getPages();
+
+        RenderingContext c = newRenderingContext();
+        c.setInitialPageNo(initialPageNo);
+        PageBox firstPage = (PageBox) pages.get(0);
+        com.lowagie.text.Rectangle firstPageSize = new com.lowagie.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
+                firstPage.getHeight(c) / _dotsPerPoint);
+
+        _outputDevice.setStartPageNo(_writer.getPageNumber());
+
+        _pdfDoc.setPageSize(firstPageSize);
+        _pdfDoc.newPage();
+        _pdfDoc.addCreator("Kotek");
+        _pdfDoc.addAuthor("Piesek");
+
+        writePDF(pages, c, firstPageSize, _pdfDoc, _writer, false);
+    }
 
     public void finishPDF() {
         if (_pdfDoc != null) {

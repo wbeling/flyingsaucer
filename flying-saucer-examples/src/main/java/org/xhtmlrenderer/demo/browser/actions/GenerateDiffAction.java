@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.demo.browser.actions;
 
 import org.xhtmlrenderer.demo.browser.BrowserStartup;
-import org.xhtmlrenderer.test.DocumentDiffTest;
+//import org.xhtmlrenderer.test.DocumentDiffTest;
 import org.xhtmlrenderer.util.Uu;
 
 import javax.swing.*;
@@ -47,9 +47,9 @@ public class GenerateDiffAction extends AbstractAction {
                             return;
                         }
                     }
-                    DocumentDiffTest.generateTestFile(str + ".xhtml",
-                            str + ".diff",
-                            500, 500);
+//                    DocumentDiffTest.generateTestFile(str + ".xhtml",
+//                            str + ".diff",
+//                            500, 500);
                     Uu.p("wrote out: " + str + ".diff");
                 }
             }
