@@ -214,16 +214,16 @@ public class LineBox extends Box implements InlinePaintable {
                 JustificationInfo info = new JustificationInfo();
                 if (! getParent().getStyle().isIdent(CSSName.LETTER_SPACING, IdentValue.NORMAL)) {
                     info.setNonSpaceAdjust(0.0f);
-                    info.setSpaceAdjust((float)toAdd / counts.getSpaceCount());
+                    info.setSpaceAdjust(((float)toAdd) / (counts.getSpaceCount()));
                 } else {
                     if (counts.getNonSpaceCount() > 1) {
-                        info.setNonSpaceAdjust((float)toAdd * JUSTIFY_NON_SPACE_SHARE / (counts.getNonSpaceCount()-1));
+                        info.setNonSpaceAdjust(((float) toAdd * JUSTIFY_NON_SPACE_SHARE) / (counts.getNonSpaceCount() - 1));
                     } else {
                         info.setNonSpaceAdjust(0.0f);
                     }
                     
                     if (counts.getSpaceCount() > 0) {
-                        info.setSpaceAdjust((float)toAdd * JUSTIFY_SPACE_SHARE / counts.getSpaceCount());
+                        info.setSpaceAdjust(((float)toAdd * JUSTIFY_SPACE_SHARE) / (counts.getSpaceCount() - 1));
                     } else {
                         info.setSpaceAdjust(0.0f);
                     }
