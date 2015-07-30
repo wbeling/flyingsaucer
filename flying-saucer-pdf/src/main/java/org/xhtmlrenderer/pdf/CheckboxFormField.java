@@ -19,12 +19,12 @@
  */
 package org.xhtmlrenderer.pdf;
 
-import java.awt.Color;
 import java.io.IOException;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.*;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.*;
 
 import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -62,7 +62,7 @@ public class CheckboxFormField extends AbstractFormField
     field.setCheckType(RadioCheckField.TYPE_CHECK);
     field.setBorderStyle(PdfBorderDictionary.STYLE_SOLID);
     //TODO Consider if we can get some more correct color
-    field.setBorderColor(Color.black);
+    field.setBorderColor(BaseColor.BLACK);
 
     field.setBorderWidth(BaseField.BORDER_WIDTH_THIN);
 

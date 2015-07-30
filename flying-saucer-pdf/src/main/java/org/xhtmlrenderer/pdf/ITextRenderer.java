@@ -53,8 +53,8 @@ import org.xhtmlrenderer.simple.HtmlNamespaceHandler;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.JsoupUtil;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class ITextRenderer {
     // These two defaults combine to produce an effective resolution of 96 px to
@@ -70,7 +70,7 @@ public class ITextRenderer {
 
     private final float _dotsPerPoint;
 
-    private com.lowagie.text.Document _pdfDoc;
+    private com.itextpdf.text.Document _pdfDoc;
     private PdfWriter _writer;
 
     private PDFEncryption _pdfEncryption;
@@ -230,25 +230,25 @@ public class ITextRenderer {
         return result;
     }
 
-    public void createPDF(OutputStream os) throws DocumentException {
+    public void createPDF(OutputStream os) throws DocumentException, IOException {
         createPDF(os, true, 0, false);
     }
     
-    public void createPDF(OutputStream os, boolean oneSidedPrint) throws DocumentException {
+    public void createPDF(OutputStream os, boolean oneSidedPrint) throws DocumentException, IOException {
         createPDF(os, true, 0, oneSidedPrint);
     }
 
-    public void writeNextDocument() throws DocumentException {
+    public void writeNextDocument() throws DocumentException, IOException {
         writeNextDocument(0);
     }
 
-    public void writeNextDocument(int initialPageNo) throws DocumentException {
+    public void writeNextDocument(int initialPageNo) throws DocumentException, IOException {
         List pages = _root.getLayer().getPages();
 
         RenderingContext c = newRenderingContext();
         c.setInitialPageNo(initialPageNo);
         PageBox firstPage = (PageBox) pages.get(0);
-        com.lowagie.text.Rectangle firstPageSize = new com.lowagie.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
+        com.itextpdf.text.Rectangle firstPageSize = new com.itextpdf.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
                 firstPage.getHeight(c) / _dotsPerPoint);
 
         _outputDevice.setStartPageNo(_writer.getPageNumber());
@@ -268,24 +268,25 @@ public class ITextRenderer {
         }
     }
 
-    public void createPDF(OutputStream os, boolean finish, boolean oneSidedPrint) throws DocumentException {
+    public void createPDF(OutputStream os, boolean finish, boolean oneSidedPrint) throws DocumentException, IOException {
         createPDF(os, finish, 0, oneSidedPrint);
     }
 
     /**
      * <B>NOTE:</B> Caller is responsible for cleaning up the OutputStream if
      * something goes wrong.
+     * @throws IOException 
      */
-    public void createPDF(OutputStream os, boolean finish, int initialPageNo, boolean oneSidedPrint) throws DocumentException {
+    public void createPDF(OutputStream os, boolean finish, int initialPageNo, boolean oneSidedPrint) throws DocumentException, IOException {
         List pages = _root.getLayer().getPages();
 
         RenderingContext c = newRenderingContext();
         c.setInitialPageNo(initialPageNo);
         PageBox firstPage = (PageBox) pages.get(0);
-        com.lowagie.text.Rectangle firstPageSize = new com.lowagie.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
+        com.itextpdf.text.Rectangle firstPageSize = new com.itextpdf.text.Rectangle(0, 0, firstPage.getWidth(c) / _dotsPerPoint,
                 firstPage.getHeight(c) / _dotsPerPoint);
 
-        com.lowagie.text.Document doc = new com.lowagie.text.Document(firstPageSize, 0, 0, 0, 0);
+        com.itextpdf.text.Document doc = new com.itextpdf.text.Document(firstPageSize, 0, 0, 0, 0);
         PdfWriter writer = PdfWriter.getInstance(doc, os);
         if (_pdfVersion != null) {
             writer.setPdfVersion(_pdfVersion.charValue());
@@ -327,8 +328,8 @@ public class ITextRenderer {
         }
     }
 
-    private void writePDF(List pages, RenderingContext c, com.lowagie.text.Rectangle firstPageSize, com.lowagie.text.Document doc,
-            PdfWriter writer, boolean oneSidedPrint) throws DocumentException {
+    private void writePDF(List pages, RenderingContext c, com.itextpdf.text.Rectangle firstPageSize, com.itextpdf.text.Document doc,
+            PdfWriter writer, boolean oneSidedPrint) throws DocumentException, IOException {
         _outputDevice.setRoot(_root);
 
         _outputDevice.start(_doc);
@@ -347,7 +348,7 @@ public class ITextRenderer {
             paintPage(c, writer, currentPage);
             _outputDevice.finishPage();
             if(oneSidedPrint) {
-                com.lowagie.text.Rectangle thisPageSize = new com.lowagie.text.Rectangle(0, 0, currentPage.getWidth(c) / _dotsPerPoint,
+                com.itextpdf.text.Rectangle thisPageSize = new com.itextpdf.text.Rectangle(0, 0, currentPage.getWidth(c) / _dotsPerPoint,
                 		currentPage.getHeight(c) / _dotsPerPoint);
                 doc.setPageSize(thisPageSize);
                 doc.newPage();
@@ -356,7 +357,7 @@ public class ITextRenderer {
             }
             if (i != pageCount - 1) {
                 PageBox nextPage = (PageBox) pages.get(i + 1);
-                com.lowagie.text.Rectangle nextPageSize = new com.lowagie.text.Rectangle(0, 0, nextPage.getWidth(c) / _dotsPerPoint,
+                com.itextpdf.text.Rectangle nextPageSize = new com.itextpdf.text.Rectangle(0, 0, nextPage.getWidth(c) / _dotsPerPoint,
                         nextPage.getHeight(c) / _dotsPerPoint);
                 doc.setPageSize(nextPageSize);
                 doc.newPage();
@@ -368,7 +369,7 @@ public class ITextRenderer {
     }
 
     // Sets the document information dictionary values from html metadata
-    private void setDidValues(com.lowagie.text.Document doc) {
+    private void setDidValues(com.itextpdf.text.Document doc) {
         String v = _outputDevice.getMetadataByName("title");
         if (v != null) {
             doc.addTitle(v);
@@ -387,7 +388,7 @@ public class ITextRenderer {
         }
     }
 
-    private void paintPage(RenderingContext c, PdfWriter writer, PageBox page) {
+    private void paintPage(RenderingContext c, PdfWriter writer, PageBox page) throws IOException {
         provideMetadataToPage(writer, page);
 
         page.paintBackground(c, 0, Layer.PAGED_MODE_PRINT);
@@ -410,7 +411,7 @@ public class ITextRenderer {
         _outputDevice.setClip(working);
     }
 
-    private void provideMetadataToPage(PdfWriter writer, PageBox page) {
+    private void provideMetadataToPage(PdfWriter writer, PageBox page) throws IOException {
         byte[] metadata = null;
         if (page.getMetadata() != null) {
             try {

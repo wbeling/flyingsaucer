@@ -20,8 +20,8 @@
 import com.github.danfickle.flyingsaucer.swing.FSMouseListener;
 import com.github.danfickle.flyingsaucer.swing.LinkListener;
 import com.github.danfickle.flyingsaucer.swing.XHTMLPanel;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.BaseFont;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.BaseFont;
 
 import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.event.DefaultDocumentListener;

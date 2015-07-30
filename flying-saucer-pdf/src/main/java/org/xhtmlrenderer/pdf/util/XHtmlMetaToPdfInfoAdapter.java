@@ -22,7 +22,6 @@ package org.xhtmlrenderer.pdf.util;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,9 +31,9 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.pdf.PDFCreationListener;
 import org.xhtmlrenderer.util.XRLog;
 
-import com.lowagie.text.pdf.PdfName;
-import com.lowagie.text.pdf.PdfObject;
-import com.lowagie.text.pdf.PdfString;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfObject;
+import com.itextpdf.text.pdf.PdfString;
 
 
 /**

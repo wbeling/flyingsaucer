@@ -17,7 +17,7 @@
  */
 
 
-import com.lowagie.text.DocumentException;
+import com.itextpdf.text.DocumentException;
 
 import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.pdf.ITextOutputDevice;

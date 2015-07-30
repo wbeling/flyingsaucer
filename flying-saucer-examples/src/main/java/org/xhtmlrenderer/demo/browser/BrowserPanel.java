@@ -32,8 +32,8 @@ import org.xhtmlrenderer.util.XRRuntimeException;
 
 import com.github.danfickle.flyingsaucer.swing.ScalableXHTMLPanel;
 import com.github.danfickle.flyingsaucer.swing.SwingReplacedElementFactory;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.*;
 import java.awt.*;

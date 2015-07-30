@@ -1,4 +1,4 @@
-import com.lowagie.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.BaseFont;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 
 import java.awt.*;

@@ -38,9 +38,9 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.util.JsoupUtil;
 
-import com.lowagie.text.BadElementException;
-import com.lowagie.text.Image;
-import com.lowagie.text.pdf.Barcode128;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.Barcode128;
 
 import static org.xhtmlrenderer.util.GeneralUtil.ciEquals;
 

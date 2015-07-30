@@ -19,8 +19,8 @@
  */
 package org.xhtmlrenderer.pdf;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.BaseFont;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.BaseFont;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.sheet.FontFaceRule;
@@ -444,7 +444,7 @@ public class ITextFontResolver implements FontResolver {
             addZapfDingbats(result);
 
             // Try and load the iTextAsian fonts
-            if(ITextFontResolver.class.getClassLoader().getResource("com/lowagie/text/pdf/fonts/cjkfonts.properties") != null) {
+            if(ITextFontResolver.class.getClassLoader().getResource("com/itextpdf/text/pdf/fonts/cjkfonts.properties") != null) {
                 addCJKFonts(result);
             }
         } catch (DocumentException e) {
